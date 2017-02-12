@@ -150,25 +150,25 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                     List<RegistryConfig> registryConfigs = new ArrayList<RegistryConfig>();
                     for (String registryId : service.registry()) {
                         if (registryId != null && registryId.length() > 0) {
-                            registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));
+                            registryConfigs.add(applicationContext.getBean(registryId, RegistryConfig.class));
                         }
                     }
                     serviceConfig.setRegistries(registryConfigs);
                 }
                 if (service.provider() != null && service.provider().length() > 0) {
-                    serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));
+                    serviceConfig.setProvider(applicationContext.getBean(service.provider(),ProviderConfig.class));
                 }
                 if (service.monitor() != null && service.monitor().length() > 0) {
-                    serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));
+                    serviceConfig.setMonitor(applicationContext.getBean(service.monitor(), MonitorConfig.class));
                 }
                 if (service.application() != null && service.application().length() > 0) {
-                    serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));
+                    serviceConfig.setApplication(applicationContext.getBean(service.application(), ApplicationConfig.class));
                 }
                 if (service.module() != null && service.module().length() > 0) {
-                    serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.module(), ModuleConfig.class));
+                    serviceConfig.setModule(applicationContext.getBean(service.module(), ModuleConfig.class));
                 }
                 if (service.provider() != null && service.provider().length() > 0) {
-                    serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));
+                    serviceConfig.setProvider(applicationContext.getBean(service.provider(), ProviderConfig.class));
                 } else {
                     
                 }
@@ -176,7 +176,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                     List<ProtocolConfig> protocolConfigs = new ArrayList<ProtocolConfig>();
                     for (String protocolId : service.registry()) {
                         if (protocolId != null && protocolId.length() > 0) {
-                            protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));
+                            protocolConfigs.add(applicationContext.getBean(protocolId, ProtocolConfig.class));
                         }
                     }
                     serviceConfig.setProtocols(protocolConfigs);
@@ -267,25 +267,25 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                     List<RegistryConfig> registryConfigs = new ArrayList<RegistryConfig>();
                     for (String registryId : reference.registry()) {
                         if (registryId != null && registryId.length() > 0) {
-                            registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));
+                            registryConfigs.add(applicationContext.getBean(registryId, RegistryConfig.class));
                         }
                     }
                     referenceConfig.setRegistries(registryConfigs);
                 }
                 if (reference.consumer() != null && reference.consumer().length() > 0) {
-                    referenceConfig.setConsumer((ConsumerConfig)applicationContext.getBean(reference.consumer(), ConsumerConfig.class));
+                    referenceConfig.setConsumer(applicationContext.getBean(reference.consumer(), ConsumerConfig.class));
                 }
                 if (reference.monitor() != null && reference.monitor().length() > 0) {
-                    referenceConfig.setMonitor((MonitorConfig)applicationContext.getBean(reference.monitor(), MonitorConfig.class));
+                    referenceConfig.setMonitor(applicationContext.getBean(reference.monitor(), MonitorConfig.class));
                 }
                 if (reference.application() != null && reference.application().length() > 0) {
-                    referenceConfig.setApplication((ApplicationConfig)applicationContext.getBean(reference.application(), ApplicationConfig.class));
+                    referenceConfig.setApplication(applicationContext.getBean(reference.application(), ApplicationConfig.class));
                 }
                 if (reference.module() != null && reference.module().length() > 0) {
-                    referenceConfig.setModule((ModuleConfig)applicationContext.getBean(reference.module(), ModuleConfig.class));
+                    referenceConfig.setModule(applicationContext.getBean(reference.module(), ModuleConfig.class));
                 }
                 if (reference.consumer() != null && reference.consumer().length() > 0) {
-                    referenceConfig.setConsumer((ConsumerConfig)applicationContext.getBean(reference.consumer(), ConsumerConfig.class));
+                    referenceConfig.setConsumer(applicationContext.getBean(reference.consumer(), ConsumerConfig.class));
                 }
                 try {
                     referenceConfig.afterPropertiesSet();
