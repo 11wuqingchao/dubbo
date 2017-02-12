@@ -51,7 +51,8 @@
 		<module>dubbo-simple</module>
 		<module>dubbo-admin</module>
 		<module>dubbo-demo</module>
-	</modules>
+        <module>dubbo-remoting-netty4</module>
+    </modules>
 	<profiles>
 		<profile>
 			<id>test</id>
@@ -84,6 +85,7 @@
         <org.springframework.version>3.2.9.RELEASE</org.springframework.version>
 		<javassist_version>3.15.0-GA</javassist_version>
 		<netty_version>3.2.5.Final</netty_version>
+        <netty4_version>4.0.12.Final</netty4_version>
 		<mina_version>1.1.7</mina_version>
 		<grizzly_version>2.1.4</grizzly_version>
 		<httpclient_version>4.1.2</httpclient_version>
@@ -206,6 +208,11 @@
 				<artifactId>netty</artifactId>
 				<version>${netty_version}</version>
 			</dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty4_version}</version>
+            </dependency>
 			<dependency>
 				<groupId>org.apache.mina</groupId>
 				<artifactId>mina-core</artifactId>
