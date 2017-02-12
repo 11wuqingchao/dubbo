@@ -35,7 +35,7 @@ public abstract class AbstractEndpoint extends AbstractPeer implements Resetable
     
     private static final Logger logger = LoggerFactory.getLogger(AbstractEndpoint.class);
 
-    private Codec2                codec;
+    private Codec                codec;
 
     private int                   timeout;
 
@@ -43,7 +43,7 @@ public abstract class AbstractEndpoint extends AbstractPeer implements Resetable
     
     public AbstractEndpoint(URL url, ChannelHandler handler) {
         super(url, handler);
-        this.codec = getChannelCodec(url);
+        this.codec = ExtensionLoader.getExtensionLoader(Codec.class).getExtension(url.getParameter(Constants.CODEC_KEY, "telnet"));
         this.timeout = url.getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);
         this.connectTimeout = url.getPositiveParameter(Constants.CONNECT_TIMEOUT_KEY, Constants.DEFAULT_CONNECT_TIMEOUT);
     }
@@ -75,7 +75,7 @@ public abstract class AbstractEndpoint extends AbstractPeer implements Resetable
         }
         try {
             if (url.hasParameter(Constants.CODEC_KEY)) {
-                this.codec = getChannelCodec(url);
+                this.codec = ExtensionLoader.getExtensionLoader(Codec.class).getExtension(url.getParameter(Constants.CODEC_KEY));
             }
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
@@ -87,7 +87,7 @@ public abstract class AbstractEndpoint extends AbstractPeer implements Resetable
         reset(getUrl().addParameters(parameters.getParameters()));
     }
 
-    protected Codec2 getCodec() {
+    protected Codec getCodec() {
         return codec;
     }
 
@@ -99,14 +99,6 @@ public abstract class AbstractEndpoint extends AbstractPeer implements Resetable
         return connectTimeout;
     }
 
-    protected static Codec2 getChannelCodec(URL url) {
-        String codecName = url.getParameter(Constants.CODEC_KEY, "telnet");
-        if (ExtensionLoader.getExtensionLoader(Codec2.class).hasExtension(codecName)) {
-            return ExtensionLoader.getExtensionLoader(Codec2.class).getExtension(codecName);
-        } else {
-            return new CodecAdapter(ExtensionLoader.getExtensionLoader(Codec.class)
-                                               .getExtension(codecName));
-        }
-    }
+
 
 }

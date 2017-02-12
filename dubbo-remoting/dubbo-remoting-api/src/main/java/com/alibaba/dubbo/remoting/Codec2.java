@@ -34,7 +34,6 @@ public interface Codec2 {
     @Adaptive({Constants.CODEC_KEY})
     Object decode(Channel channel, ChannelBuffer buffer) throws IOException;
 
-
     enum DecodeResult {
         NEED_MORE_INPUT, SKIP_SOME_INPUT
     }

@@ -16,6 +16,7 @@
 package com.alibaba.dubbo.remoting.exchange.support.header;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.Future;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
@@ -32,7 +33,10 @@ import com.alibaba.dubbo.remoting.exchange.ExchangeHandler;
 import com.alibaba.dubbo.remoting.exchange.Request;
 import com.alibaba.dubbo.remoting.exchange.Response;
 import com.alibaba.dubbo.remoting.exchange.support.DefaultFuture;
+import com.alibaba.dubbo.remoting.exchange.support.ListenableFuture;
 import com.alibaba.dubbo.remoting.transport.ChannelHandlerDelegate;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.dubbo.rpc.RpcResult;
 
 /**
  * ExchangeReceiver
@@ -42,11 +46,11 @@ import com.alibaba.dubbo.remoting.transport.ChannelHandlerDelegate;
  */
 public class HeaderExchangeHandler implements ChannelHandlerDelegate {
 
-    protected static final Logger logger              = LoggerFactory.getLogger(HeaderExchangeHandler.class);
+    protected static final Logger logger     = LoggerFactory.getLogger(HeaderExchangeHandler.class);
 
-    public static String          KEY_READ_TIMESTAMP  = HeartbeatHandler.KEY_READ_TIMESTAMP;
+    public static String KEY_READ_TIMESTAMP  = HeartbeatHandler.KEY_READ_TIMESTAMP;
 
-    public static String          KEY_WRITE_TIMESTAMP = HeartbeatHandler.KEY_WRITE_TIMESTAMP;
+    public static String KEY_WRITE_TIMESTAMP = HeartbeatHandler.KEY_WRITE_TIMESTAMP;
 
     private final ExchangeHandler handler;
 
@@ -63,8 +67,8 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
-    Response handleRequest(ExchangeChannel channel, Request req) throws RemotingException {
-        Response res = new Response(req.getId(), req.getVersion());
+    void handleRequest(final ExchangeChannel channel, Request req) throws RemotingException {
+        final Response res = new Response(req.getId(), req.getVersion());
         if (req.isBroken()) {
             Object data = req.getData();
 
@@ -75,20 +79,39 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
             res.setErrorMessage("Fail to decode request due to: " + msg);
             res.setStatus(Response.BAD_REQUEST);
 
-            return res;
+            channel.send(res);
+            return;
         }
         // find handler by message class.
         Object msg = req.getData();
         try {
             // handle data.
+            RpcContext context = RpcContext.getContext();
             Object result = handler.reply(channel, msg);
             res.setStatus(Response.OK);
-            res.setResult(result);
+            final Future<Object> future = context.getFuture();
+            if (future != null && future instanceof ListenableFuture) {
+                ((ListenableFuture) future).then(new Runnable() {
+                    @Override
+                    public void run() {
+                        res.setResult(new RpcResult(get(future)));
+                        try {
+                            channel.send(res);
+                        } catch (RemotingException ex) {
+                            logger.error("async send response to consumer error", ex);
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                });
+            } else {
+                res.setResult(result);
+                channel.send(res);
+            }
         } catch (Throwable e) {
             res.setStatus(Response.SERVICE_ERROR);
             res.setErrorMessage(StringUtils.toString(e));
+            channel.send(res);
         }
-        return res;
     }
 
     static void handleResponse(Channel channel, Response response) throws RemotingException {
@@ -97,6 +120,16 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
+    private Object get(Future future) {
+        try {
+            return future.get();
+        } catch (Exception e) {
+            logger.error("impossible get here", e);
+            return null;
+        }
+    }
+
+    @Override
     public void connected(Channel channel) throws RemotingException {
         channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());
         channel.setAttribute(KEY_WRITE_TIMESTAMP, System.currentTimeMillis());
@@ -108,6 +141,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
+    @Override
     public void disconnected(Channel channel) throws RemotingException {
         channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());
         channel.setAttribute(KEY_WRITE_TIMESTAMP, System.currentTimeMillis());
@@ -119,6 +153,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
+    @Override
     public void sent(Channel channel, Object message) throws RemotingException {
         Throwable exception = null;
         try {
@@ -156,6 +191,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
                     .equals(NetUtils.filterLocalHost(address.getAddress().getHostAddress()));
     }
 
+    @Override
     public void received(Channel channel, Object message) throws RemotingException {
         channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());
         ExchangeChannel exchangeChannel = HeaderExchangeChannel.getOrAddChannel(channel);
@@ -167,8 +203,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
                     handlerEvent(channel, request);
                 } else {
                     if (request.isTwoWay()) {
-                        Response response = handleRequest(exchangeChannel, request);
-                        channel.send(response);
+                        handleRequest(exchangeChannel, request);
                     } else {
                         handler.received(exchangeChannel, request.getData());
                     }
@@ -193,6 +228,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
+    @Override
     public void caught(Channel channel, Throwable exception) throws RemotingException {
         if (exception instanceof ExecutionException) {
             ExecutionException e = (ExecutionException) exception;
@@ -216,6 +252,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
+    @Override
     public ChannelHandler getHandler() {
         if (handler instanceof ChannelHandlerDelegate) {
             return ((ChannelHandlerDelegate) handler).getHandler();
