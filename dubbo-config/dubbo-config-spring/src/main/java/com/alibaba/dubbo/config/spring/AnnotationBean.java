@@ -55,7 +55,7 @@ import com.alibaba.dubbo.config.annotation.Service;
  * AnnotationBean
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class AnnotationBean extends AbstractConfig implements DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware {
 
@@ -87,8 +87,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
         this.applicationContext = applicationContext;
     }
 
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
-            throws BeansException {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (annotationPackage == null || annotationPackage.length() == 0) {
             return;
         }
@@ -104,7 +103,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                 addIncludeFilter.invoke(scanner, filter);
                 // scan packages
                 String[] packages = Constants.COMMA_SPLIT_PATTERN.split(annotationPackage);
-                Method scan = scannerClass.getMethod("scan", new Class<?>[]{String[].class});
+                Method scan = scannerClass.getMethod("scan", String[].class);
                 scan.invoke(scanner, new Object[] {packages});
             } catch (Throwable e) {
                 // spring 2.0
@@ -185,7 +184,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                 try {
                     serviceConfig.afterPropertiesSet();
                 } catch (RuntimeException e) {
-                    throw (RuntimeException) e;
+                    throw e;
                 } catch (Exception e) {
                     throw new IllegalStateException(e.getMessage(), e);
                 }
@@ -291,7 +290,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                 try {
                     referenceConfig.afterPropertiesSet();
                 } catch (RuntimeException e) {
-                    throw (RuntimeException) e;
+                    throw e;
                 } catch (Exception e) {
                     throw new IllegalStateException(e.getMessage(), e);
                 }

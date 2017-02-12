@@ -58,7 +58,7 @@ import com.alibaba.dubbo.rpc.Protocol;
  * AbstractBeanDefinitionParser
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class DubboBeanDefinitionParser implements BeanDefinitionParser {
     
@@ -254,13 +254,13 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
         return beanDefinition;
     }
 
-    private static final Pattern GROUP_AND_VERION = Pattern.compile("^[\\-.0-9_a-zA-Z]+(\\:[\\-.0-9_a-zA-Z]+)?$");
+    private static final Pattern GROUP_AND_VERSION = Pattern.compile("^[\\-.0-9_a-zA-Z]+(\\:[\\-.0-9_a-zA-Z]+)?$");
     
     protected static MonitorConfig convertMonitor(String monitor) {
         if (monitor == null || monitor.length() == 0) {
             return null;
         }
-        if (GROUP_AND_VERION.matcher(monitor).matches()) {
+        if (GROUP_AND_VERSION.matcher(monitor).matches()) {
             String group;
             String version;
             int i = monitor.indexOf(':');
@@ -334,8 +334,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 if (node instanceof Element) {
-                    if ("property".equals(node.getNodeName())
-                            || "property".equals(node.getLocalName())) {
+                    if ("property".equals(node.getNodeName())  || "property".equals(node.getLocalName())) {
                         String name = ((Element) node).getAttribute("name");
                         if (name != null && name.length() > 0) {
                             String value = ((Element) node).getAttribute("value");

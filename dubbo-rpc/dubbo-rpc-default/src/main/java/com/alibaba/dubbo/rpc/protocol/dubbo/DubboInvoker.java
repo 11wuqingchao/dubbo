@@ -83,15 +83,29 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
             boolean isOneway = RpcUtils.isOneway(getUrl(), invocation);
             int timeout = getUrl().getMethodParameter(methodName, Constants.TIMEOUT_KEY,Constants.DEFAULT_TIMEOUT);
             if (isOneway) {
+                /**
+                 * 执行的方法不需要返回值：直接使用ExchangeClient的send方法
+                 * add by woodle
+                 */
             	boolean isSent = getUrl().getMethodParameter(methodName, Constants.SENT_KEY, false);
                 currentClient.send(inv, isSent);
                 RpcContext.getContext().setFuture(null);
                 return new RpcResult();
             } else if (isAsync) {
+                /**
+                 * 执行的方法的结果需要异步返回：使用ExchangeClient的request方法，返回一个ResponseFuture，
+                 * 通过ThreadLocal方式与当前线程绑定，未等服务器端响应结果就直接返回
+                 * add by woodle
+                 */
             	ResponseFuture future = currentClient.request(inv, timeout) ;
                 RpcContext.getContext().setFuture(new FutureAdapter<Object>(future));
                 return new RpcResult();
             } else {
+                /**
+                 * - 执行的方法的结果需要同步返回：使用ExchangeClient的request方法，返回一个ResponseFuture，
+                 * 一直阻塞到服务器端返回响应结果
+                 * add by woodle
+                 */
             	RpcContext.getContext().setFuture(null);
                 return (Result) currentClient.request(inv, timeout).get();
             }

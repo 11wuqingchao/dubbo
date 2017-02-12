@@ -265,9 +265,20 @@ public class RegistryProtocol implements Protocol {
         URL subscribeUrl = new URL(Constants.CONSUMER_PROTOCOL, NetUtils.getLocalHost(), 0, type.getName(), directory.getUrl().getParameters());
         if (! Constants.ANY_VALUE.equals(url.getServiceInterface())
                 && url.getParameter(Constants.REGISTER_KEY, true)) {
+            /**
+             * 根据客户端的注册中心配置找到对应注册服务 Registry registry = registryFactory.getRegistry(url);
+             * 使用注册服务将客户端的信息注册到注册中心上
+             * subscribeUrl的地址如下
+             * consumer://consumer-host/com.foo.FooService?application=consumer-of-fooService&dubbo=2.4.9&interface=com.foo.FooService&methods=foo&pid=6444&side=consumer&timestamp=1444606047076
+             * add by woodle
+             */
             registry.register(subscribeUrl.addParameters(Constants.CATEGORY_KEY, Constants.CONSUMERS_CATEGORY,
                     Constants.CHECK_KEY, String.valueOf(false)));
         }
+        /**
+         * 创建一个RegistryDirectory，从注册中心中订阅自己引用的服务，将订阅到的url在RegistryDirectory内部转换成Invoker
+         * * add by woodle
+         */
         directory.subscribe(subscribeUrl.addParameter(Constants.CATEGORY_KEY, 
                 Constants.PROVIDERS_CATEGORY 
                 + "," + Constants.CONFIGURATORS_CATEGORY 
@@ -300,7 +311,8 @@ public class RegistryProtocol implements Protocol {
     }
     
     
-    /*重新export 1.protocol中的exporter destory问题 
+    /**
+     *重新export 1.protocol中的exporter destory问题
      *1.要求registryprotocol返回的exporter可以正常destroy
      *2.notify后不需要重新向注册中心注册 
      *3.export 方法传入的invoker最好能一直作为exporter的invoker.
@@ -315,7 +327,7 @@ public class RegistryProtocol implements Protocol {
 			this.subscribeUrl = subscribeUrl;
 		}
 
-		/*
+		/**
          *  provider 端可识别的override url只有这两种.
          *  override://0.0.0.0/serviceName?timeout=10
          *  override://0.0.0.0/?timeout=10

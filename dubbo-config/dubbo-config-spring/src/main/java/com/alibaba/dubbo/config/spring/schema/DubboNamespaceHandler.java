@@ -33,15 +33,23 @@ import com.alibaba.dubbo.config.spring.ServiceBean;
  * DubboNamespaceHandler
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class DubboNamespaceHandler extends NamespaceHandlerSupport {
 
 	static {
+        /**
+         * 确保系统中只存在一份解析处理器类定义
+         * add by woodle
+         */
 		Version.checkDuplicate(DubboNamespaceHandler.class);
 	}
 
 	public void init() {
+        /**
+         * 把每个自定义的可使用配置元素和对应的解析器绑定到一起
+         * add by woodle
+         */
 	    registerBeanDefinitionParser("application", new DubboBeanDefinitionParser(ApplicationConfig.class, true));
         registerBeanDefinitionParser("module", new DubboBeanDefinitionParser(ModuleConfig.class, true));
         registerBeanDefinitionParser("registry", new DubboBeanDefinitionParser(RegistryConfig.class, true));
