@@ -41,8 +41,8 @@ import com.alibaba.dubbo.common.utils.NetUtils;
  * @see com.alibaba.dubbo.rpc.filter.ContextFilter
  * @author qian.lei
  * @author william.liangf
- * @export
  */
+@SuppressWarnings("unused")
 public class RpcContext {
 	
 	private static final ThreadLocal<RpcContext> LOCAL = new ThreadLocal<RpcContext>() {
@@ -152,8 +152,7 @@ public class RpcContext {
 
     /**
      * get future.
-     * 
-     * @param <T>
+     *
      * @return future
      */
     @SuppressWarnings("unchecked")
@@ -163,15 +162,14 @@ public class RpcContext {
 
     /**
      * set future.
-     * 
-     * @param future
+     *
      */
     public void setFuture(Future<?> future) {
         this.future = future;
     }
 
     public List<URL> getUrls() {
-        return urls == null && url != null ? (List<URL>) Arrays.asList(url) : urls;
+        return urls == null && url != null ? Arrays.asList(url) : urls;
     }
 
     public void setUrls(List<URL> urls) {
@@ -201,8 +199,7 @@ public class RpcContext {
 
     /**
      * get parameter types.
-     * 
-     * @serial
+     *
      */
     public Class<?>[] getParameterTypes() {
         return parameterTypes;
@@ -227,8 +224,7 @@ public class RpcContext {
 
     /**
      * set local address.
-     * 
-     * @param address
+     *
      * @return context
      */
 	public RpcContext setLocalAddress(InetSocketAddress address) {
@@ -238,9 +234,7 @@ public class RpcContext {
 
 	/**
 	 * set local address.
-	 * 
-	 * @param host
-	 * @param port
+	 *
 	 * @return context
 	 */
     public RpcContext setLocalAddress(String host, int port) {
@@ -279,8 +273,7 @@ public class RpcContext {
 
     /**
      * set remote address.
-     * 
-     * @param address
+     *
      * @return context
      */
     public RpcContext setRemoteAddress(InetSocketAddress address) {
@@ -290,9 +283,7 @@ public class RpcContext {
     
     /**
      * set remote address.
-     * 
-     * @param host
-     * @param port
+     *
      * @return context
      */
     public RpcContext setRemoteAddress(String host, int port) {
@@ -376,8 +367,7 @@ public class RpcContext {
 
     /**
      * get attachment.
-     * 
-     * @param key
+     *
      * @return attachment
      */
     public String getAttachment(String key) {
@@ -386,9 +376,7 @@ public class RpcContext {
 
     /**
      * set attachment.
-     * 
-     * @param key
-     * @param value
+     *
      * @return context
      */
     public RpcContext setAttachment(String key, String value) {
@@ -402,8 +390,7 @@ public class RpcContext {
 
     /**
      * remove attachment.
-     * 
-     * @param key
+     *
      * @return context
      */
     public RpcContext removeAttachment(String key) {
@@ -422,8 +409,7 @@ public class RpcContext {
 
     /**
      * set attachments
-     * 
-     * @param attachment
+     *
      * @return context
      */
     public RpcContext setAttachments(Map<String, String> attachment) {
@@ -449,9 +435,7 @@ public class RpcContext {
 
     /**
      * set value.
-     * 
-     * @param key
-     * @param value
+     *
      * @return context
      */
     public RpcContext set(String key, Object value) {
@@ -465,8 +449,7 @@ public class RpcContext {
 
     /**
      * remove value.
-     * 
-     * @param key
+     *
      * @return value
      */
     public RpcContext remove(String key) {
@@ -476,8 +459,7 @@ public class RpcContext {
 
     /**
      * get value.
-     * 
-     * @param key
+     *
      * @return value
      */
     public Object get(String key) {
@@ -557,7 +539,6 @@ public class RpcContext {
     
     /**
      * 异步调用 ，需要返回值，即使步调用Future.get方法，也会处理调用超时问题.
-     * @param callable
      * @return 通过future.get()获取返回结果.
      */
     @SuppressWarnings("unchecked")
@@ -609,12 +590,11 @@ public class RpcContext {
     
 	/**
 	 * oneway调用，只发送请求，不接收返回结果.
-	 * @param callable
 	 */
-	public void asyncCall(Runnable runable) {
+	public void asyncCall(Runnable runnable) {
     	try {
     		setAttachment(Constants.RETURN_KEY, Boolean.FALSE.toString());
-    		runable.run();
+            runnable.run();
 		} catch (Throwable e) {
 			//FIXME 异常是否应该放在future中？
 			throw new RpcException("oneway call error ." + e.getMessage(), e);

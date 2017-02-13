@@ -33,7 +33,7 @@ public class NettyServer extends AbstractServer implements Server {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
-    private Map<String, Channel> channels; // <ip:port, channel>
+    private Map<String /** ip:port */, Channel /** channel */> channels;
 
     private io.netty.bootstrap.ServerBootstrap bootstrap;
 
@@ -71,7 +71,7 @@ public class NettyServer extends AbstractServer implements Server {
     protected void doClose() throws Throwable {
         try {
             if (channel != null) {
-                // unbind.
+                // unbind
                 channel.close();
             }
         } catch (Throwable e) {
@@ -93,7 +93,7 @@ public class NettyServer extends AbstractServer implements Server {
         }
         try {
             if (bootstrap != null) {
-                // release external resource.
+                // release external resource
                 bootstrap.group().shutdownGracefully();
                 bootstrap.childGroup().shutdownGracefully();
             }

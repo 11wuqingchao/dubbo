@@ -47,11 +47,6 @@ final class GrizzlyChannel extends AbstractChannel {
 
     private final Connection<?> connection;
 
-    /**
-     * @param connection
-     * @param url
-     * @param handler
-     */
     private GrizzlyChannel(Connection<?> connection, URL url, ChannelHandler handler){
         super(url, handler);
         if (connection == null) {
