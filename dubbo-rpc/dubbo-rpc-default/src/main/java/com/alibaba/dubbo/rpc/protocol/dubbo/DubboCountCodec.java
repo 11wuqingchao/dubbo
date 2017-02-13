@@ -17,11 +17,13 @@
 package com.alibaba.dubbo.rpc.protocol.dubbo;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.alibaba.dubbo.common.Constants;
+import com.alibaba.dubbo.common.PositionableInputStream;
 import com.alibaba.dubbo.remoting.Channel;
-import com.alibaba.dubbo.remoting.Codec2;
-import com.alibaba.dubbo.remoting.buffer.ChannelBuffer;
+import com.alibaba.dubbo.remoting.Codec;
 import com.alibaba.dubbo.remoting.exchange.Request;
 import com.alibaba.dubbo.remoting.exchange.Response;
 import com.alibaba.dubbo.remoting.exchange.support.MultiMessage;
@@ -31,30 +33,31 @@ import com.alibaba.dubbo.rpc.RpcResult;
 /**
  * @author <a href="mailto:gang.lvg@alibaba-inc.com">kimi</a>
  */
-public final class DubboCountCodec implements Codec2 {
+public final class DubboCountCodec implements Codec {
 
     private DubboCodec codec = new DubboCodec();
 
-    public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
-        codec.encode(channel, buffer, msg);
+    public void encode(Channel channel, OutputStream os, Object msg) throws IOException {
+        codec.encode(channel, os, msg);
     }
 
-    public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
-        int save = buffer.readerIndex();
+    public Object decode(Channel channel, InputStream is) throws IOException {
+        PositionableInputStream pis = (PositionableInputStream) is;
+        int beginIdx = pis.position();
         MultiMessage result = MultiMessage.create();
         do {
-            Object obj = codec.decode(channel, buffer);
-            if (Codec2.DecodeResult.NEED_MORE_INPUT == obj) {
-                buffer.readerIndex(save);
+            Object obj = codec.decode(channel, pis);
+            if (NEED_MORE_INPUT == obj) {
+                pis.position(beginIdx);
                 break;
             } else {
                 result.addMessage(obj);
-                logMessageLength(obj, buffer.readerIndex() - save);
-                save = buffer.readerIndex();
+                logMessageLength(obj, pis.position() - beginIdx);
+                beginIdx = pis.position();
             }
         } while (true);
         if (result.isEmpty()) {
-            return Codec2.DecodeResult.NEED_MORE_INPUT;
+            return NEED_MORE_INPUT;
         }
         if (result.size() == 1) {
             return result.get(0);

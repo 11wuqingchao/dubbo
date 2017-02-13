@@ -15,6 +15,8 @@ package com.alibaba.dubbo.rpc.protocol.thrift;
 
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.alibaba.dubbo.remoting.Codec;
 import org.apache.commons.lang.StringUtils;
 import org.apache.thrift.TApplicationException;
 import org.apache.thrift.TBase;
@@ -40,7 +43,6 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.utils.ClassHelper;
 import com.alibaba.dubbo.remoting.Channel;
-import com.alibaba.dubbo.remoting.Codec2;
 import com.alibaba.dubbo.remoting.buffer.ChannelBuffer;
 import com.alibaba.dubbo.remoting.buffer.ChannelBufferInputStream;
 import com.alibaba.dubbo.remoting.exchange.Request;
@@ -71,7 +73,7 @@ import com.alibaba.dubbo.rpc.protocol.thrift.io.RandomAccessByteArrayOutputStrea
  *
  * @author <a href="mailto:gang.lvg@alibaba-inc.com">gang.lvg</a>
  */
-public class ThriftCodec implements Codec2 {
+public class ThriftCodec implements Codec {
 
     private static final AtomicInteger THRIFT_SEQ_ID = new AtomicInteger( 0 );
 
@@ -95,14 +97,13 @@ public class ThriftCodec implements Codec2 {
 
     public static final short MAGIC = (short) 0xdabc;
 
-    public void encode( Channel channel, ChannelBuffer buffer, Object message )
-            throws IOException {
+    public void encode( Channel channel, OutputStream os, Object message ) throws IOException {
 
         if ( message instanceof Request ) {
-            encodeRequest( channel, buffer, ( Request ) message );
+            encodeRequest( channel, os, ( Request ) message );
         }
         else if ( message instanceof Response ) {
-            encodeResponse( channel, buffer, ( Response ) message );
+            encodeResponse( channel, os, ( Response ) message );
         } else {
             throw new UnsupportedOperationException(
                     new StringBuilder( 32 )
@@ -115,17 +116,14 @@ public class ThriftCodec implements Codec2 {
 
     }
 
-    public Object decode( Channel channel, ChannelBuffer buffer ) throws IOException {
-
-        int available = buffer.readableBytes();
+    public Object decode( Channel channel, InputStream is ) throws IOException {
+        int available = is.available();
 
         if ( available < MESSAGE_SHORTEST_LENGTH ) {
-
-            return DecodeResult.NEED_MORE_INPUT;
-
+            return NEED_MORE_INPUT;
         } else {
 
-            TIOStreamTransport transport = new TIOStreamTransport( new ChannelBufferInputStream(buffer));
+            TIOStreamTransport transport = new TIOStreamTransport(is);
 
             TBinaryProtocol protocol = new TBinaryProtocol( transport );
 
@@ -151,7 +149,7 @@ public class ThriftCodec implements Codec2 {
                                 .toString() );
             }
 
-            if ( available < messageLength ) { return  DecodeResult.NEED_MORE_INPUT; }
+            if ( available < messageLength ) { return  NEED_MORE_INPUT; }
 
             return decode( protocol );
 
@@ -159,8 +157,7 @@ public class ThriftCodec implements Codec2 {
 
     }
 
-    private Object decode( TProtocol protocol )
-            throws IOException {
+    private Object decode( TProtocol protocol ) throws IOException {
 
         // version
         String serviceName;
@@ -391,8 +388,7 @@ public class ThriftCodec implements Codec2 {
 
     }
 
-    private void encodeRequest( Channel channel, ChannelBuffer buffer, Request request )
-            throws IOException {
+    private void encodeRequest( Channel channel, OutputStream os, Request request ) throws IOException {
 
         RpcInvocation inv = ( RpcInvocation ) request.getData();
 
@@ -525,12 +521,13 @@ public class ThriftCodec implements Codec2 {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
         }
 
-        buffer.writeBytes(bytes);
-        buffer.writeBytes(bos.toByteArray());
+        os.write(bytes);
+        bos.writeTo(os);
+        os.flush();
 
     }
 
-    private void encodeResponse( Channel channel, ChannelBuffer buffer, Response response )
+    private void encodeResponse( Channel channel, OutputStream os, Response response )
             throws IOException {
 
         RpcResult result = ( RpcResult ) response.getResult();
@@ -687,9 +684,9 @@ public class ThriftCodec implements Codec2 {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
         }
 
-        buffer.writeBytes(bytes);
-        buffer.writeBytes(bos.toByteArray());
-
+        os.write(bytes);
+        bos.writeTo(os);
+        os.flush();
     }
 
     private static int nextSeqId() {
