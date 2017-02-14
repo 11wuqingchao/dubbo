@@ -75,11 +75,9 @@ public class ThriftCodec implements Codec {
 
     private static final AtomicInteger THRIFT_SEQ_ID = new AtomicInteger( 0 );
 
-    private static final ConcurrentMap<String, Class<?>> cachedClass =
-            new ConcurrentHashMap<String, Class<?>>();
+    private static final ConcurrentMap<String, Class<?>> cachedClass = new ConcurrentHashMap<String, Class<?>>();
 
-    static final ConcurrentMap<Long, RequestData> cachedRequest =
-            new ConcurrentHashMap<Long, RequestData>();
+    static final ConcurrentMap<Long, RequestData> cachedRequest = new ConcurrentHashMap<Long, RequestData>();
 
     public static final int MESSAGE_LENGTH_INDEX = 2;
 
@@ -95,13 +93,12 @@ public class ThriftCodec implements Codec {
 
     public static final short MAGIC = (short) 0xdabc;
 
-    public void encode( Channel channel, OutputStream os, Object message ) throws IOException {
-
+    public void encode(Channel channel, OutputStream os, Object message) throws IOException {
         if ( message instanceof Request ) {
-            encodeRequest( channel, os, ( Request ) message );
+            encodeRequest(channel, os, (Request) message );
         }
-        else if ( message instanceof Response ) {
-            encodeResponse( channel, os, ( Response ) message );
+        else if (message instanceof Response) {
+            encodeResponse(channel, os, (Response) message );
         } else {
             throw new UnsupportedOperationException(
                     new StringBuilder( 32 )
@@ -111,56 +108,48 @@ public class ThriftCodec implements Codec {
                             .append( Response.class.getName() )
                             .toString() );
         }
-
     }
 
-    public Object decode( Channel channel, InputStream is ) throws IOException {
+    public Object decode(Channel channel, InputStream is) throws IOException {
         int available = is.available();
 
-        if ( available < MESSAGE_SHORTEST_LENGTH ) {
+        if (available < MESSAGE_SHORTEST_LENGTH ) {
             return NEED_MORE_INPUT;
-        } else {
+        }
+        TIOStreamTransport transport = new TIOStreamTransport(is);
+        TBinaryProtocol protocol = new TBinaryProtocol( transport );
+        short magic;
+        int messageLength;
 
-            TIOStreamTransport transport = new TIOStreamTransport(is);
-
-            TBinaryProtocol protocol = new TBinaryProtocol( transport );
-
-            short magic;
-            int messageLength;
-
-            try{
+        try{
 //                protocol.readI32(); // skip the first message length
-                byte[] bytes = new byte[4];
-                transport.read( bytes, 0, 4 );
-                magic = protocol.readI16();
-                messageLength = protocol.readI32();
-
-            } catch ( TException e ) {
-                throw new IOException( e.getMessage(), e );
-            }
-
-            if ( MAGIC != magic ) {
-                throw new IOException(
-                        new StringBuilder( 32 )
-                                .append( "Unknown magic code " )
-                                .append( magic )
-                                .toString() );
-            }
-
-            if ( available < messageLength ) { return  NEED_MORE_INPUT; }
-
-            return decode( protocol );
-
+            byte[] bytes = new byte[4];
+            transport.read(bytes, 0, 4 );
+            magic = protocol.readI16();
+            messageLength = protocol.readI32();
+        } catch ( TException e ) {
+            throw new IOException( e.getMessage(), e );
         }
 
+        if (MAGIC != magic) {
+            throw new IOException(
+                    new StringBuilder(32)
+                            .append("Unknown magic code ")
+                            .append(magic)
+                            .toString());
+        }
+
+        if (available < messageLength) {
+            return  NEED_MORE_INPUT;
+        }
+
+        return decode(protocol);
     }
 
-    private Object decode( TProtocol protocol ) throws IOException {
-
+    private Object decode(TProtocol protocol) throws IOException {
         // version
         String serviceName;
         long id;
-
         TMessage message;
 
         try {
@@ -173,48 +162,40 @@ public class ThriftCodec implements Codec {
             throw new IOException( e.getMessage(), e );
         }
 
-        if ( message.type == TMessageType.CALL ) {
-
+        if (message.type == TMessageType.CALL) {
             RpcInvocation result = new RpcInvocation();
             result.setAttachment(Constants.INTERFACE_KEY, serviceName );
             result.setMethodName( message.name );
-
             String argsClassName = ExtensionLoader.getExtensionLoader(ClassNameGenerator.class)
                     .getExtension(ThriftClassNameGenerator.NAME).generateArgsClassName( serviceName, message.name );
 
-            if ( StringUtils.isEmpty( argsClassName ) ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION,
-                                        "The specified interface name incorrect." );
+            if (StringUtils.isEmpty(argsClassName)) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, "The specified interface name incorrect." );
             }
 
             Class clazz = cachedClass.get( argsClassName );
-
-            if ( clazz == null ) {
+            if (clazz == null) {
                 try {
-
                     clazz = ClassHelper.forNameWithThreadContextClassLoader( argsClassName );
-
                     cachedClass.putIfAbsent( argsClassName, clazz );
-
                 } catch ( ClassNotFoundException e ) {
                     throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
                 }
             }
 
             TBase args;
-
             try {
-                args = ( TBase ) clazz.newInstance();
-            } catch ( InstantiationException e ) {
+                args = (TBase) clazz.newInstance();
+            } catch (InstantiationException e ) {
                 throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
-            } catch ( IllegalAccessException e ) {
+            } catch (IllegalAccessException e ) {
                 throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
             }
 
-            try{
+            try {
                 args.read( protocol );
                 protocol.readMessageEnd();
-            } catch ( TException e ) {
+            } catch (TException e) {
                 throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
             }
 
@@ -222,23 +203,17 @@ public class ThriftCodec implements Codec {
             List<Class<?>> parameterTypes =new ArrayList<Class<?>>();
             int index = 1;
 
-            while ( true ) {
-
+            while (true) {
                 TFieldIdEnum fieldIdEnum = args.fieldForId( index++ );
-
                 if ( fieldIdEnum == null ) { break; }
-
                 String fieldName = fieldIdEnum.getFieldName();
-
                 String getMethodName = ThriftUtils.generateGetMethodName( fieldName );
-
                 Method getMethod;
-
                 try {
-                    getMethod = clazz.getMethod( getMethodName );
+                    getMethod = clazz.getMethod(getMethodName);
                 } catch ( NoSuchMethodException e ) {
                     throw new RpcException(
-                            RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
+                            RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
                 }
 
                 parameterTypes.add( getMethod.getReturnType() );
@@ -257,18 +232,13 @@ public class ThriftCodec implements Codec {
             result.setArguments( parameters.toArray() );
             result.setParameterTypes(parameterTypes.toArray(new Class[parameterTypes.size()]));
 
-            Request request = new Request( id );
+            Request request = new Request(id);
             request.setData( result );
-
-            cachedRequest.putIfAbsent( id,
-                                       RequestData.create( message.seqid, serviceName, message.name ) );
+            cachedRequest.putIfAbsent(id, RequestData.create( message.seqid, serviceName, message.name ) );
 
             return request;
-
         } else if ( message.type == TMessageType.EXCEPTION ) {
-
             TApplicationException exception;
-
             try {
                 exception = TApplicationException.read( protocol );
                 protocol.readMessageEnd();
@@ -277,19 +247,12 @@ public class ThriftCodec implements Codec {
             }
 
             RpcResult result = new RpcResult();
-
-            result.setException( new RpcException( exception.getMessage() ) );
-
+            result.setException(new RpcException( exception.getMessage()));
             Response response = new Response();
-
-            response.setResult( result );
-
-            response.setId( id );
-
+            response.setResult(result);
+            response.setId(id);
             return response;
-
         } else if ( message.type == TMessageType.REPLY ) {
-
             String resultClassName = ExtensionLoader.getExtensionLoader( ClassNameGenerator.class )
                     .getExtension(ThriftClassNameGenerator.NAME).generateResultClassName( serviceName, message.name );
 
@@ -303,15 +266,10 @@ public class ThriftCodec implements Codec {
             }
 
             Class<?> clazz = cachedClass.get( resultClassName );
-
-            if ( clazz == null ) {
-
+            if (clazz == null) {
                 try {
-
                     clazz = ClassHelper.forNameWithThreadContextClassLoader( resultClassName );
-
                     cachedClass.putIfAbsent( resultClassName, clazz );
-
                 } catch ( ClassNotFoundException e ) {
                     throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
                 }
@@ -335,17 +293,12 @@ public class ThriftCodec implements Codec {
             }
 
             Object realResult = null;
-
             int index = 0;
-
-            while ( true ) {
-
+            while (true) {
                 TFieldIdEnum fieldIdEnum = result.fieldForId( index++ );
-
                 if ( fieldIdEnum == null ) { break ; }
 
                 Field field;
-
                 try {
                     field = clazz.getDeclaredField( fieldIdEnum.getFieldName() );
                     field.setAccessible( true );
@@ -364,11 +317,8 @@ public class ThriftCodec implements Codec {
             }
 
             Response response = new Response();
-
             response.setId( id );
-
             RpcResult rpcResult = new RpcResult();
-
             if ( realResult instanceof Throwable ) {
                 rpcResult.setException( ( Throwable ) realResult );
             } else {
@@ -376,9 +326,7 @@ public class ThriftCodec implements Codec {
             }
 
             response.setResult( rpcResult );
-
             return response;
-
         } else {
             // Impossible
             throw new IOException(  );
@@ -386,15 +334,11 @@ public class ThriftCodec implements Codec {
 
     }
 
-    private void encodeRequest( Channel channel, OutputStream os, Request request ) throws IOException {
-
-        RpcInvocation inv = ( RpcInvocation ) request.getData();
-
+    private void encodeRequest(Channel channel, OutputStream os, Request request) throws IOException {
+        RpcInvocation inv = (RpcInvocation ) request.getData();
         int seqId = nextSeqId();
-
         String serviceName = inv.getAttachment(Constants.INTERFACE_KEY);
-
-        if ( StringUtils.isEmpty( serviceName ) ) {
+        if (StringUtils.isEmpty(serviceName)) {
             throw new IllegalArgumentException(
                     new StringBuilder( 32 )
                             .append( "Could not find service name in attachment with key " )
@@ -413,28 +357,20 @@ public class ThriftCodec implements Codec {
 
         if ( StringUtils.isEmpty( methodArgs ) ) {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION,
-                                    new StringBuilder(32).append(
-                                            "Could not encode request, the specified interface may be incorrect." ).toString() );
+                                            "Could not encode request, the specified interface may be incorrect." );
         }
 
-        Class<?> clazz = cachedClass.get( methodArgs );
-
-        if ( clazz == null ) {
-
+        Class<?> clazz = cachedClass.get(methodArgs);
+        if (clazz == null) {
             try {
-
                 clazz = ClassHelper.forNameWithThreadContextClassLoader( methodArgs );
-
                 cachedClass.putIfAbsent( methodArgs, clazz );
-
             } catch ( ClassNotFoundException e ) {
                 throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
             }
-
         }
 
         TBase args;
-
         try {
             args = (TBase) clazz.newInstance();
         } catch ( InstantiationException e ) {
@@ -443,40 +379,35 @@ public class ThriftCodec implements Codec {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
         }
 
-        for( int i = 0; i < inv.getArguments().length; i++ ) {
-
+        for(int i = 0; i < inv.getArguments().length; i++) {
             Object obj = inv.getArguments()[i];
-
-            if ( obj == null ) { continue; }
+            if ( obj == null ) {
+                continue;
+            }
 
             TFieldIdEnum field = args.fieldForId( i + 1 );
-
             String setMethodName = ThriftUtils.generateSetMethodName( field.getFieldName() );
-
             Method method;
 
             try {
-                method = clazz.getMethod( setMethodName, inv.getParameterTypes()[i] );
+                method = clazz.getMethod(setMethodName, inv.getParameterTypes()[i]);
             } catch ( NoSuchMethodException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
             }
 
             try {
                 method.invoke( args, obj );
-            } catch ( IllegalAccessException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
-            } catch ( InvocationTargetException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
+            } catch (IllegalAccessException e) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
             }
 
         }
 
-        RandomAccessByteArrayOutputStream bos = new RandomAccessByteArrayOutputStream( 1024 );
-
+        RandomAccessByteArrayOutputStream bos = new RandomAccessByteArrayOutputStream(1024);
         TIOStreamTransport transport = new TIOStreamTransport( bos );
-
         TBinaryProtocol protocol = new TBinaryProtocol( transport );
-
         int headerLength, messageLength;
 
         byte[] bytes = new byte[4];
@@ -522,43 +453,34 @@ public class ThriftCodec implements Codec {
         os.write(bytes);
         bos.writeTo(os);
         os.flush();
-
     }
 
-    private void encodeResponse( Channel channel, OutputStream os, Response response )
-            throws IOException {
-
+    private void encodeResponse(Channel channel, OutputStream os, Response response) throws IOException {
         RpcResult result = ( RpcResult ) response.getResult();
-
         RequestData rd = cachedRequest.get( response.getId() );
 
         String resultClassName = ExtensionLoader.getExtensionLoader( ClassNameGenerator.class ).getExtension(
                     channel.getUrl().getParameter(ThriftConstants.CLASS_NAME_GENERATOR_KEY, ThriftClassNameGenerator.NAME))
                     .generateResultClassName(rd.serviceName, rd.methodName);
 
-        if ( StringUtils.isEmpty( resultClassName ) ) {
+        if (StringUtils.isEmpty( resultClassName)) {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION,
-                                    new StringBuilder( 32 ).append(
-                                            "Could not encode response, the specified interface may be incorrect." ).toString() );
+                                            "Could not encode response, the specified interface may be incorrect.");
         }
 
-        Class clazz = cachedClass.get( resultClassName );
-
-        if ( clazz == null ) {
-
+        Class clazz = cachedClass.get(resultClassName);
+        if (clazz == null) {
             try {
                 clazz = ClassHelper.forNameWithThreadContextClassLoader(resultClassName);
                 cachedClass.putIfAbsent( resultClassName, clazz );
             } catch ( ClassNotFoundException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
             }
-
         }
 
         TBase resultObj;
-
         try {
-            resultObj = ( TBase ) clazz.newInstance();
+            resultObj = (TBase) clazz.newInstance();
         } catch ( InstantiationException e ) {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
         } catch ( IllegalAccessException e ) {
@@ -568,7 +490,7 @@ public class ThriftCodec implements Codec {
         TApplicationException applicationException = null;
         TMessage message;
 
-        if ( result.hasException() ) {
+        if (result.hasException()) {
             Throwable throwable = result.getException();
             int index = 1;
             boolean found = false;
@@ -581,10 +503,10 @@ public class ThriftCodec implements Codec {
                 Method getMethod;
                 Method setMethod;
                 try {
-                    getMethod = clazz.getMethod( getMethodName );
+                    getMethod = clazz.getMethod(getMethodName);
                     if ( getMethod.getReturnType().equals( throwable.getClass() ) ) {
                         found = true;
-                        setMethod = clazz.getMethod( setMethodName, throwable.getClass() );
+                        setMethod = clazz.getMethod(setMethodName, throwable.getClass());
                         setMethod.invoke( resultObj, throwable );
                     }
                 } catch ( NoSuchMethodException e ) {
@@ -609,17 +531,16 @@ public class ThriftCodec implements Codec {
             Method getMethod;
             Method setMethod;
             try {
-                getMethod = clazz.getMethod( getMethodName );
-                setMethod = clazz.getMethod( setMethodName, getMethod.getReturnType() );
+                getMethod = clazz.getMethod(getMethodName);
+                setMethod = clazz.getMethod(setMethodName, getMethod.getReturnType());
                 setMethod.invoke( resultObj, realResult );
-            } catch ( NoSuchMethodException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
-            } catch ( InvocationTargetException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
-            } catch ( IllegalAccessException e ) {
-                throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
+            } catch (NoSuchMethodException e) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+            } catch (InvocationTargetException e ) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+            } catch (IllegalAccessException e ) {
+                throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
             }
-
         }
 
         if ( applicationException != null ) {
@@ -629,11 +550,8 @@ public class ThriftCodec implements Codec {
         }
 
         RandomAccessByteArrayOutputStream bos = new RandomAccessByteArrayOutputStream( 1024 );
-
         TIOStreamTransport transport = new TIOStreamTransport( bos );
-
         TBinaryProtocol protocol = new TBinaryProtocol( transport );
-
         int messageLength;
         int headerLength;
 
@@ -668,7 +586,7 @@ public class ThriftCodec implements Codec {
             protocol.getTransport().flush();
             int oldIndex = messageLength = bos.size();
 
-            try{
+            try {
                 TFramedTransport.encodeFrameSize( messageLength, bytes );
                 bos.setWriteIndex( MESSAGE_LENGTH_INDEX );
                 protocol.writeI32( messageLength );
@@ -708,7 +626,6 @@ public class ThriftCodec implements Codec {
             result.methodName = mn;
             return result;
         }
-
     }
 
 }

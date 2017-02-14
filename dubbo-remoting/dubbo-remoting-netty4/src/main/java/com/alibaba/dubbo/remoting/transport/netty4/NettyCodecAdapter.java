@@ -26,7 +26,6 @@ public class NettyCodecAdapter {
 
     private final URL url;
 
-
     private final com.alibaba.dubbo.remoting.ChannelHandler handler;
 
     public NettyCodecAdapter(Codec codec, URL url, com.alibaba.dubbo.remoting.ChannelHandler handler) {
@@ -57,18 +56,17 @@ public class NettyCodecAdapter {
     }
 
     private class InternalDecoder extends ByteToMessageDecoder {
-
         @Override
         protected void decode(ChannelHandlerContext ctx, ByteBuf input, List<Object> out) throws Exception {
             NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel(), url, handler);
             try {
-
                 Object msg = codec.decode(channel, new ByteBufInputStream(input));
                 if (msg == Codec.NEED_MORE_INPUT) {
                     return;
                 }
-                if (msg != null)
+                if (msg != null) {
                     out.add(msg);
+                }
             } catch (IOException ex) {
                 throw ex;
             } finally {

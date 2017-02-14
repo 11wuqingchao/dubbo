@@ -23,7 +23,7 @@ public class NettyHandler extends ChannelDuplexHandler {
 
     public static final EventLoopGroup workerGroup = new NioEventLoopGroup(Constants.DEFAULT_IO_THREADS, new NamedThreadFactory("NettyWorker", true));
 
-    private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
+    private final Map<String /**ip:port*/, Channel> channels = new ConcurrentHashMap<String, Channel>();
 
     private final URL url;
 

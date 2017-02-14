@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by woodle on 17/2/12.
  *
  */
-public class NettyChannel extends AbstractChannel{
+public class NettyChannel extends AbstractChannel {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyChannel.class);
 

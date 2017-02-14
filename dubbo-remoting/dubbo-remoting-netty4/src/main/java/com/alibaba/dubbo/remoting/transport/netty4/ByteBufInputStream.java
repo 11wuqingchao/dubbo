@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 
 /**
- * Created by wuqingchao on 17/2/12.
+ * Created by woodle on 17/2/12.
  *
  */
 public class ByteBufInputStream extends PositionableInputStream {

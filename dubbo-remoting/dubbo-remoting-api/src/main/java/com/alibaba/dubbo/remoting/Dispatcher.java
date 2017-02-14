@@ -31,9 +31,7 @@ public interface Dispatcher {
 
     /**
      * dispatch the message to threadpool.
-     * 
-     * @param handler
-     * @param url
+     *
      * @return channel handler
      */
     @Adaptive({Constants.DISPATCHER_KEY, "dispather", "channel.handler"}) // 后两个参数为兼容旧配置

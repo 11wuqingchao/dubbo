@@ -73,7 +73,6 @@ final class NettyCodecAdapter {
 
     @Sharable
     private class InternalEncoder extends OneToOneEncoder {
-
         @Override
         protected Object encode(ChannelHandlerContext ctx, Channel ch, Object msg) throws Exception {
             UnsafeByteArrayOutputStream os = new UnsafeByteArrayOutputStream(1024); // 不需要关闭

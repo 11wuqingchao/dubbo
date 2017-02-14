@@ -62,7 +62,7 @@ public class ExchangeCodec extends TelnetCodec {
 
     protected static final byte     FLAG_TWOWAY        = (byte) 0x40;
 
-    protected static final byte     FLAG_EVENT     = (byte) 0x20;
+    protected static final byte     FLAG_EVENT         = (byte) 0x20;
 
     protected static final int      SERIALIZATION_MASK = 0x1f;
 

@@ -68,7 +68,7 @@ public class GrizzlyCodecAdapter extends BaseFilter {
             Object msg = context.getMessage();
             codec.encode(channel, os, msg);
             
-            GrizzlyChannel.removeChannelIfDisconnectd(connection);
+            GrizzlyChannel.removeChannelIfDisconnected(connection);
             byte[] output = os.toByteArray();
             Buffer buffer = connection.getTransport().getMemoryManager().allocate(output.length);
             buffer.put(output);
@@ -76,7 +76,7 @@ public class GrizzlyCodecAdapter extends BaseFilter {
             buffer.allowBufferDispose(true);
             context.setMessage(buffer);
         } finally {
-            GrizzlyChannel.removeChannelIfDisconnectd(connection);
+            GrizzlyChannel.removeChannelIfDisconnected(connection);
         }
         return context.getInvokeAction();
     }
@@ -121,7 +121,7 @@ public class GrizzlyCodecAdapter extends BaseFilter {
                 return context.getInvokeAction();
             }
         } finally {
-            GrizzlyChannel.removeChannelIfDisconnectd(connection);
+            GrizzlyChannel.removeChannelIfDisconnected(connection);
         }
     }
 

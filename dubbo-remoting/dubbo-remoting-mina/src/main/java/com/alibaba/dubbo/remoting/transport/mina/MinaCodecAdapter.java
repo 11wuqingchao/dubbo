@@ -82,7 +82,7 @@ final class MinaCodecAdapter implements ProtocolCodecFactory {
             try {
             	codec.encode(channel, os, msg);
             } finally {
-                MinaChannel.removeChannelIfDisconnectd(session);
+                MinaChannel.removeChannelIfDisconnected(session);
             }
             out.write(ByteBuffer.wrap(os.toByteBuffer()));
             out.flush();
@@ -162,7 +162,7 @@ final class MinaCodecAdapter implements ProtocolCodecFactory {
                 } else {
                     session.removeAttribute(BUFFER_KEY);
                 }
-                MinaChannel.removeChannelIfDisconnectd(session);
+                MinaChannel.removeChannelIfDisconnected(session);
             }
         }
 

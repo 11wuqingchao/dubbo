@@ -49,7 +49,7 @@ public class MinaHandler extends IoHandlerAdapter {
         try {
             handler.connected(channel);
         } finally {
-            MinaChannel.removeChannelIfDisconnectd(session);
+            MinaChannel.removeChannelIfDisconnected(session);
         }
     }
 
@@ -59,7 +59,7 @@ public class MinaHandler extends IoHandlerAdapter {
         try {
             handler.disconnected(channel);
         } finally {
-            MinaChannel.removeChannelIfDisconnectd(session);
+            MinaChannel.removeChannelIfDisconnected(session);
         }
     }
 
@@ -69,7 +69,7 @@ public class MinaHandler extends IoHandlerAdapter {
         try {
             handler.received(channel, message);
         } finally {
-            MinaChannel.removeChannelIfDisconnectd(session);
+            MinaChannel.removeChannelIfDisconnected(session);
         }
     }
 
@@ -79,7 +79,7 @@ public class MinaHandler extends IoHandlerAdapter {
         try {
             handler.sent(channel, message);
         } finally {
-            MinaChannel.removeChannelIfDisconnectd(session);
+            MinaChannel.removeChannelIfDisconnected(session);
         }
     }
 
@@ -89,7 +89,7 @@ public class MinaHandler extends IoHandlerAdapter {
         try {
             handler.caught(channel, cause);
         } finally {
-            MinaChannel.removeChannelIfDisconnectd(session);
+            MinaChannel.removeChannelIfDisconnected(session);
         }
     }
 
