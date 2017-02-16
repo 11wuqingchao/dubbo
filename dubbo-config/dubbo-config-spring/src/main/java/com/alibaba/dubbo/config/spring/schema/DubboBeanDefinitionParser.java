@@ -137,8 +137,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
         ManagedMap parameters = null;
         for (Method setter : beanClass.getMethods()) {
             String name = setter.getName();
-            if (name.length() > 3 && name.startsWith("set")
-                    && Modifier.isPublic(setter.getModifiers())
+            if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(setter.getModifiers())
                     && setter.getParameterTypes().length == 1) {
                 Class<?> type = setter.getParameterTypes()[0];
                 String property = StringUtils.camelToSplitName(name.substring(3, 4).toLowerCase() + name.substring(4), "-");
@@ -150,10 +149,10 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
                     try {
                         getter = beanClass.getMethod("is" + name.substring(3), new Class<?>[0]);
                     } catch (NoSuchMethodException e2) {
+                        // nothing to do
                     }
                 }
-                if (getter == null 
-                        || ! Modifier.isPublic(getter.getModifiers())
+                if (getter == null  || ! Modifier.isPublic(getter.getModifiers())
                         || ! type.equals(getter.getReturnType())) {
                     continue;
                 }
@@ -287,8 +286,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
     }
     
     @SuppressWarnings("unchecked")
-	private static void parseMultiRef(String property, String value, RootBeanDefinition beanDefinition,
-            ParserContext parserContext) {
+	private static void parseMultiRef(String property, String value, RootBeanDefinition beanDefinition, ParserContext parserContext) {
     	String[] values = value.split("\\s*[,]+\\s*");
 		ManagedList list = null;
         for (int i = 0; i < values.length; i++) {

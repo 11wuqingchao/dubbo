@@ -52,7 +52,7 @@ import com.alibaba.dubbo.rpc.support.ProtocolUtils;
  * ServiceConfig
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
@@ -65,15 +65,15 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<String, Integer>();
 
     // 接口类型
-    private String              interfaceName;
+    private String interfaceName;
 
-    private Class<?>            interfaceClass;
+    private Class<?> interfaceClass;
 
     // 接口实现类引用
-    private T                   ref;
+    private T ref;
 
     // 服务名称
-    private String              path;
+    private String path;
 
     // 方法配置
     private List<MethodConfig>  methods;
@@ -127,6 +127,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (export != null && ! export) {
             return;
         }
+        // 是否延迟暴露
         if (delay != null && delay > 0) {
             Thread thread = new Thread(new Runnable() {
                 public void run() {
@@ -464,7 +465,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         String scope = url.getParameter(Constants.SCOPE_KEY);
         //配置为none不暴露
         if (! Constants.SCOPE_NONE.equalsIgnoreCase(scope)) {
-
             //配置不是remote的情况下做本地暴露 (配置为remote，则表示只暴露远程服务)
             if (!Constants.SCOPE_REMOTE.equalsIgnoreCase(scope)) {
                 exportLocal(url);
@@ -654,7 +654,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     @Deprecated
-    private static final List<ProtocolConfig> convertProviderToProtocol(List<ProviderConfig> providers) {
+    private static List<ProtocolConfig> convertProviderToProtocol(List<ProviderConfig> providers) {
         if (providers == null || providers.size() == 0) {
             return null;
         }
@@ -666,7 +666,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
     
     @Deprecated
-    private static final List<ProviderConfig> convertProtocolToProvider(List<ProtocolConfig> protocols) {
+    private static List<ProviderConfig> convertProtocolToProvider(List<ProtocolConfig> protocols) {
         if (protocols == null || protocols.size() == 0) {
             return null;
         }
@@ -678,7 +678,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
     
     @Deprecated
-    private static final ProtocolConfig convertProviderToProtocol(ProviderConfig provider) {
+    private static ProtocolConfig convertProviderToProtocol(ProviderConfig provider) {
         ProtocolConfig protocol = new ProtocolConfig();
         protocol.setName(provider.getProtocol().getName());
         protocol.setServer(provider.getServer());
@@ -694,7 +694,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
     
     @Deprecated
-    private static final ProviderConfig convertProtocolToProvider(ProtocolConfig protocol) {
+    private static ProviderConfig convertProtocolToProvider(ProtocolConfig protocol) {
         ProviderConfig provider = new ProviderConfig();
         provider.setProtocol(protocol);
         provider.setServer(protocol.getServer());
