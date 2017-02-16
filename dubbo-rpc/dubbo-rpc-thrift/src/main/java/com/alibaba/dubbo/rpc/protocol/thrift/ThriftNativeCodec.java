@@ -27,15 +27,13 @@ public class ThriftNativeCodec implements Codec {
     
     private final AtomicInteger thriftSeq = new AtomicInteger(0);
     
-    public void encode(Channel channel, OutputStream os, Object message)
-        throws IOException {
+    public void encode(Channel channel, OutputStream os, Object message) throws IOException {
         if (message instanceof Request) {
             encodeRequest(channel, os, (Request)message);
         } else if (message instanceof Response) {
             encodeResponse(channel, os, (Response)message);
         } else {
-            throw new IOException("Unsupported message type "
-                                      + message.getClass().getName());
+            throw new IOException("Unsupported message type " + message.getClass().getName());
         }
     }
 
@@ -44,13 +42,10 @@ public class ThriftNativeCodec implements Codec {
         Invocation invocation = (Invocation) request.getData();
         TProtocol protocol = newProtocol(channel.getUrl(), os);
         try {
-            protocol.writeMessageBegin(new TMessage(
-                invocation.getMethodName(), TMessageType.CALL, 
-                thriftSeq.getAndIncrement()));
+            protocol.writeMessageBegin(new TMessage(invocation.getMethodName(), TMessageType.CALL,  thriftSeq.getAndIncrement()));
             protocol.writeStructBegin(new TStruct(invocation.getMethodName() + "_args"));
             for(int i = 0; i < invocation.getParameterTypes().length; i++) {
                 Class<?> type = invocation.getParameterTypes()[i];
-
             }
         } catch (TException e) {
             throw new IOException(e.getMessage(), e);
@@ -68,8 +63,7 @@ public class ThriftNativeCodec implements Codec {
     }
 
     protected static TProtocol newProtocol(URL url, OutputStream os) throws IOException {
-        String protocol = url.getParameter(ThriftConstants.THRIFT_PROTOCOL_KEY,
-                                           ThriftConstants.DEFAULT_PROTOCOL);
+        String protocol = url.getParameter(ThriftConstants.THRIFT_PROTOCOL_KEY, ThriftConstants.DEFAULT_PROTOCOL);
         if (ThriftConstants.BINARY_THRIFT_PROTOCOL.equals(protocol)) {
             return new TBinaryProtocol(new TIOStreamTransport(os));
         }

@@ -41,20 +41,17 @@ public class ConfigUtils {
     private static final Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
     
     public static boolean isNotEmpty(String value) {
-        return ! isEmpty(value);
+        return !isEmpty(value);
     }
 	
 	public static boolean isEmpty(String value) {
 		return value == null || value.length() == 0 
-    			|| "false".equalsIgnoreCase(value) 
-    			|| "0".equalsIgnoreCase(value) 
-    			|| "null".equalsIgnoreCase(value) 
-    			|| "N/A".equalsIgnoreCase(value);
+    			|| "false".equalsIgnoreCase(value) || "0".equalsIgnoreCase(value)
+    			|| "null".equalsIgnoreCase(value) || "N/A".equalsIgnoreCase(value);
 	}
 	
 	public static boolean isDefault(String value) {
-		return "true".equalsIgnoreCase(value) 
-				|| "default".equalsIgnoreCase(value);
+		return "true".equalsIgnoreCase(value) || "default".equalsIgnoreCase(value);
 	}
 	
 	/**
@@ -100,8 +97,7 @@ public class ConfigUtils {
                 names.addAll(0, defaults);
             }
             names.remove(Constants.DEFAULT_KEY);
-        }
-        else {
+        } else {
             names.remove(Constants.DEFAULT_KEY);
         }
         
@@ -115,8 +111,7 @@ public class ConfigUtils {
         return names;
 	}
 
-    private static Pattern VARIABLE_PATTERN = Pattern.compile(
-            "\\$\\s*\\{?\\s*([\\._0-9a-zA-Z]+)\\s*\\}?");
+    private static Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\s*\\{?\\s*([\\._0-9a-zA-Z]+)\\s*\\}?");
     
 	public static String replaceProperty(String expression, Map<String, String> params) {
         if (expression == null || expression.length() == 0 || expression.indexOf('$') < 0) {
@@ -216,7 +211,7 @@ public class ConfigUtils {
                     input.close();
                 }
             } catch (Throwable e) {
-                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ignore this file): " + e.getMessage(), e);
             }
             return properties;
         }
@@ -251,7 +246,7 @@ public class ConfigUtils {
             try {
                 properties.load(ClassHelper.getClassLoader().getResourceAsStream(fileName));
             } catch (Throwable e) {
-                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ignore this file): " + e.getMessage(), e);
             }
             return properties;
         }
@@ -269,11 +264,13 @@ public class ConfigUtils {
                     } finally {
                         try {
                             input.close();
-                        } catch (Throwable t) {}
+                        } catch (Throwable t) {
+                            // do nothing
+                        }
                     }
                 }
             } catch (Throwable e) {
-                logger.warn("Fail to load " + fileName + " file from " + url + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Fail to load " + fileName + " file from " + url + "(ignore this file): " + e.getMessage(), e);
             }
         }
         

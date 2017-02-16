@@ -124,7 +124,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 delay = provider.getDelay();
             }
         }
-        if (export != null && ! export.booleanValue()) {
+        if (export != null && ! export) {
             return;
         }
         if (delay != null && delay > 0) {
@@ -133,6 +133,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     try {
                         Thread.sleep(delay);
                     } catch (Throwable e) {
+                        // do nothing
                     }
                     doExport();
                 }
@@ -206,9 +207,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             checkRef();
             generic = Boolean.FALSE.toString();
         }
-        if(local !=null){
-            if(local=="true"){
-                local=interfaceName+"Local";
+        if(local != null){
+            if("true".equals(local)){
+                local = interfaceName + "Local";
             }
             Class<?> localClass;
             try {
@@ -217,12 +218,12 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException(e.getMessage(), e);
             }
             if(!interfaceClass.isAssignableFrom(localClass)){
-                throw new IllegalStateException("The local implemention class " + localClass.getName() + " not implement interface " + interfaceName);
+                throw new IllegalStateException("The local implementation class " + localClass.getName() + " not implement interface " + interfaceName);
             }
         }
-        if(stub !=null){
-            if(stub=="true"){
-                stub=interfaceName+"Stub";
+        if(stub != null){
+            if("true".equals(stub)){
+                stub = interfaceName + "Stub";
             }
             Class<?> stubClass;
             try {
@@ -231,7 +232,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException(e.getMessage(), e);
             }
             if(!interfaceClass.isAssignableFrom(stubClass)){
-                throw new IllegalStateException("The stub implemention class " + stubClass.getName() + " not implement interface " + interfaceName);
+                throw new IllegalStateException("The stub implementation class " + stubClass.getName() + " not implement interface " + interfaceName);
             }
         }
         checkApplication();
@@ -316,7 +317,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                             } finally {
                                 try {
                                     socket.close();
-                                } catch (Throwable e) {}
+                                } catch (Throwable e) {
+                                    // do nothing
+                                }
                             }
                         } catch (Exception e) {
                             logger.warn(e.getMessage(), e);
@@ -375,30 +378,30 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 if (arguments != null && arguments.size() > 0) {
                     for (ArgumentConfig argument : arguments) {
                         //类型自动转换.
-                        if(argument.getType() != null && argument.getType().length() >0){
+                        if(argument.getType() != null && argument.getType().length() > 0) {
                             Method[] methods = interfaceClass.getMethods();
                             //遍历所有方法
                             if(methods != null && methods.length > 0){
                                 for (int i = 0; i < methods.length; i++) {
                                     String methodName = methods[i].getName();
                                     //匹配方法名称，获取方法签名.
-                                    if(methodName.equals(method.getName())){
-                                        Class<?>[] argtypes = methods[i].getParameterTypes();
+                                    if (methodName.equals(method.getName())){
+                                        Class<?>[] argTypes = methods[i].getParameterTypes();
                                         //一个方法中单个callback
                                         if (argument.getIndex() != -1 ){
-                                            if (argtypes[argument.getIndex()].getName().equals(argument.getType())){
+                                            if (argTypes[argument.getIndex()].getName().equals(argument.getType())){
                                                 appendParameters(map, argument, method.getName() + "." + argument.getIndex());
                                             }else {
-                                                throw new IllegalArgumentException("argument config error : the index attribute and type attirbute not match :index :"+argument.getIndex() + ", type:" + argument.getType());
+                                                throw new IllegalArgumentException("argument config error : the index attribute and type attribute not match :index :"+argument.getIndex() + ", type:" + argument.getType());
                                             }
                                         } else {
                                             //一个方法中多个callback
-                                            for (int j = 0 ;j<argtypes.length ;j++) {
-                                                Class<?> argclazz = argtypes[j];
-                                                if (argclazz.getName().equals(argument.getType())){
+                                            for (int j = 0 ;j < argTypes.length; j++) {
+                                                Class<?> argClazz = argTypes[j];
+                                                if (argClazz.getName().equals(argument.getType())){
                                                     appendParameters(map, argument, method.getName() + "." + j);
                                                     if (argument.getIndex() != -1 && argument.getIndex() != j){
-                                                        throw new IllegalArgumentException("argument config error : the index attribute and type attirbute not match :index :"+argument.getIndex() + ", type:" + argument.getType());
+                                                        throw new IllegalArgumentException("argument config error : the index attribute and type attribute not match :index :"+argument.getIndex() + ", type:" + argument.getType());
                                                     }
                                                 }
                                             }
@@ -406,9 +409,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                                     }
                                 }
                             }
-                        }else if(argument.getIndex() != -1){
+                        } else if(argument.getIndex() != -1){
                             appendParameters(map, argument, method.getName() + "." + argument.getIndex());
-                        }else {
+                        } else {
                             throw new IllegalArgumentException("argument config must set index or type attribute.eg: <dubbo:argument index='0' .../> or <dubbo:argument type=xxx .../>");
                         }
 
@@ -453,27 +456,25 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
         URL url = new URL(name, host, port, (contextPath == null || contextPath.length() == 0 ? "" : contextPath + "/") + path, map);
 
-        if (ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class)
-                .hasExtension(url.getProtocol())) {
+        if (ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class).hasExtension(url.getProtocol())) {
             url = ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class)
                     .getExtension(url.getProtocol()).getConfigurator(url).configure(url);
         }
 
         String scope = url.getParameter(Constants.SCOPE_KEY);
         //配置为none不暴露
-        if (! Constants.SCOPE_NONE.toString().equalsIgnoreCase(scope)) {
+        if (! Constants.SCOPE_NONE.equalsIgnoreCase(scope)) {
 
             //配置不是remote的情况下做本地暴露 (配置为remote，则表示只暴露远程服务)
-            if (!Constants.SCOPE_REMOTE.toString().equalsIgnoreCase(scope)) {
+            if (!Constants.SCOPE_REMOTE.equalsIgnoreCase(scope)) {
                 exportLocal(url);
             }
             //如果配置不是local则暴露为远程服务.(配置为local，则表示只暴露远程服务)
-            if (! Constants.SCOPE_LOCAL.toString().equalsIgnoreCase(scope) ){
+            if (! Constants.SCOPE_LOCAL.equalsIgnoreCase(scope) ){
                 if (logger.isInfoEnabled()) {
                     logger.info("Export dubbo service " + interfaceClass.getName() + " to url " + url);
                 }
-                if (registryURLs != null && registryURLs.size() > 0
-                        && url.getParameter("register", true)) {
+                if (registryURLs != null && registryURLs.size() > 0 && url.getParameter("register", true)) {
                     for (URL registryURL : registryURLs) {
                         url = url.addParameterIfAbsent("dynamic", registryURL.getParameter("dynamic"));
                         URL monitorUrl = loadMonitor(registryURL);
@@ -507,8 +508,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     .setProtocol(Constants.LOCAL_PROTOCOL)
                     .setHost(NetUtils.LOCALHOST)
                     .setPort(0);
-            Exporter<?> exporter = protocol.export(
-                    proxyFactory.getInvoker(ref, (Class) interfaceClass, local));
+            Exporter<?> exporter = protocol.export(proxyFactory.getInvoker(ref, (Class) interfaceClass, local));
             exporters.add(exporter);
             logger.info("Export dubbo service " + interfaceClass.getName() +" to local registry");
         }
@@ -559,7 +559,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     /**
      * @deprecated
      * @see #setInterface(Class)
-     * @param interfaceClass
      */
     public void setInterfaceClass(Class<?> interfaceClass) {
         setInterface(interfaceClass);
@@ -581,7 +580,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             throw new IllegalStateException("The interface class " + interfaceClass + " is not a interface!");
         }
         this.interfaceClass = interfaceClass;
-        setInterface(interfaceClass == null ? (String) null : interfaceClass.getName());
+        setInterface(interfaceClass == null ?  null : interfaceClass.getName());
     }
 
     public T getRef() {
