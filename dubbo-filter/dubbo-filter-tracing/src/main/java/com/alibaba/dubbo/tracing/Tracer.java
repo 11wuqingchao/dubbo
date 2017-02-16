@@ -5,7 +5,7 @@ import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.rpc.RpcContext;
-import com.alibaba.dubbo.tracing.util.GUID;
+import com.alibaba.dubbo.tracing.util.GUId;
 import com.alibaba.dubbo.tracing.util.Sampler;
 
 /**
@@ -72,7 +72,7 @@ public class Tracer {
     private Span createConsumerSideSpan() {
         if(ContextHolder.isSample()){
             Span span = new Span();
-            span.setId(GUID.singleton().nextId());
+            span.setId(GUId.singleton().nextId());
             Span parentSpan = ContextHolder.getSpan();
             if (parentSpan != null) {
                 span.setParentId(parentSpan.getId());
@@ -110,7 +110,7 @@ public class Tracer {
         String traceId = ContextHolder.getTraceId();
         if (StringUtils.isBlank(traceId)) {//启动一个新的链路
             if(ContextHolder.isSample() && Sampler.isSample(getServiceName())){
-                ContextHolder.setTraceId(GUID.singleton().nextId());
+                ContextHolder.setTraceId(GUId.singleton().nextId());
             }else{
                 ContextHolder.setLocalSample(false);
             }
@@ -126,7 +126,7 @@ public class Tracer {
         }
         String traceId = rpcContext.getAttachment(TracingConstants.TRACING_TRACE_ID);
         if (StringUtils.isBlank(traceId)) {
-            ContextHolder.setTraceId(GUID.singleton().nextId());
+            ContextHolder.setTraceId(GUId.singleton().nextId());
         } else {
             ContextHolder.setTraceId(traceId);
         }
