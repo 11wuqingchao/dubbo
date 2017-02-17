@@ -72,7 +72,7 @@ public class Tracer {
     private Span createConsumerSideSpan() {
         if(ContextHolder.isSample()){
             Span span = new Span();
-            span.setId(GUId.singleton().nextId());
+            span.setId(GUId.get().nextId());
             Span parentSpan = ContextHolder.getSpan();
             if (parentSpan != null) {
                 span.setParentId(parentSpan.getId());
@@ -93,7 +93,7 @@ public class Tracer {
         String spanId = rpcContext.getAttachment(TracingConstants.TRACING_SPAN_ID);
         String parentSpanId = rpcContext.getAttachment(TracingConstants.TRACING_PARENT_SPAN_ID);
         if (StringUtils.isNotEmpty(traceId)
-                && StringUtils.isNotEmpty(spanId)) {//只需要判断traceId和spanId即可
+                && StringUtils.isNotEmpty(spanId)) {    //只需要判断traceId和spanId即可
             Span span = new Span();
             span.setId(spanId);
             span.setParentId(parentSpanId);
@@ -108,9 +108,9 @@ public class Tracer {
 
     private String createConsumerSideTraceId() {
         String traceId = ContextHolder.getTraceId();
-        if (StringUtils.isBlank(traceId)) {//启动一个新的链路
+        if (StringUtils.isBlank(traceId)) {             //启动一个新的链路
             if(ContextHolder.isSample() && Sampler.isSample(getServiceName())){
-                ContextHolder.setTraceId(GUId.singleton().nextId());
+                ContextHolder.setTraceId(GUId.get().nextId());
             }else{
                 ContextHolder.setLocalSample(false);
             }
@@ -126,7 +126,7 @@ public class Tracer {
         }
         String traceId = rpcContext.getAttachment(TracingConstants.TRACING_TRACE_ID);
         if (StringUtils.isBlank(traceId)) {
-            ContextHolder.setTraceId(GUId.singleton().nextId());
+            ContextHolder.setTraceId(GUId.get().nextId());
         } else {
             ContextHolder.setTraceId(traceId);
         }
