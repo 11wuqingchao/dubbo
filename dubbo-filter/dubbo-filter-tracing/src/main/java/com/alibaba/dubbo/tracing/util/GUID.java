@@ -14,12 +14,10 @@ import java.nio.channels.FileChannel;
  * Created by woodle on 17/2/16.
  *
  */
-public class GUID {
+public class GUId {
     private final long maxId = 1 << 10;
     private final long maxSequence = 1 << 12;
-
     private final short timeShiftLeft = 64;
-
     private final short sequenceShiftLeft = 42;
     private final short idShiftLeft = 32;
     private final short ipShiftLeft = 0;
@@ -31,18 +29,17 @@ public class GUID {
     private long lastTimestamp;
 
     private static class Holder {
-        private static GUID instance;
-
+        private static GUId instance;
         static {
             try {
-                instance = new GUID();
+                instance = new GUId();
             } catch (IOException e) {
-                e.printStackTrace();
+                //
             }
         }
     }
 
-    private GUID() throws IOException {
+    private GUId() throws IOException {
         long ipTmp = ip();
         long idTmp = id();
 
@@ -54,7 +51,7 @@ public class GUID {
         id = BigInteger.valueOf(idTmp).shiftLeft(idShiftLeft);
     }
 
-    public static GUID singleton() {
+    public static GUId get() {
         return Holder.instance;
     }
 
@@ -87,30 +84,32 @@ public class GUID {
 
     private long id() throws IOException {
         String userHome = System.getProperty("user.home");
+        if (StringUtils.isBlank(userHome)) {
+            return -1;
+        }
 
-        if (StringUtils.isNotEmpty(userHome)) {
-            File dstDirectory = new File(userHome, ".dst");
-            boolean dstDirectoryExists = dstDirectory.exists();
-            if (!dstDirectoryExists) {
-                dstDirectoryExists = dstDirectory.mkdir();
+        File dstDirectory = new File(userHome, ".dst");
+        boolean dstDirectoryExists = dstDirectory.exists();
+        if (!dstDirectoryExists) {
+            dstDirectoryExists = dstDirectory.mkdir();
+        }
+        if (dstDirectoryExists) {
+            File lock = new File(dstDirectory, "unique-id.lock");
+            boolean lockExists = dstDirectory.exists();
+            if (!lockExists) {
+                lockExists = lock.createNewFile();
             }
-            if (dstDirectoryExists) {
-                File lock = new File(dstDirectory, "unique-id.lock");
-                boolean lockExists = dstDirectory.exists();
-                if (!lockExists) {
-                    lockExists = lock.createNewFile();
-                }
-                if (lockExists) {
-                    RandomAccessFile randomAccessFile = new RandomAccessFile(lock, "rw");
-                    FileChannel fileChannel = randomAccessFile.getChannel();
-                    for (int i = 0; i < maxId; i++) {
-                        if (fileChannel.tryLock(i, 1, false) != null) {
-                            return i;
-                        }
+            if (lockExists) {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(lock, "rw");
+                FileChannel fileChannel = randomAccessFile.getChannel();
+                for (int i = 0; i < maxId; i++) {
+                    if (fileChannel.tryLock(i, 1, false) != null) {
+                        return i;
                     }
                 }
             }
         }
+
 
         return -1;
     }
@@ -129,7 +128,7 @@ public class GUID {
 
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-            System.out.println(GUID.singleton().nextId());
+            System.out.println(GUId.get().nextId());
         }
     }
 }
