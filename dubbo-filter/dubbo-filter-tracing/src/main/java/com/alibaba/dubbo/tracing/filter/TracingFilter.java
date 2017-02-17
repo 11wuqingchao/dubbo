@@ -15,6 +15,7 @@ import com.alibaba.dubbo.tracing.TracingCollector;
  */
 @Activate(group = {Constants.PROVIDER, Constants.CONSUMER})
 public class TracingFilter implements Filter {
+
     private Tracer tracer = new Tracer();
 
     public TracingFilter(){
