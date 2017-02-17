@@ -15,17 +15,12 @@ import java.nio.channels.FileChannel;
  *
  */
 public class GUId {
-    private final long maxId = 1 << 10;
-    private final long maxSequence = 1 << 12;
-    private final short timeShiftLeft = 64;
-    private final short sequenceShiftLeft = 42;
-    private final short idShiftLeft = 32;
-    private final short ipShiftLeft = 0;
-
     private BigInteger ip;
+
     private BigInteger id;
 
     private long sequence;
+
     private long lastTimestamp;
 
     private static class Holder {
@@ -47,8 +42,8 @@ public class GUId {
             throw new IllegalArgumentException("can not be less than 0");
         }
 
-        ip = BigInteger.valueOf(ipTmp).shiftLeft(ipShiftLeft);
-        id = BigInteger.valueOf(idTmp).shiftLeft(idShiftLeft);
+        ip = BigInteger.valueOf(ipTmp).shiftLeft(0);
+        id = BigInteger.valueOf(idTmp).shiftLeft(32);
     }
 
     public static GUId get() {
@@ -58,7 +53,7 @@ public class GUId {
     public synchronized String nextId() {
         long timestamp = timeGen();
         if (lastTimestamp == timestamp) {
-            sequence = sequence + 1 & maxSequence;
+            sequence = sequence + 1 & (1 << 12);
             if (sequence == 0) {
                 timestamp = tilNextMillis(lastTimestamp);
             }
@@ -67,8 +62,8 @@ public class GUId {
         }
 
         lastTimestamp = timestamp;
-        BigInteger time = BigInteger.valueOf(timestamp).shiftLeft(timeShiftLeft);
-        BigInteger seq = BigInteger.valueOf(sequence).shiftLeft(sequenceShiftLeft);
+        BigInteger time = BigInteger.valueOf(timestamp).shiftLeft(64);
+        BigInteger seq = BigInteger.valueOf(sequence).shiftLeft(42);
         return time.or(seq).or(id).or(ip).toString(32);
     }
 
@@ -102,7 +97,7 @@ public class GUId {
             if (lockExists) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(lock, "rw");
                 FileChannel fileChannel = randomAccessFile.getChannel();
-                for (int i = 0; i < maxId; i++) {
+                for (int i = 0; i < (1 << 10); i++) {
                     if (fileChannel.tryLock(i, 1, false) != null) {
                         return i;
                     }
