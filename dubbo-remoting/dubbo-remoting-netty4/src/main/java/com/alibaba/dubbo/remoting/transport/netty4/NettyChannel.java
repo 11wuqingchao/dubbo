@@ -91,7 +91,7 @@ public class NettyChannel extends AbstractChannel {
             throw new RemotingException(this, "Failed to send message " + message + " to " + getRemoteAddress() + ", cause: " + e.getMessage(), e);
         }
 
-        if(! success) {
+        if(!success) {
             throw new RemotingException(this, "Failed to send message " + message + " to " + getRemoteAddress()
                     + "in timeout(" + timeout + "ms) limit");
         }
@@ -132,7 +132,7 @@ public class NettyChannel extends AbstractChannel {
     }
 
     public void setAttribute(String key, Object value) {
-        if (value == null) { // The null value unallowed in the ConcurrentHashMap.
+        if (value == null) { // The null value un allowed in the ConcurrentHashMap.
             attributes.remove(key);
         } else {
             attributes.put(key, value);
@@ -158,8 +158,12 @@ public class NettyChannel extends AbstractChannel {
         if (getClass() != obj.getClass()) return false;
         NettyChannel other = (NettyChannel) obj;
         if (channel == null) {
-            if (other.channel != null) return false;
-        } else if (!channel.equals(other.channel)) return false;
+            if (other.channel != null) {
+                return false;
+            }
+        } else if (!channel.equals(other.channel)) {
+            return false;
+        }
         return true;
     }
 

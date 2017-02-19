@@ -71,6 +71,7 @@ public class ByteBufInputStream extends PositionableInputStream {
 
         if (skip <= 0)
             return 0;
+
         buffer.skipBytes((int) skip);
         return skip;
     }
