@@ -24,11 +24,11 @@ public abstract class AbstractTracingCollectorFactory implements TracingCollecto
         for(Registry registry:registries){
             URL url = registry.getUrl();
             String protocolName = url.getProtocol();
-            url=url.setProtocol(Constants.REGISTRY_PROTOCOL);
-            url=url.addParameter(Constants.REGISTRY_KEY,protocolName);
-            url=url.setPath(TracingCollector.class.getName());
-            url=url.addParameter(Constants.INTERFACE_KEY,TracingCollector.class.getName());
-            url=url.addParameter(Constants.REFERENCE_FILTER_KEY,"-dst");
+            url = url.setProtocol(Constants.REGISTRY_PROTOCOL);
+            url = url.addParameter(Constants.REGISTRY_KEY, protocolName);
+            url = url.setPath(TracingCollector.class.getName());
+            url = url.addParameter(Constants.INTERFACE_KEY, TracingCollector.class.getName());
+            url = url.addParameter(Constants.REFERENCE_FILTER_KEY, "-tracing");
             urls.add(url);
         }
         return createTracingCollector(urls);

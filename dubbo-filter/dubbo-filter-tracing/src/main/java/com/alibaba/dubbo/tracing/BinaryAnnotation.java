@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by woodle on 17/2/16.
- *
+ * key-value映射的标注
  */
 public class BinaryAnnotation implements Serializable {
 

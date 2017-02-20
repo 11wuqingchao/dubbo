@@ -120,6 +120,8 @@
 		<junit_version>4.10</junit_version>
 		<easymock_version>3.0</easymock_version>
 		<jmockit_version>0.999.8</jmockit_version>
+
+        <rocketmq.version>3.2.6</rocketmq.version>
 		<!-- Build args -->
 		<!--<argline>-server -Xms64m -Xmx64m -XX:PermSize=64m -XX:MaxPermSize=64m</argline>-->
 		<skip_maven_deploy>false</skip_maven_deploy>
@@ -398,6 +400,24 @@
 				<artifactId>cglib-nodep</artifactId>
 				<version>${cglib_version}</version>
 			</dependency>
+
+            <!--<dependency>-->
+                <!--<groupId>com.alibaba.rocketmq</groupId>-->
+                <!--<artifactId>rocketmq-all</artifactId>-->
+                <!--<version>${rocketmq.version}</version>-->
+            <!--</dependency>-->
+
+            <dependency>
+                <groupId>com.alibaba.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.rocketmq</groupId>
+                <artifactId>rocketmq-common</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>

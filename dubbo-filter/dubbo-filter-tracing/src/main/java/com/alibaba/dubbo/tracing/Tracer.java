@@ -26,11 +26,11 @@ public class Tracer {
     public void beforeInvoke(boolean isConsumerSide) {
         if (isConsumerSide) {
             String traceId = createConsumerSideTraceId();
-            if(traceId!=null){
+            if(traceId != null){
                 createConsumerSideSpan();
                 addClientSendAnnotation();
             }
-        } else{
+        } else {
             createProvideSideTraceId();
             createProviderSideSpan();
             addServerReceiveAnnotation();
@@ -109,9 +109,9 @@ public class Tracer {
     private String createConsumerSideTraceId() {
         String traceId = ContextHolder.getTraceId();
         if (StringUtils.isBlank(traceId)) {             //启动一个新的链路
-            if(ContextHolder.isSample() && Sampler.isSample(getServiceName())){
+            if (ContextHolder.isSample() && Sampler.isSample(getServiceName())){
                 ContextHolder.setTraceId(GUId.get().nextId());
-            }else{
+            } else {
                 ContextHolder.setLocalSample(false);
             }
         }
@@ -136,7 +136,7 @@ public class Tracer {
     private void setAttachment() {
         RpcContext rpcContext = RpcContext.getContext();
         String traceId = ContextHolder.getTraceId();
-        rpcContext.setAttachment(TracingConstants.TRACING_IS_SAMPLE, ContextHolder.isSample()+"");
+        rpcContext.setAttachment(TracingConstants.TRACING_IS_SAMPLE, String.valueOf(ContextHolder.isSample()));
         if (traceId != null) {
             rpcContext.setAttachment(TracingConstants.TRACING_TRACE_ID, traceId);
         }

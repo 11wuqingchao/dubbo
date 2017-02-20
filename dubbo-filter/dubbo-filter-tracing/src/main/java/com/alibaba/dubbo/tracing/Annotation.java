@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by woodle on 17/2/16.
- * 标注
+ * 标注 文本Annotation
  */
 public class Annotation implements Serializable {
     public static final String CLIENT_SEND      = "cs";
@@ -15,24 +15,24 @@ public class Annotation implements Serializable {
 
     public static final String SERVER_RECEIVE   = "sr";
 
-    private Long timestamp;
+    private long timestamp;
 
     private String value;
 
-    private Integer duration;
+    private int duration;
 
     private Endpoint host;
 
     public Annotation(){
 
     }
-    public Annotation(Long timestamp, String value, Endpoint host) {
+    public Annotation(long timestamp, String value, Endpoint host) {
         this.timestamp = timestamp;
         this.value = value;
         this.host = host;
     }
 
-    public Long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -48,11 +48,11 @@ public class Annotation implements Serializable {
         this.value = value;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(Integer duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
