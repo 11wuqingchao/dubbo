@@ -70,7 +70,6 @@ public class ContextHolder {
         }
     }
 
-
     static void removeSpan() {
         localSpan.remove();
     }

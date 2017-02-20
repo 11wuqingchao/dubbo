@@ -10,7 +10,10 @@ import com.alibaba.dubbo.common.extension.SPI;
 @SPI("default")
 public interface SyncTransfer {
 
-    public void start();
-    public void cancel();
-    public void syncSend(Span span);
+    void start();
+
+    void cancel();
+
+    void syncSend(Span span);
+
 }

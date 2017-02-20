@@ -4,10 +4,10 @@ import java.util.List;
 
 /**
  * Created by woodle on 17/2/16.
- *
+ * 追踪日志收集
  */
 public interface TracingCollector {
 
-    public void push(List<Span> spanList);
+    void push(List<Span> spanList);
 
 }

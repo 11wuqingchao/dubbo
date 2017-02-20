@@ -21,12 +21,10 @@ public class Tracer {
         syncTransfer.start();
     }
 
-
-
     public void beforeInvoke(boolean isConsumerSide) {
         if (isConsumerSide) {
             String traceId = createConsumerSideTraceId();
-            if(traceId != null){
+            if (traceId != null) {
                 createConsumerSideSpan();
                 addClientSendAnnotation();
             }
@@ -42,7 +40,7 @@ public class Tracer {
     public void afterInvoke(boolean isConsumerSide) {
         if (isConsumerSide) {
             addClientReceiveAnnotation();
-        } else{
+        } else {
             addServerSendAnnotation();
         }
         send();
@@ -92,8 +90,7 @@ public class Tracer {
         String traceId = rpcContext.getAttachment(TracingConstants.TRACING_TRACE_ID);
         String spanId = rpcContext.getAttachment(TracingConstants.TRACING_SPAN_ID);
         String parentSpanId = rpcContext.getAttachment(TracingConstants.TRACING_PARENT_SPAN_ID);
-        if (StringUtils.isNotEmpty(traceId)
-                && StringUtils.isNotEmpty(spanId)) {    //只需要判断traceId和spanId即可
+        if (StringUtils.isNotEmpty(traceId) && StringUtils.isNotEmpty(spanId)) {    //只需要判断traceId和spanId即可
             Span span = new Span();
             span.setId(spanId);
             span.setParentId(parentSpanId);
@@ -121,7 +118,7 @@ public class Tracer {
     private String createProvideSideTraceId() {
         RpcContext rpcContext = RpcContext.getContext();
         String isSample = rpcContext.getAttachment(TracingConstants.TRACING_IS_SAMPLE);
-        if(StringUtils.isNotEmpty(isSample)){
+        if (StringUtils.isNotEmpty(isSample)) {
             ContextHolder.setLocalSample(Boolean.valueOf(isSample));
         }
         String traceId = rpcContext.getAttachment(TracingConstants.TRACING_TRACE_ID);

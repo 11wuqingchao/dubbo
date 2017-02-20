@@ -50,7 +50,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
                     Span first = queue.take();
                     cacheList.add(first);
                     queue.drainTo(cacheList, flushSizeInner);
-                    if (cacheList.size() <=0 ){
+                    if (cacheList.size() <= 0 ) {
                         continue;
                     }
                     if (!initialized && collector == null) {

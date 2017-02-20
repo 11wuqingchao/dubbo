@@ -83,7 +83,7 @@ public class GUId {
             return -1;
         }
 
-        File dstDirectory = new File(userHome, ".dst");
+        File dstDirectory = new File(userHome, ".tracing");
         boolean dstDirectoryExists = dstDirectory.exists();
         if (!dstDirectoryExists) {
             dstDirectoryExists = dstDirectory.mkdir();
