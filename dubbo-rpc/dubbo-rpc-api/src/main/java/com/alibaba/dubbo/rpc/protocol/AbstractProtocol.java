@@ -43,7 +43,7 @@ public abstract class AbstractProtocol implements Protocol {
 
 	protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<String, Exporter<?>>();
 
-	//TODO SOFEREFENCE
+	//TODO SOFT REFERENCE
     protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
     
 	protected static String serviceKey(URL url) {

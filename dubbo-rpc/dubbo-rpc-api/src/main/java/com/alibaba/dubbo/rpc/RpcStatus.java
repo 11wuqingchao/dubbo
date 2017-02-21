@@ -36,11 +36,6 @@ public class RpcStatus {
 
     private static final ConcurrentMap<String, ConcurrentMap<String, RpcStatus>> METHOD_STATISTICS = new ConcurrentHashMap<String, ConcurrentMap<String, RpcStatus>>();
 
-    /**
-     * 
-     * @param url
-     * @return status
-     */
     public static RpcStatus getStatus(URL url) {
         String uri = url.toIdentityString();
         RpcStatus status = SERVICE_STATISTICS.get(uri);
@@ -50,22 +45,12 @@ public class RpcStatus {
         }
         return status;
     }
-    
-    /**
-     * 
-     * @param url
-     */
+
     public static void removeStatus(URL url) {
         String uri = url.toIdentityString();
         SERVICE_STATISTICS.remove(uri);
     }
-    
-    /**
-     * 
-     * @param url
-     * @param methodName
-     * @return status
-     */
+
     public static RpcStatus getStatus(URL url, String methodName) {
         String uri = url.toIdentityString();
         ConcurrentMap<String, RpcStatus> map = METHOD_STATISTICS.get(uri);
@@ -81,10 +66,6 @@ public class RpcStatus {
         return status;
     }
 
-    /**
-     * 
-     * @param url
-     */
     public static void removeStatus(URL url, String methodName) {
         String uri = url.toIdentityString();
         ConcurrentMap<String, RpcStatus> map = METHOD_STATISTICS.get(uri);
@@ -93,10 +74,6 @@ public class RpcStatus {
         }
     }
 
-    /**
-     * 
-     * @param url
-     */
     public static void beginCount(URL url, String methodName) {
         beginCount(getStatus(url));
         beginCount(getStatus(url, methodName));
@@ -106,12 +83,6 @@ public class RpcStatus {
         status.active.incrementAndGet();
     }
 
-    /**
-     * 
-     * @param url
-     * @param elapsed
-     * @param succeeded
-     */
     public static void endCount(URL url, String methodName, long elapsed, boolean succeeded) {
         endCount(getStatus(url), elapsed, succeeded);
         endCount(getStatus(url, methodName), elapsed, succeeded);
@@ -159,9 +130,7 @@ public class RpcStatus {
 
     /**
      * set value.
-     * 
-     * @param key
-     * @param value
+     *
      */
     public void set(String key, Object value) {
         values.put(key, value);
@@ -169,8 +138,6 @@ public class RpcStatus {
 
     /**
      * get value.
-     * 
-     * @param key
      * @return value
      */
     public Object get(String key) {

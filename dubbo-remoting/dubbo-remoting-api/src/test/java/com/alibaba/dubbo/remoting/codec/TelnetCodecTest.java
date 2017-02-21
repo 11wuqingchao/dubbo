@@ -53,7 +53,8 @@ public class TelnetCodecTest {
         AbstractMockChannel channel = new AbstractMockChannel(url);
         return channel;
     }
-    protected AbstractMockChannel getCliendSideChannel(URL url){
+
+    protected AbstractMockChannel getClientSideChannel(URL url){
         url = url.addParameter(AbstractMockChannel.LOCAL_ADDRESS, "127.0.0.1:12345")
         .addParameter(AbstractMockChannel.REMOTE_ADDRESS, url.getAddress());
         AbstractMockChannel channel = new AbstractMockChannel(url);
@@ -142,7 +143,7 @@ public class TelnetCodecTest {
     
     protected void testDecode_assertEquals(byte[] request,Object ret, boolean isServerside) throws IOException{
         //init channel
-        Channel channel = isServerside? getServerSideChannel(url) : getCliendSideChannel(url);
+        Channel channel = isServerside? getServerSideChannel(url) : getClientSideChannel(url);
         //init request string
         InputStream is = new UnsafeByteArrayInputStream(request);
 
@@ -155,7 +156,7 @@ public class TelnetCodecTest {
     
     protected void testEecode_assertEquals(Object request,byte[] ret, boolean isServerside) throws IOException{
         //init channel
-        Channel channel = isServerside? getServerSideChannel(url) : getCliendSideChannel(url);
+        Channel channel = isServerside? getServerSideChannel(url) : getClientSideChannel(url);
 
         UnsafeByteArrayOutputStream os = new UnsafeByteArrayOutputStream(1024);
 
