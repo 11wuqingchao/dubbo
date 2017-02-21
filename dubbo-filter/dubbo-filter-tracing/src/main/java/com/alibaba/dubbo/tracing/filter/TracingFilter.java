@@ -18,7 +18,7 @@ public class TracingFilter implements Filter {
 
     private Tracer tracer = new Tracer();
 
-    public TracingFilter(){
+    public TracingFilter() {
         tracer.init();
     }
 

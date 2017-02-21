@@ -26,27 +26,27 @@ public class ContextHolder {
         }
     };
 
-    static String getTraceId(){
+    static String getTraceId() {
         return localTraceId.get();
     }
 
-    static void setTraceId(String traceId){
+    static void setTraceId(String traceId) {
         localTraceId.set(traceId);
     }
 
-    static void removeTraceId(){
+    static void removeTraceId() {
         localTraceId.remove();
     }
 
-    static boolean isSample(){
+    static boolean isSample() {
         return localSample.get();
     }
 
-    static void setLocalSample(boolean isSample){
+    static void setLocalSample(boolean isSample) {
         localSample.set(isSample);
     }
 
-    static void removeSample(){
+    static void removeSample() {
         localSample.remove();
     }
 
@@ -62,7 +62,7 @@ public class ContextHolder {
         }
     }
 
-    static Span popSpan(){
+    static Span popSpan() {
         try {
             return localSpan.get().pop();
         } catch (EmptyStackException e) {
@@ -75,7 +75,7 @@ public class ContextHolder {
     }
 
     public static void removeAll() {
-        if (localSpan.get().size() <= 0){ //span堆栈为空的时候才能清除
+        if (localSpan.get().size() <= 0) { //span堆栈为空的时候才能清除
             removeSpan();
             removeTraceId();
             removeSample();
