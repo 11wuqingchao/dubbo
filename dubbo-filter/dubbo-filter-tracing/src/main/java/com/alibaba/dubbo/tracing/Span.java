@@ -26,8 +26,8 @@ public class Span implements Serializable {
     private List<BinaryAnnotation> binaryAnnotationList;
 
     public Span() {
-        this.annotationList = new LinkedList<Annotation>();
-        this.binaryAnnotationList = new LinkedList<BinaryAnnotation>();
+        this.annotationList = new LinkedList<>();
+        this.binaryAnnotationList = new LinkedList<>();
     }
 
     public String getId() {

@@ -32,7 +32,7 @@ public class DefaultTracingCollectorFactory extends AbstractTracingCollectorFact
         if(urls.size() == 1){
             invoker = protocol.refer(TracingCollector.class, urls.get(0));
         } else {
-            List<Invoker<TracingCollector>> invokers = new ArrayList<Invoker<TracingCollector>>();
+            List<Invoker<TracingCollector>> invokers = new ArrayList<>();
             URL registryURL = null;
             for (URL url : urls) {
                 invokers.add(protocol.refer(TracingCollector.class, url));

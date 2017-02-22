@@ -20,7 +20,7 @@ public abstract class AbstractTracingCollectorFactory implements TracingCollecto
     @Override
     public TracingCollector getTracingCollector() {
         Collection<Registry> registries =  AbstractRegistryFactory.getRegistries();
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         for (Registry registry:registries) {
             URL url = registry.getUrl();
             String protocolName = url.getProtocol();

@@ -17,7 +17,7 @@ public class Sampler {
         private AtomicLong counter = new AtomicLong(0);
     }
 
-    private static ConcurrentMap<String, MetaData> samplerMap = new ConcurrentHashMap<String, MetaData>();
+    private static ConcurrentMap<String, MetaData> samplerMap = new ConcurrentHashMap<>();
 
     public static boolean isSample(String serviceName) {
         MetaData metaData = getOrCreate(serviceName);

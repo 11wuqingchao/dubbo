@@ -13,7 +13,7 @@ public class ContextHolder {
     private static ThreadLocal<Stack<Span>> localSpan = new ThreadLocal<Stack<Span>>(){
         @Override
         protected Stack<Span> initialValue() {
-            return new Stack<Span>();
+            return new Stack<>();
         }
     };
 

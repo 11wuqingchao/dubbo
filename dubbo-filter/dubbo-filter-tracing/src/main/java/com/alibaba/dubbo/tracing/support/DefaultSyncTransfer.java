@@ -38,7 +38,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
         private int flushSizeInner;
 
         private TransferTask(int flushSize) {
-            cacheList = new ArrayList<Span>();
+            cacheList = new ArrayList<>();
             flushSizeInner = flushSize;
             setName("Tracing-span-transfer-task-thread");
         }
@@ -70,7 +70,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
     }
 
     public DefaultSyncTransfer() {
-        queue = new ArrayBlockingQueue<Span>(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.FLUSH_SIZE_KEY,
+        queue = new ArrayBlockingQueue<>(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.FLUSH_SIZE_KEY,
                 TracingConstants.DEFAULT_FLUSH_SIZE)));
         transferTask = new TransferTask(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.QUEUE_SIZE_KEY,
                 TracingConstants.DEFAULT_BUFFER_QUEUE_SIZE)));
