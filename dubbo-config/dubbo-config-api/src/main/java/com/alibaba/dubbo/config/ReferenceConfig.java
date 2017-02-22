@@ -280,7 +280,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         appendParameters(map, module);
         appendParameters(map, consumer, Constants.DEFAULT_KEY);
         appendParameters(map, this);
-        String prifix = StringUtils.getServiceKey(map);
+        String prefix = StringUtils.getServiceKey(map);
         if (methods != null && methods.size() > 0) {
             for (MethodConfig method : methods) {
                 appendParameters(map, method, method.getName());
@@ -291,7 +291,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                         map.put(method.getName() + ".retries", "0");
                     }
                 }
-                appendAttributes(attributes, method, prifix + "." + method.getName());
+                appendAttributes(attributes, method, prefix + "." + method.getName());
                 checkAndConvertImplicitConfig(method, map, attributes);
             }
         }
@@ -347,7 +347,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                 isJvmRefer = false;
             }
         } else {
-            isJvmRefer = isInjvm().booleanValue();
+            isJvmRefer = isInjvm();
         }
 		
 		if (isJvmRefer) {
@@ -391,7 +391,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             if (urls.size() == 1) {
                 invoker = refprotocol.refer(interfaceClass, urls.get(0));
             } else {
-                List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();
+                List<Invoker<?>> invokers = new ArrayList<>();
                 URL registryURL = null;
                 for (URL url : urls) {
                     invokers.add(refprotocol.refer(interfaceClass, url));

@@ -72,7 +72,7 @@ public abstract class AbstractConfig implements Serializable {
         this.id = id;
     }
     
-    private static final Map<String, String> legacyProperties = new HashMap<String, String>();
+    private static final Map<String, String> legacyProperties = new HashMap<>();
     static {
         legacyProperties.put("dubbo.protocol.name", "dubbo.service.protocol");
         legacyProperties.put("dubbo.protocol.host", "dubbo.service.server.host");
@@ -150,7 +150,7 @@ public abstract class AbstractConfig implements Serializable {
                     if (config.getId() != null && config.getId().length() > 0) {
                         String pn = prefix + config.getId() + "." + property;
                         value = System.getProperty(pn);
-                        if(! StringUtils.isBlank(value)) {
+                        if (! StringUtils.isBlank(value)) {
                             logger.info("Use System Property " + pn + " to config dubbo");
                         }
                     }
@@ -427,12 +427,12 @@ public abstract class AbstractConfig implements Serializable {
         }
     }
     
-    protected static void checkProperty(String property, String value, int maxlength, Pattern pattern) {
+    protected static void checkProperty(String property, String value, int maxLength, Pattern pattern) {
         if (value == null || value.length() == 0) {
             return;
         }
-        if(value.length() > maxlength){
-            throw new IllegalStateException("Invalid " + property + "=\"" + value + "\" is longer than " + maxlength);
+        if(value.length() > maxLength){
+            throw new IllegalStateException("Invalid " + property + "=\"" + value + "\" is longer than " + maxLength);
         }
         if (pattern != null) {
             Matcher matcher = pattern.matcher(value);

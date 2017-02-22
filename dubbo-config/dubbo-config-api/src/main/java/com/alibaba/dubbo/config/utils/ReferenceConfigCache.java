@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 public class ReferenceConfigCache {
     public static final String DEFAULT_NAME = "_DEFAULT_";
 
-    static final ConcurrentMap<String, ReferenceConfigCache> cacheHolder = new ConcurrentHashMap<String, ReferenceConfigCache>();
+    static final ConcurrentMap<String, ReferenceConfigCache> cacheHolder = new ConcurrentHashMap<>();
 
     /**
      * Get the cache use default name and {@link #DEFAULT_KEY_GENERATOR} to generate cache key.
@@ -102,7 +102,7 @@ public class ReferenceConfigCache {
     private final String name;
     private final KeyGenerator generator;
 
-    ConcurrentMap<String, ReferenceConfig<?>> cache = new ConcurrentHashMap<String, ReferenceConfig<?>>();
+    ConcurrentMap<String, ReferenceConfig<?>> cache = new ConcurrentHashMap<>();
 
     private ReferenceConfigCache(String name, KeyGenerator generator) {
         this.name = name;
@@ -125,7 +125,7 @@ public class ReferenceConfigCache {
 
     void destroyKey(String key) {
         ReferenceConfig<?> config = cache.remove(key);
-        if(config == null) return;
+        if (config == null) return;
         config.destroy();
     }
 
@@ -143,7 +143,7 @@ public class ReferenceConfigCache {
      */
     public void destroyAll() {
         Set<String> set = new HashSet<>(cache.keySet());
-        for(String key : set) {
+        for (String key : set) {
             destroyKey(key);
         }
     }

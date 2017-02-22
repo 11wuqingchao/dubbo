@@ -281,7 +281,7 @@ public final class StringUtils {
 	public static String join(String[] array, String split) {
 		if( array.length == 0 ) return "";
 		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<array.length; i++) {
+		for (int i= 0; i < array.length; i++) {
 			if( i > 0 )
 				sb.append(split);
 			sb.append(array[i]);

@@ -62,7 +62,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     
     private static final ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
 
-    private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<String, Integer>();
+    private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<>();
 
     // 接口类型
     private String interfaceName;
@@ -222,8 +222,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException("The local implementation class " + localClass.getName() + " not implement interface " + interfaceName);
             }
         }
-        if(stub != null){
-            if("true".equals(stub)){
+        if (stub != null) {
+            if ("true".equals(stub)) {
                 stub = interfaceName + "Stub";
             }
             Class<?> stubClass;
@@ -232,7 +232,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             } catch (ClassNotFoundException e) {
                 throw new IllegalStateException(e.getMessage(), e);
             }
-            if(!interfaceClass.isAssignableFrom(stubClass)){
+            if (!interfaceClass.isAssignableFrom(stubClass)) {
                 throw new IllegalStateException("The stub implementation class " + stubClass.getName() + " not implement interface " + interfaceName);
             }
         }
