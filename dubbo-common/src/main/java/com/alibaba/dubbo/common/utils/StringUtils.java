@@ -48,11 +48,8 @@ public final class StringUtils {
 	
 	private static final Pattern INT_PATTERN = Pattern.compile("^\\d+$");
 	
-	public static boolean isBlank(String str)
-	{
-		if( str == null || str.length() == 0 )
-			return true;
-		return false;
+	public static boolean isBlank(String str) {
+        return  str == null || str.length() == 0;
 	}
 
 	/**
@@ -61,11 +58,8 @@ public final class StringUtils {
 	 * @param str source string.
 	 * @return is empty.
 	 */
-	public static boolean isEmpty(String str)
-	{
-		if( str == null || str.length() == 0 )
-			return true;
-		return false;
+	public static boolean isEmpty(String str) {
+        return  str == null || str.length() == 0;
 	}
 
 	/**
@@ -74,15 +68,12 @@ public final class StringUtils {
 	 * @param str source string.
 	 * @return is not empty.
 	 */
-    public static boolean isNotEmpty(String str)
-    {
+    public static boolean isNotEmpty(String str) {
         return str != null && str.length() > 0;
     }
     
     /**
-     * 
-     * @param s1
-     * @param s2
+     *
      * @return equals
      */
     public static boolean isEquals(String s1, String s2) {
@@ -95,8 +86,7 @@ public final class StringUtils {
     
     /**
      * is integer string.
-     * 
-     * @param str
+     *
      * @return is integer
      */
     public static boolean isInteger(String str) {
@@ -119,7 +109,7 @@ public final class StringUtils {
         if (s.length() == 0 || !Character.isJavaIdentifierStart(s.charAt(0))) {
             return false;
         }
-        for (int i=1; i<s.length(); i++) {
+        for (int i = 1; i < s.length(); i++) {
             if (!Character.isJavaIdentifierPart(s.charAt(i))) {
                 return false;
             }
@@ -133,13 +123,7 @@ public final class StringUtils {
         }
         return isContains(Constants.COMMA_SPLIT_PATTERN.split(values), value);
     }
-    
-    /**
-     * 
-     * @param values
-     * @param value
-     * @return contains
-     */
+
     public static boolean isContains(String[] values, String value) {
         if (value != null && value.length() > 0 && values != null && values.length > 0) {
             for (String v : values) {
@@ -164,11 +148,7 @@ public final class StringUtils {
 		return true;
 	}
 
-    /**
-     * 
-     * @param e
-     * @return string
-     */
+
     public static String toString(Throwable e) {
     	UnsafeStringWriter w = new UnsafeStringWriter();
         PrintWriter p = new PrintWriter(w);
@@ -185,12 +165,7 @@ public final class StringUtils {
         }
     }
     
-    /**
-     * 
-     * @param msg
-     * @param e
-     * @return string
-     */
+
     public static String toString(String msg, Throwable e) {
     	UnsafeStringWriter w = new UnsafeStringWriter();
         w.write(msg + "\n");
@@ -246,25 +221,22 @@ public final class StringUtils {
 	 * @param ch char.
 	 * @return string array.
 	 */
-	public static String[] split(String str, char ch)
-	{
+	public static String[] split(String str, char ch) {
 		List<String> list = null;
         char c;
         int ix = 0,len=str.length();
-		for(int i=0;i<len;i++)
-		{
+		for(int i=0;i<len;i++) {
 			c = str.charAt(i);
-			if( c == ch )
-			{
+			if( c == ch ) {
 				if( list == null )
-					list = new ArrayList<String>();
+					list = new ArrayList<>();
 				list.add(str.substring(ix, i));
 				ix = i + 1;
 			}
 		}
 		if( ix > 0 )
 			list.add(str.substring(ix));
-		return list == null ? EMPTY_STRING_ARRAY : (String[])list.toArray(EMPTY_STRING_ARRAY);
+		return list == null ? EMPTY_STRING_ARRAY : list.toArray(EMPTY_STRING_ARRAY);
 	}
 
 	/**
@@ -273,8 +245,7 @@ public final class StringUtils {
 	 * @param array String array.
 	 * @return String.
 	 */
-	public static String join(String[] array)
-	{
+	public static String join(String[] array) {
 		if( array.length == 0 ) return "";
 		StringBuilder sb = new StringBuilder();
 		for( String s : array )
@@ -289,12 +260,10 @@ public final class StringUtils {
 	 * @param split split
 	 * @return String.
 	 */
-	public static String join(String[] array, char split)
-	{
+	public static String join(String[] array, char split) {
 		if( array.length == 0 ) return "";
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<array.length;i++)
-		{
+		for(int i=0; i<array.length; i++) {
 			if( i > 0 )
 				sb.append(split);
 			sb.append(array[i]);
@@ -309,12 +278,10 @@ public final class StringUtils {
 	 * @param split split
 	 * @return String.
 	 */
-	public static String join(String[] array, String split)
-	{
+	public static String join(String[] array, String split) {
 		if( array.length == 0 ) return "";
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<array.length;i++)
-		{
+		for (int i=0; i<array.length; i++) {
 			if( i > 0 )
 				sb.append(split);
 			sb.append(array[i]);
@@ -341,12 +308,10 @@ public final class StringUtils {
 	 * @param itemSeparator item separator.
 	 * @return key-value map;
 	 */
-	private static Map<String, String> parseKeyValuePair(String str, String itemSeparator)
-	{
+	private static Map<String, String> parseKeyValuePair(String str, String itemSeparator) {
 		String[] tmp = str.split(itemSeparator);
-		Map<String, String> map = new HashMap<String, String>(tmp.length);
-		for(int i=0;i<tmp.length;i++)
-		{
+		Map<String, String> map = new HashMap<>(tmp.length);
+		for (int i=0; i<tmp.length; i++) {
 			Matcher matcher = KVP_PATTERN.matcher(tmp[i]);
 			if( matcher.matches() == false )
 				continue;
@@ -366,10 +331,9 @@ public final class StringUtils {
      * @param qs query string.
      * @return Parameters instance.
      */
-	public static Map<String, String> parseQueryString(String qs)
-	{
+	public static Map<String, String> parseQueryString(String qs) {
 	    if( qs == null || qs.length() == 0 )
-            return new HashMap<String, String>();
+            return new HashMap<>();
 	    return parseKeyValuePair(qs, "\\&");
 	}
 	
@@ -390,7 +354,7 @@ public final class StringUtils {
 	public static String toQueryString(Map<String, String> ps) {
 		StringBuilder buf = new StringBuilder();
 		if (ps != null && ps.size() > 0) {
-			for (Map.Entry<String, String> entry : new TreeMap<String, String>(ps).entrySet()) {
+			for (Map.Entry<String, String> entry : new TreeMap<>(ps).entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (key != null && key.length() > 0

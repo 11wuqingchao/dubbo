@@ -29,7 +29,7 @@ import com.alibaba.dubbo.common.utils.ConcurrentHashSet;
  */
 public class SpringExtensionFactory implements ExtensionFactory {
     
-    private static final Set<ApplicationContext> contexts = new ConcurrentHashSet<ApplicationContext>();
+    private static final Set<ApplicationContext> contexts = new ConcurrentHashSet<>();
     
     public static void addApplicationContext(ApplicationContext context) {
         contexts.add(context);

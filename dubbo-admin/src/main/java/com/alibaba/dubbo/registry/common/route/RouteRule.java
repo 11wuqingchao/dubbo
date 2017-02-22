@@ -50,8 +50,8 @@ import com.alibaba.dubbo.registry.common.domain.Route;
  */
 public class RouteRule {
     public static class MatchPair {
-        Set<String> matches   = new HashSet<String>();
-        Set<String> unmatches = new HashSet<String>();
+        Set<String> matches   = new HashSet<>();
+        Set<String> unmatches = new HashSet<>();
 
         public MatchPair() {
         }
@@ -155,9 +155,8 @@ public class RouteRule {
     
     private static Pattern CONDITION_SEPERATOR = Pattern.compile("(.*)=>(.*)");
     
-    public static Map<String, MatchPair> parseRule(String rule)
-            throws ParseException {
-    	Map<String, MatchPair> condition = new HashMap<String, RouteRule.MatchPair>();
+    public static Map<String, MatchPair> parseRule(String rule) throws ParseException {
+    	Map<String, MatchPair> condition = new HashMap<>();
         if(StringUtils.isBlank(rule)) {
             return condition;
         }        

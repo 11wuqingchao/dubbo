@@ -58,6 +58,10 @@ public class SpringStatusChecker implements StatusChecker {
             Method method = null;
             while (cls != null && method == null) {
                 try {
+                    /**
+                     * getConfigLocations 方法返回spring的applicationContext文件路径的数组
+                     * add by woodle
+                     */
                     method = cls.getDeclaredMethod("getConfigLocations", new Class<?>[0]);
                 } catch (NoSuchMethodException t) {
                     cls = cls.getSuperclass();

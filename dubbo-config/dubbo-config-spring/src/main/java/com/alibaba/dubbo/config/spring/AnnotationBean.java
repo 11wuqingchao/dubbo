@@ -95,7 +95,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
             try {
                 // init scanner
                 Class<?> scannerClass = ReflectUtils.forName("org.springframework.context.annotation.ClassPathBeanDefinitionScanner");
-                Object scanner = scannerClass.getConstructor(new Class<?>[] {BeanDefinitionRegistry.class, boolean.class}).newInstance(new Object[] {(BeanDefinitionRegistry) beanFactory, true});
+                Object scanner = scannerClass.getConstructor(new Class<?>[] {BeanDefinitionRegistry.class, boolean.class}).newInstance(beanFactory, true);
                 // add filter
                 Class<?> filterClass = ReflectUtils.forName("org.springframework.core.type.filter.AnnotationTypeFilter");
                 Object filter = filterClass.getConstructor(Class.class).newInstance(Service.class);
@@ -264,7 +264,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
             if (applicationContext != null) {
                 referenceConfig.setApplicationContext(applicationContext);
                 if (reference.registry() != null && reference.registry().length > 0) {
-                    List<RegistryConfig> registryConfigs = new ArrayList<RegistryConfig>();
+                    List<RegistryConfig> registryConfigs = new ArrayList<>();
                     for (String registryId : reference.registry()) {
                         if (registryId != null && registryId.length() > 0) {
                             registryConfigs.add(applicationContext.getBean(registryId, RegistryConfig.class));

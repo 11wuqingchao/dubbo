@@ -83,7 +83,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
         beanDefinition.setBeanClass(beanClass);
         beanDefinition.setLazyInit(false);
         String id = element.getAttribute("id");
-        if ((id == null || id.length() == 0) && required) {
+        if (StringUtils.isEmpty(id) && required) {
         	String generatedBeanName = element.getAttribute("name");
         	if (generatedBeanName == null || generatedBeanName.length() == 0) {
         	    if (ProtocolConfig.class.equals(beanClass)) {
@@ -97,11 +97,11 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
         	}
             id = generatedBeanName; 
             int counter = 2;
-            while(parserContext.getRegistry().containsBeanDefinition(id)) {
+            while (parserContext.getRegistry().containsBeanDefinition(id)) {
                 id = generatedBeanName + (counter ++);
             }
         }
-        if (id != null && id.length() > 0) {
+        if (StringUtils.isNotEmpty(id)) {
             if (parserContext.getRegistry().containsBeanDefinition(id))  {
         		throw new IllegalStateException("Duplicate spring bean id " + id);
         	}
@@ -133,7 +133,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
         } else if (ConsumerConfig.class.equals(beanClass)) {
             parseNested(element, parserContext, ReferenceBean.class, false, "reference", "consumer", id, beanDefinition);
         }
-        Set<String> props = new HashSet<String>();
+        Set<String> props = new HashSet<>();
         ManagedMap parameters = null;
         for (Method setter : beanClass.getMethods()) {
             String name = setter.getName();
@@ -289,8 +289,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
 	private static void parseMultiRef(String property, String value, RootBeanDefinition beanDefinition, ParserContext parserContext) {
     	String[] values = value.split("\\s*[,]+\\s*");
 		ManagedList list = null;
-        for (int i = 0; i < values.length; i++) {
-            String v = values[i];
+        for (String v : values) {
             if (v != null && v.length() > 0) {
             	if (list == null) {
                     list = new ManagedList();
@@ -303,116 +302,121 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
     
     private static void parseNested(Element element, ParserContext parserContext, Class<?> beanClass, boolean required, String tag, String property, String ref, BeanDefinition beanDefinition) {
         NodeList nodeList = element.getChildNodes();
-        if (nodeList != null && nodeList.getLength() > 0) {
-            boolean first = true;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (node instanceof Element) {
-                    if (tag.equals(node.getNodeName())
-                            || tag.equals(node.getLocalName())) {
-                        if (first) {
-                            first = false;
-                            String isDefault = element.getAttribute("default");
-                            if (isDefault == null || isDefault.length() == 0) {
-                                beanDefinition.getPropertyValues().addPropertyValue("default", "false");
-                            }
+        if (nodeList == null || nodeList.getLength() == 0) {
+            return;
+        }
+
+        boolean first = true;
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element) {
+                if (tag.equals(node.getNodeName()) || tag.equals(node.getLocalName())) {
+                    if (first) {
+                        first = false;
+                        String isDefault = element.getAttribute("default");
+                        if (isDefault == null || isDefault.length() == 0) {
+                            beanDefinition.getPropertyValues().addPropertyValue("default", "false");
                         }
-                        BeanDefinition subDefinition = parse((Element) node, parserContext, beanClass, required);
-                        if (subDefinition != null && ref != null && ref.length() > 0) {
-                            subDefinition.getPropertyValues().addPropertyValue(property, new RuntimeBeanReference(ref));
-                        }
+                    }
+                    BeanDefinition subDefinition = parse((Element) node, parserContext, beanClass, required);
+                    if (subDefinition != null && ref != null && ref.length() > 0) {
+                        subDefinition.getPropertyValues().addPropertyValue(property, new RuntimeBeanReference(ref));
                     }
                 }
             }
         }
+
     }
 
     private static void parseProperties(NodeList nodeList, RootBeanDefinition beanDefinition) {
-        if (nodeList != null && nodeList.getLength() > 0) {
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (node instanceof Element) {
-                    if ("property".equals(node.getNodeName())  || "property".equals(node.getLocalName())) {
-                        String name = ((Element) node).getAttribute("name");
-                        if (name != null && name.length() > 0) {
-                            String value = ((Element) node).getAttribute("value");
-                            String ref = ((Element) node).getAttribute("ref");
-                            if (value != null && value.length() > 0) {
-                                beanDefinition.getPropertyValues().addPropertyValue(name, value);
-                            } else if (ref != null && ref.length() > 0) {
-                                beanDefinition.getPropertyValues().addPropertyValue(name, new RuntimeBeanReference(ref));
-                            } else {
-                                throw new UnsupportedOperationException("Unsupported <property name=\"" + name + "\"> sub tag, Only supported <property name=\"" + name + "\" ref=\"...\" /> or <property name=\"" + name + "\" value=\"...\" />");
-                            }
+        if (nodeList == null || nodeList.getLength() == 0) {
+            return;
+        }
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element) {
+                if ("property".equals(node.getNodeName())  || "property".equals(node.getLocalName())) {
+                    String name = ((Element) node).getAttribute("name");
+                    if (name != null && name.length() > 0) {
+                        String value = ((Element) node).getAttribute("value");
+                        String ref = ((Element) node).getAttribute("ref");
+                        if (value != null && value.length() > 0) {
+                            beanDefinition.getPropertyValues().addPropertyValue(name, value);
+                        } else if (ref != null && ref.length() > 0) {
+                            beanDefinition.getPropertyValues().addPropertyValue(name, new RuntimeBeanReference(ref));
+                        } else {
+                            throw new UnsupportedOperationException("Unsupported <property name=\""
+                                    + name + "\"> sub tag, Only supported <property name=\""
+                                    + name + "\" ref=\"...\" /> or <property name=\"" + name + "\" value=\"...\" />");
                         }
                     }
                 }
             }
         }
+
     }
 
     @SuppressWarnings("unchecked")
     private static ManagedMap parseParameters(NodeList nodeList, RootBeanDefinition beanDefinition) {
-        if (nodeList != null && nodeList.getLength() > 0) {
-            ManagedMap parameters = null;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (node instanceof Element) {
-                    if ("parameter".equals(node.getNodeName())
-                            || "parameter".equals(node.getLocalName())) {
-                        if (parameters == null) {
-                            parameters = new ManagedMap();
-                        }
-                        String key = ((Element) node).getAttribute("key");
-                        String value = ((Element) node).getAttribute("value");
-                        boolean hide = "true".equals(((Element) node).getAttribute("hide"));
-                        if (hide) {
-                            key = Constants.HIDE_KEY_PREFIX + key;
-                        }
-                        parameters.put(key, new TypedStringValue(value, String.class));
+        if (nodeList == null || nodeList.getLength() == 0) {
+            return null;
+        }
+        ManagedMap parameters = null;
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element) {
+                if ("parameter".equals(node.getNodeName())
+                        || "parameter".equals(node.getLocalName())) {
+                    if (parameters == null) {
+                        parameters = new ManagedMap();
                     }
+                    String key = ((Element) node).getAttribute("key");
+                    String value = ((Element) node).getAttribute("value");
+                    boolean hide = "true".equals(((Element) node).getAttribute("hide"));
+                    if (hide) {
+                        key = Constants.HIDE_KEY_PREFIX + key;
+                    }
+                    parameters.put(key, new TypedStringValue(value, String.class));
                 }
             }
-            return parameters;
         }
-        return null;
+        return parameters;
     }
 
     @SuppressWarnings("unchecked")
-    private static void parseMethods(String id, NodeList nodeList, RootBeanDefinition beanDefinition,
-                              ParserContext parserContext) {
-        if (nodeList != null && nodeList.getLength() > 0) {
-            ManagedList methods = null;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (node instanceof Element) {
-                    Element element = (Element) node;
-                    if ("method".equals(node.getNodeName()) || "method".equals(node.getLocalName())) {
-                        String methodName = element.getAttribute("name");
-                        if (methodName == null || methodName.length() == 0) {
-                            throw new IllegalStateException("<dubbo:method> name attribute == null");
-                        }
-                        if (methods == null) {
-                            methods = new ManagedList();
-                        }
-                        BeanDefinition methodBeanDefinition = parse(((Element) node),
-                                parserContext, MethodConfig.class, false);
-                        String name = id + "." + methodName;
-                        BeanDefinitionHolder methodBeanDefinitionHolder = new BeanDefinitionHolder(
-                                methodBeanDefinition, name);
-                        methods.add(methodBeanDefinitionHolder);
+    private static void parseMethods(String id, NodeList nodeList, RootBeanDefinition beanDefinition, ParserContext parserContext) {
+        if (nodeList == null || nodeList.getLength() == 0) {
+            return;
+        }
+
+        ManagedList methods = null;
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element) {
+                Element element = (Element) node;
+                if ("method".equals(node.getNodeName()) || "method".equals(node.getLocalName())) {
+                    String methodName = element.getAttribute("name");
+                    if (methodName == null || methodName.length() == 0) {
+                        throw new IllegalStateException("<dubbo:method> name attribute == null");
                     }
+                    if (methods == null) {
+                        methods = new ManagedList();
+                    }
+                    BeanDefinition methodBeanDefinition = parse(((Element) node), parserContext, MethodConfig.class, false);
+                    String name = id + "." + methodName;
+                    BeanDefinitionHolder methodBeanDefinitionHolder = new BeanDefinitionHolder(methodBeanDefinition, name);
+                    methods.add(methodBeanDefinitionHolder);
                 }
             }
-            if (methods != null) {
-                beanDefinition.getPropertyValues().addPropertyValue("methods", methods);
-            }
+        }
+        if (methods != null) {
+            beanDefinition.getPropertyValues().addPropertyValue("methods", methods);
         }
     }
     
     @SuppressWarnings("unchecked")
-    private static void parseArguments(String id, NodeList nodeList, RootBeanDefinition beanDefinition,
-                              ParserContext parserContext) {
+    private static void parseArguments(String id, NodeList nodeList, RootBeanDefinition beanDefinition, ParserContext parserContext) {
         if (nodeList != null && nodeList.getLength() > 0) {
             ManagedList arguments = null;
             for (int i = 0; i < nodeList.getLength(); i++) {
@@ -424,11 +428,9 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
                         if (arguments == null) {
                             arguments = new ManagedList();
                         }
-                        BeanDefinition argumentBeanDefinition = parse(((Element) node),
-                                parserContext, ArgumentConfig.class, false);
+                        BeanDefinition argumentBeanDefinition = parse(((Element) node), parserContext, ArgumentConfig.class, false);
                         String name = id + "." + argumentIndex;
-                        BeanDefinitionHolder argumentBeanDefinitionHolder = new BeanDefinitionHolder(
-                                argumentBeanDefinition, name);
+                        BeanDefinitionHolder argumentBeanDefinitionHolder = new BeanDefinitionHolder(argumentBeanDefinition, name);
                         arguments.add(argumentBeanDefinitionHolder);
                     }
                 }
