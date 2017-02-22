@@ -179,9 +179,10 @@ public class DubboCodec extends ExchangeCodec implements Codec {
         out.writeUTF(inv.getMethodName());
         out.writeUTF(ReflectUtils.getDesc(inv.getParameterTypes()));
         Object[] args = inv.getArguments();
-        if (args != null)
-        for (int i = 0; i < args.length; i++){
-            out.writeObject(encodeInvocationArgument(channel, inv, i));
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+                out.writeObject(encodeInvocationArgument(channel, inv, i));
+            }
         }
         out.writeObject(inv.getAttachments());
     }

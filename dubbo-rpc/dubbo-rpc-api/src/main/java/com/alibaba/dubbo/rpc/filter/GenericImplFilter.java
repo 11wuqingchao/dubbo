@@ -153,14 +153,13 @@ public class GenericImplFilter implements Filter {
 
             Object[] args = (Object[]) invocation.getArguments()[2];
             if (ProtocolUtils.isJavaGenericSerialization(generic)) {
-
                 for (Object arg : args) {
                     if (!(byte[].class == arg.getClass())) {
                         error(byte[].class.getName(), arg.getClass().getName());
                     }
                 }
             } else if (ProtocolUtils.isBeanGenericSerialization(generic)) {
-                for(Object arg : args) {
+                for (Object arg : args) {
                     if (!(arg instanceof JavaBeanDescriptor)) {
                         error(JavaBeanDescriptor.class.getName(), arg.getClass().getName());
                     }

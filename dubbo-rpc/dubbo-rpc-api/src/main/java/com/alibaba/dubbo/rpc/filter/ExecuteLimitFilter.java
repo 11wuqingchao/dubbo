@@ -47,8 +47,7 @@ public class ExecuteLimitFilter implements Filter {
         boolean isException = false;
         RpcStatus.beginCount(url, methodName);
         try {
-            Result result = invoker.invoke(invocation);
-            return result;
+            return invoker.invoke(invocation);
         } catch (Throwable t) {
             isException = true;
             if(t instanceof RuntimeException) {
@@ -57,8 +56,7 @@ public class ExecuteLimitFilter implements Filter {
             else {
                 throw new RpcException("unexpected exception when ExecuteLimitFilter", t);
             }
-        }
-        finally {
+        }  finally {
             RpcStatus.endCount(url, methodName, System.currentTimeMillis() - begin, isException);
         }
     }

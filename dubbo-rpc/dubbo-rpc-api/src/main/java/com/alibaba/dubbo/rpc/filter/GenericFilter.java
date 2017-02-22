@@ -67,7 +67,7 @@ public class GenericFilter implements Filter {
                     || ProtocolUtils.isDefaultGenericSerialization(generic)) {
                     args = PojoUtils.realize(args, params, method.getGenericParameterTypes());
                 } else if (ProtocolUtils.isJavaGenericSerialization(generic)) {
-                    for(int i = 0; i < args.length; i++) {
+                    for (int i = 0; i < args.length; i++) {
                         if (byte[].class == args[i].getClass()) {
                             try {
                                 UnsafeByteArrayInputStream is = new UnsafeByteArrayInputStream((byte[])args[i]);

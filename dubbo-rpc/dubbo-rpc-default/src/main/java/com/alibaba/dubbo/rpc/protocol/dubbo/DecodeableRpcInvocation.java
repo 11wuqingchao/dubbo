@@ -45,13 +45,13 @@ public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Dec
 
     private static final Logger log = LoggerFactory.getLogger(DecodeableRpcInvocation.class);
 
-    private Channel     channel;
+    private Channel channel;
 
-    private byte        serializationType;
+    private byte serializationType;
 
     private InputStream inputStream;
 
-    private Request     request;
+    private Request request;
 
     private volatile boolean hasDecoded;
 

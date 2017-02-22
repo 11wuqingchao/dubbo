@@ -72,14 +72,14 @@ public final class DubboCountCodec implements Codec {
                 ((RpcInvocation) ((Request) result).getData()).setAttachment(
                     Constants.INPUT_KEY, String.valueOf(bytes));
             } catch (Throwable e) {
-                /* ignore */
+                // do nothing
             }
         } else if (result instanceof Response) {
             try {
                 ((RpcResult) ((Response) result).getResult()).setAttachment(
                     Constants.OUTPUT_KEY, String.valueOf(bytes));
             } catch (Throwable e) {
-                /* ignore */
+                // do nothing
             }
         }
     }

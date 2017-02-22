@@ -40,14 +40,14 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     
     private final URL url;
     
-    private final AtomicInteger refenceCount = new AtomicInteger(0);
+    private final AtomicInteger referenceCount = new AtomicInteger(0);
     
     private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap;
     
     
     public ReferenceCountExchangeClient(ExchangeClient client, ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap) {
         this.client = client;
-        refenceCount.incrementAndGet();
+        referenceCount.incrementAndGet();
         this.url = client.getUrl();
         if (ghostClientMap == null){
             throw new IllegalStateException("ghostClientMap can not be null, url: " + url);
@@ -122,7 +122,8 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     public void removeAttribute(String key) {
         client.removeAttribute(key);
     }
-    /* 
+
+    /**
      * close方法将不再幂等,调用需要注意.
      */
     public void close() {
@@ -130,7 +131,7 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     }
 
     public void close(int timeout) {
-        if (refenceCount.decrementAndGet() <= 0){
+        if (referenceCount.decrementAndGet() <= 0){
             if (timeout == 0){
                 client.close();
             } else {
@@ -152,12 +153,12 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
         
         String key = url.getAddress();
         //最差情况下只有一个幽灵连接
-        LazyConnectExchangeClient gclient = ghostClientMap.get(key);
-        if (gclient == null || gclient.isClosed()){
-            gclient = new LazyConnectExchangeClient(lazyUrl, client.getExchangeHandler());
-            ghostClientMap.put(key, gclient);
+        LazyConnectExchangeClient gClient = ghostClientMap.get(key);
+        if (gClient == null || gClient.isClosed()){
+            gClient = new LazyConnectExchangeClient(lazyUrl, client.getExchangeHandler());
+            ghostClientMap.put(key, gClient);
         }
-        return gclient;
+        return gClient;
     }
 
     public boolean isClosed() {
@@ -165,6 +166,6 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     }
     
     public void incrementAndGetCount(){
-        refenceCount.incrementAndGet();
+        referenceCount.incrementAndGet();
     }
 }

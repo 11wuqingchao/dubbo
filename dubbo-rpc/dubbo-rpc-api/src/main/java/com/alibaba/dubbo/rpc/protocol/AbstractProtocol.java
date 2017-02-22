@@ -41,10 +41,10 @@ public abstract class AbstractProtocol implements Protocol {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<String, Exporter<?>>();
+	protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<>();
 
 	//TODO SOFT REFERENCE
-    protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
+    protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<>();
     
 	protected static String serviceKey(URL url) {
 	    return ProtocolUtils.serviceKey(url);
@@ -68,7 +68,7 @@ public abstract class AbstractProtocol implements Protocol {
                 }
             }
 	    }
-	    for (String key : new ArrayList<String>(exporterMap.keySet())) {
+	    for (String key : new ArrayList<>(exporterMap.keySet())) {
             Exporter<?> exporter = exporterMap.remove(key);
             if (exporter != null) {
                 try {
@@ -89,14 +89,16 @@ public abstract class AbstractProtocol implements Protocol {
         if (value != null && value.length() > 0) {
             try{
                 timeout = Integer.parseInt(value);
-            }catch (Exception e) {
+            } catch (Exception e) {
+                // do nothing
             }        
         } else {
             value = ConfigUtils.getProperty(Constants.SHUTDOWN_WAIT_SECONDS_KEY);
             if (value != null && value.length() > 0) {
                 try{
                     timeout = Integer.parseInt(value) * 1000;
-                }catch (Exception e) {
+                } catch (Exception e) {
+                    // do nothing
                 }        
             }
         }

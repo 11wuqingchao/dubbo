@@ -64,9 +64,9 @@ public class DubboProtocol extends AbstractProtocol {
     
     public static final int DEFAULT_PORT = 20880;
     
-    private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<>(); // <host:port,Exchanger>
+    private final Map<String/** host:port */, ExchangeServer/** Exchanger */> serverMap = new ConcurrentHashMap<>();
     
-    private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new ConcurrentHashMap<>(); // <host:port,Exchanger>
+    private final Map<String/** host:port */, ReferenceCountExchangeClient/** Exchanger */> referenceClientMap = new ConcurrentHashMap<>();
     
     private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap = new ConcurrentHashMap<>();
     

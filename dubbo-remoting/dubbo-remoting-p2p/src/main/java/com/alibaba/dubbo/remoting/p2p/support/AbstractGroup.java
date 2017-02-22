@@ -43,9 +43,9 @@ public abstract class AbstractGroup implements Group {
     
     protected final URL url;
     
-    protected final Map<URL, Server> servers = new ConcurrentHashMap<URL, Server>();
+    protected final Map<URL, Server> servers = new ConcurrentHashMap<>();
 
-    protected final Map<URL, Client> clients = new ConcurrentHashMap<URL, Client>();
+    protected final Map<URL, Client> clients = new ConcurrentHashMap<>();
     
     protected final ChannelHandlerDispatcher dispatcher = new ChannelHandlerDispatcher();
 
@@ -61,14 +61,14 @@ public abstract class AbstractGroup implements Group {
     }
 
     public void close() {
-        for (URL url : new ArrayList<URL>(servers.keySet())) {
+        for (URL url : new ArrayList<>(servers.keySet())) {
             try {
                 leave(url);
             } catch (Throwable t) {
                 logger.error(t.getMessage(), t);
             }
         }
-        for (URL url : new ArrayList<URL>(clients.keySet())) {
+        for (URL url : new ArrayList<>(clients.keySet())) {
             try {
                 disconnect(url);
             } catch (Throwable t) {
