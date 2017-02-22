@@ -25,6 +25,7 @@ import java.util.Map;
  * @serial Don't change the class name and properties.
  * @author qianlei
  */
+@SuppressWarnings("unused")
 public class RpcResult implements Result, Serializable {
 
     private static final long        serialVersionUID = -6925924956850004727L;
@@ -33,7 +34,7 @@ public class RpcResult implements Result, Serializable {
 
     private Throwable                exception;
 
-    private Map<String, String>      attachments = new HashMap<String, String>();
+    private Map<String, String>      attachments = new HashMap<>();
 
     public RpcResult(){
     }
@@ -64,7 +65,7 @@ public class RpcResult implements Result, Serializable {
 
     /**
      * @deprecated Replace to setValue()
-     * @see com.alibaba.dubbo.rpc.RpcResult#setValue()
+     * @see com.alibaba.dubbo.rpc.RpcResult#setResult(Object)
      */
     @Deprecated
     public void setResult(Object result) {

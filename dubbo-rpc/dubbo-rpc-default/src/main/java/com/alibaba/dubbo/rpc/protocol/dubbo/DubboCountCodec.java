@@ -66,18 +66,29 @@ public final class DubboCountCodec implements Codec {
     }
 
     private void logMessageLength(Object result, int bytes) {
-        if (bytes <= 0) { return; }
+        if (bytes <= 0) {
+            return;
+        }
         if (result instanceof Request) {
             try {
+                /**
+                 * 将请求参数的大小在RpcResult里放了一份，以用来监控
+                 * add by woodle
+                 */
                 ((RpcInvocation) ((Request) result).getData()).setAttachment(
                     Constants.INPUT_KEY, String.valueOf(bytes));
             } catch (Throwable e) {
                 // do nothing
             }
-        } else if (result instanceof Response) {
+        }
+        if (result instanceof Response) {
             try {
+                /**
+                 * 将接口的返回结果的大小在RpcResult里放了一份，以用来监控
+                 * add by woodle
+                 */
                 ((RpcResult) ((Response) result).getResult()).setAttachment(
-                    Constants.OUTPUT_KEY, String.valueOf(bytes));
+                        Constants.OUTPUT_KEY, String.valueOf(bytes));
             } catch (Throwable e) {
                 // do nothing
             }

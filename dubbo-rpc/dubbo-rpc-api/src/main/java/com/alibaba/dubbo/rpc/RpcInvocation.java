@@ -49,7 +49,7 @@ public class RpcInvocation implements Invocation, Serializable {
 
     public RpcInvocation(Invocation invocation, Invoker<?> invoker) {
         this(invocation.getMethodName(), invocation.getParameterTypes(), 
-                invocation.getArguments(), new HashMap<String, String>(invocation.getAttachments()),
+                invocation.getArguments(), new HashMap<>(invocation.getAttachments()),
                 invocation.getInvoker());
         if (invoker != null) {
             URL url = invoker.getUrl();
@@ -146,14 +146,14 @@ public class RpcInvocation implements Invocation, Serializable {
     
     public void setAttachment(String key, String value) {
         if (attachments == null) {
-            attachments = new HashMap<String, String>();
+            attachments = new HashMap<>();
         }
         attachments.put(key, value);
     }
 
     public void setAttachmentIfAbsent(String key, String value) {
         if (attachments == null) {
-            attachments = new HashMap<String, String>();
+            attachments = new HashMap<>();
         }
         if (! attachments.containsKey(key)) {
         	attachments.put(key, value);
@@ -165,7 +165,7 @@ public class RpcInvocation implements Invocation, Serializable {
     		return;
     	}
     	if (this.attachments == null) {
-    		this.attachments = new HashMap<String, String>();
+    		this.attachments = new HashMap<>();
         }
     	this.attachments.putAll(attachments);
     }

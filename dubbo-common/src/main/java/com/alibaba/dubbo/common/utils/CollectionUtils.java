@@ -167,7 +167,7 @@ public class CollectionUtils {
 	}
 	
 	public static Map<String, String> toStringMap(String... pairs) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         if (pairs.length > 0) {
             if (pairs.length % 2 != 0) {
                 throw new IllegalArgumentException("pairs must be even.");
@@ -181,7 +181,7 @@ public class CollectionUtils {
 
 	@SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> toMap(Object ... pairs) {
-	    Map<K, V> ret = new HashMap<K, V>();
+	    Map<K, V> ret = new HashMap<>();
 	    if (pairs == null || pairs.length == 0) return ret;
 	
         if (pairs.length % 2 != 0) {
