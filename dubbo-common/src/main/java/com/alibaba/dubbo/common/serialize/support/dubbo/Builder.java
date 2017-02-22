@@ -67,8 +67,8 @@ public abstract class Builder<T> implements GenericDataFlags
 
 	private static final String BUILDER_CLASS_NAME = Builder.class.getName();
 
-	private static final Map<Class<?>, Builder<?>> BuilderMap = new ConcurrentHashMap<Class<?>, Builder<?>>();
-	private static final Map<Class<?>, Builder<?>> nonSerializableBuilderMap = new ConcurrentHashMap<Class<?>, Builder<?>>();
+	private static final Map<Class<?>, Builder<?>> BuilderMap = new ConcurrentHashMap<>();
+	private static final Map<Class<?>, Builder<?>> nonSerializableBuilderMap = new ConcurrentHashMap<>();
 
 	private static final String FIELD_CONFIG_SUFFIX = ".fc";
 
@@ -87,9 +87,9 @@ public abstract class Builder<T> implements GenericDataFlags
 	};
 
 	// class-descriptor mapper
-	private static final List<String> mDescList = new ArrayList<String>();
+	private static final List<String> mDescList = new ArrayList<>();
 
-	private static final Map<String, Integer> mDescMap = new ConcurrentHashMap<String, Integer>();
+	private static final Map<String, Integer> mDescMap = new ConcurrentHashMap<>();
 
 	public static ClassDescriptorMapper DEFAULT_CLASS_DESCRIPTOR_MAPPER = new ClassDescriptorMapper(){
 		public String getDescriptor(int index)
@@ -102,7 +102,7 @@ public abstract class Builder<T> implements GenericDataFlags
 		public int getDescriptorIndex(String desc)
 		{
 			Integer ret = mDescMap.get(desc);
-			return ret == null ? -1 : ret.intValue();
+			return ret == null ? -1 : ret;
 		}
 	};
 
@@ -348,7 +348,7 @@ public abstract class Builder<T> implements GenericDataFlags
 					String[] lines = IOUtils.readLines(is);
 					if( lines != null && lines.length > 0 )
 					{
-						List<String> list = new ArrayList<String>();
+						List<String> list = new ArrayList<>();
 						for(int i=0;i<lines.length;i++)
 						{
 							fns = lines[i].split(",");
@@ -406,7 +406,7 @@ public abstract class Builder<T> implements GenericDataFlags
 		else
 		{
 			Class<?> t = c;
-			List<Field> fl = new ArrayList<Field>();
+			List<Field> fl = new ArrayList<>();
 			do
 			{
 				fs = t.getDeclaredFields();
@@ -491,7 +491,7 @@ public abstract class Builder<T> implements GenericDataFlags
 
 		// get bean-style property metadata.
 		Map<String, PropertyMetadata> pms = propertyMetadatas(c);
-		List<Builder<?>> builders = new ArrayList<Builder<?>>(fs.length);
+		List<Builder<?>> builders = new ArrayList<>(fs.length);
 		String fn, ftn; // field name, field type name.
 		Class<?> ft; // field type.
 		boolean da; // direct access.
@@ -798,8 +798,8 @@ public abstract class Builder<T> implements GenericDataFlags
 
 	private static Map<String, PropertyMetadata> propertyMetadatas(Class<?> c)
 	{
-		Map<String, Method> mm = new HashMap<String, Method>(); // method map.
-		Map<String, PropertyMetadata> ret = new HashMap<String, PropertyMetadata>(); // property metadata map.
+		Map<String, Method> mm = new HashMap<>(); // method map.
+		Map<String, PropertyMetadata> ret = new HashMap<>(); // property metadata map.
 
 		// All public method.
 		for( Method m : c.getMethods() )

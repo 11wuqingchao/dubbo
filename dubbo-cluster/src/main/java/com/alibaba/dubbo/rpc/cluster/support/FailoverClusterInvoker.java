@@ -59,8 +59,8 @@ public class FailoverClusterInvoker<T> extends AbstractClusterInvoker<T> {
         }
         // retry loop.
         RpcException le = null; // last exception.
-        List<Invoker<T>> invoked = new ArrayList<Invoker<T>>(copyinvokers.size()); // invoked invokers.
-        Set<String> providers = new HashSet<String>(len);
+        List<Invoker<T>> invoked = new ArrayList<>(copyinvokers.size()); // invoked invokers.
+        Set<String> providers = new HashSet<>(len);
         for (int i = 0; i < len; i++) {
         	//重试时，进行重新选择，避免重试时invoker列表已发生变化.
         	//注意：如果列表发生了变化，那么invoked判断会失效，因为invoker示例已经改变

@@ -40,7 +40,7 @@ public interface JSONConverter
 	 * @param type target type.
 	 * @param jv json value.
 	 * @return target object.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	Object readValue(Class<?> type, Object jv) throws IOException;
 }

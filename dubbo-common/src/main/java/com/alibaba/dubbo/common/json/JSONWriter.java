@@ -47,7 +47,7 @@ public class JSONWriter
 
 	private State mState = new State(UNKNOWN);
 
-	private Stack<State> mStack = new Stack<State>();
+	private Stack<State> mStack = new Stack<>();
 
 	public JSONWriter(Writer writer)
 	{
@@ -63,7 +63,7 @@ public class JSONWriter
 	 * object begin.
 	 * 
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter objectBegin() throws IOException
 	{
@@ -79,7 +79,7 @@ public class JSONWriter
 	 * object end.
 	 * 
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter objectEnd() throws IOException
 	{
@@ -93,7 +93,7 @@ public class JSONWriter
 	 * 
 	 * @param name name.
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter objectItem(String name) throws IOException
 	{
@@ -110,7 +110,7 @@ public class JSONWriter
 	 * array begin.
 	 * 
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter arrayBegin() throws IOException
 	{
@@ -126,7 +126,7 @@ public class JSONWriter
 	 * array end, return array value.
 	 * 
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter arrayEnd() throws IOException
 	{
@@ -139,7 +139,7 @@ public class JSONWriter
 	 * value.
 	 * 
 	 * @return this.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public JSONWriter valueNull() throws IOException
 	{

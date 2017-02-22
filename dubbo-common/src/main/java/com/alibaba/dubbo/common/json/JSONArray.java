@@ -28,7 +28,7 @@ import java.util.List;
 
 public class JSONArray implements JSONNode
 {
-	private List<Object> mArray = new ArrayList<Object>();
+	private List<Object> mArray = new ArrayList<>();
 
 	/**
 	 * get.

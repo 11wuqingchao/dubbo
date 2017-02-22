@@ -142,7 +142,7 @@ public class ReferenceConfigCache {
      * clear and destroy all {@link ReferenceConfig} in the cache.
      */
     public void destroyAll() {
-        Set<String> set = new HashSet<String>(cache.keySet());
+        Set<String> set = new HashSet<>(cache.keySet());
         for(String key : set) {
             destroyKey(key);
         }
@@ -150,7 +150,6 @@ public class ReferenceConfigCache {
 
     @Override
     public String toString() {
-        return "ReferenceConfigCache(name: " + name
-                + ")";
+        return "ReferenceConfigCache(name: " + name  + ")";
     }
 }

@@ -23,8 +23,7 @@ import java.io.IOException;
  * @author qian.lei
  */
 
-interface JSONNode
-{
+interface JSONNode {
 	/**
 	 * write json string.
 	 * 

@@ -42,7 +42,7 @@ public class SpringStatusChecker implements StatusChecker {
         if (context == null) {
             return new Status(Status.Level.UNKNOWN);
         }
-        Status.Level level = Status.Level.OK;
+        Status.Level level;
         if (context instanceof Lifecycle) {
             if (((Lifecycle)context).isRunning()) {
                 level = Status.Level.OK;

@@ -31,21 +31,19 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.alibaba.dubbo.common.bytecode.Wrapper;
 import com.alibaba.dubbo.common.io.Bytes;
 
-public class GenericJSONConverter implements JSONConverter
-{
+public class GenericJSONConverter implements JSONConverter {
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
 	protected interface Encoder{ void encode(Object obj, JSONWriter jb) throws IOException; }
 
 	protected interface Decoder{ Object decode(Object jv) throws IOException; }
 
-	private static final Map<Class<?>, Encoder> GlobalEncoderMap = new HashMap<Class<?>, Encoder>();
+	private static final Map<Class<?>, Encoder> GlobalEncoderMap = new HashMap<>();
 
-	private static final Map<Class<?>, Decoder> GlobalDecoderMap = new HashMap<Class<?>, Decoder>();
+	private static final Map<Class<?>, Decoder> GlobalDecoderMap = new HashMap<>();
 
 	@SuppressWarnings("unchecked")
-	public void writeValue(Object obj, JSONWriter jb, boolean writeClass) throws IOException
-	{
+	public void writeValue(Object obj, JSONWriter jb, boolean writeClass) throws IOException {
 		if (obj == null) {
 			jb.valueNull();
 			return;

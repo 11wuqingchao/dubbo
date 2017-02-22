@@ -29,7 +29,7 @@ import com.alibaba.dubbo.common.URL;
 public class ClusterUtils {
     
     public static URL mergeUrl(URL remoteUrl, Map<String, String> localMap) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         Map<String, String> remoteMap = remoteUrl.getParameters();
         
         

@@ -98,7 +98,7 @@ public class RegistryProtocol implements Protocol {
 
 	//用于解决rmi重复暴露端口冲突的问题，已经暴露过的服务不再重新暴露
     //providerurl <--> exporter
-    private final Map<String, ExporterChangeableWrapper<?>> bounds = new ConcurrentHashMap<String, ExporterChangeableWrapper<?>>();
+    private final Map<String, ExporterChangeableWrapper<?>> bounds = new ConcurrentHashMap<>();
     
     private final static Logger logger = LoggerFactory.getLogger(RegistryProtocol.class);
     
@@ -155,13 +155,11 @@ public class RegistryProtocol implements Protocol {
                 }
             }
         }
-        return (ExporterChangeableWrapper<T>) exporter;
+        return exporter;
     }
     
     /**
      * 对修改了url的invoker重新export
-     * @param originInvoker
-     * @param newInvokerUrl
      */
     @SuppressWarnings("unchecked")
     private <T> void doChangeLocalExport(final Invoker<T> originInvoker, URL newInvokerUrl){
@@ -178,8 +176,6 @@ public class RegistryProtocol implements Protocol {
 
     /**
      * 根据invoker的地址获取registry实例
-     * @param originInvoker
-     * @return
      */
     private Registry getRegistry(final Invoker<?> originInvoker){
         URL registryUrl = originInvoker.getUrl();
@@ -192,8 +188,6 @@ public class RegistryProtocol implements Protocol {
 
     /**
      * 返回注册到注册中心的URL，对URL参数进行一次过滤
-     * @param originInvoker
-     * @return
      */
     private URL getRegistedProviderUrl(final Invoker<?> originInvoker){
         URL providerUrl = getProviderUrl(originInvoker);
@@ -290,7 +284,7 @@ public class RegistryProtocol implements Protocol {
     private static String[] getFilteredKeys(URL url) {
         Map<String, String> params = url.getParameters();
         if (params != null && !params.isEmpty()) {
-            List<String> filteredKeys = new ArrayList<String>();
+            List<String> filteredKeys = new ArrayList<>();
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 if (entry != null && entry.getKey() != null && entry.getKey().startsWith(Constants.HIDE_KEY_PREFIX)) {
                     filteredKeys.add(entry.getKey());
@@ -343,7 +337,7 @@ public class RegistryProtocol implements Protocol {
         		}
         		if (! UrlUtils.isMatch(subscribeUrl, overrideUrl)) {
         			if (result == null) {
-        				result = new ArrayList<URL>(urls);
+        				result = new ArrayList<>(urls);
         			}
         			result.remove(url);
         			logger.warn("Subsribe category=configurator, but notifed non-configurator urls. may be registry bug. unexcepted url: " + url);
@@ -353,7 +347,7 @@ public class RegistryProtocol implements Protocol {
         		urls = result;
         	}
         	this.configurators = RegistryDirectory.toConfigurators(urls);
-            List<ExporterChangeableWrapper<?>> exporters = new ArrayList<ExporterChangeableWrapper<?>>(bounds.values());
+            List<ExporterChangeableWrapper<?>> exporters = new ArrayList<>(bounds.values());
             for (ExporterChangeableWrapper<?> exporter : exporters){
                 Invoker<?> invoker = exporter.getOriginInvoker();
                 final Invoker<?> originInvoker ;

@@ -160,7 +160,7 @@ public class JValidator implements Validator {
             String parameterClassName = clazz.getName() + "_" + parameterSimpleName;
             Class<?> parameterClass;
             try {
-                parameterClass = (Class<?>) Class.forName(parameterClassName, true, clazz.getClassLoader());
+                parameterClass =  Class.forName(parameterClassName, true, clazz.getClassLoader());
             } catch (ClassNotFoundException e) {
                 ClassPool pool = ClassGenerator.getClassPool(clazz.getClassLoader());
                 CtClass ctClass = pool.makeClass(parameterClassName);

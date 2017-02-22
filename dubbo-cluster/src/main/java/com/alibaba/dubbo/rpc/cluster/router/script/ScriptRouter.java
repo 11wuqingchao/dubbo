@@ -87,7 +87,7 @@ public class ScriptRouter implements Router {
     @SuppressWarnings("unchecked")
     public <T> List<Invoker<T>> route(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
         try {
-            List<Invoker<T>> invokersCopy = new ArrayList<Invoker<T>>(invokers);
+            List<Invoker<T>> invokersCopy = new ArrayList<>(invokers);
             Compilable compilable = (Compilable) engine;
             Bindings bindings = engine.createBindings();
             bindings.put("invokers", invokersCopy);
@@ -98,7 +98,7 @@ public class ScriptRouter implements Router {
             if (obj instanceof Invoker[]) {
                 invokersCopy = Arrays.asList((Invoker<T>[]) obj);
             } else if (obj instanceof Object[]) {
-                invokersCopy = new ArrayList<Invoker<T>>();
+                invokersCopy = new ArrayList<>();
                 for (Object inv : (Object[]) obj) {
                     invokersCopy.add((Invoker<T>)inv);
                 }

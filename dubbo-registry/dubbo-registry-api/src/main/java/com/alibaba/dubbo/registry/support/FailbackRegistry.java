@@ -47,15 +47,15 @@ public abstract class FailbackRegistry extends AbstractRegistry {
     // 失败重试定时器，定时检查是否有请求失败，如有，无限次重试
     private final ScheduledFuture<?> retryFuture;
 
-    private final Set<URL> failedRegistered = new ConcurrentHashSet<URL>();
+    private final Set<URL> failedRegistered = new ConcurrentHashSet<>();
 
-    private final Set<URL> failedUnregistered = new ConcurrentHashSet<URL>();
+    private final Set<URL> failedUnregistered = new ConcurrentHashSet<>();
 
-    private final ConcurrentMap<URL, Set<NotifyListener>> failedSubscribed = new ConcurrentHashMap<URL, Set<NotifyListener>>();
+    private final ConcurrentMap<URL, Set<NotifyListener>> failedSubscribed = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<URL, Set<NotifyListener>> failedUnsubscribed = new ConcurrentHashMap<URL, Set<NotifyListener>>();
+    private final ConcurrentMap<URL, Set<NotifyListener>> failedUnsubscribed = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<URL, Map<NotifyListener, List<URL>>> failedNotified = new ConcurrentHashMap<URL, Map<NotifyListener, List<URL>>>();
+    private final ConcurrentMap<URL, Map<NotifyListener, List<URL>>> failedNotified = new ConcurrentHashMap<>();
 
     public FailbackRegistry(URL url) {
         super(url);
@@ -276,7 +276,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
     @Override
     protected void recover() throws Exception {
         // register
-        Set<URL> recoverRegistered = new HashSet<URL>(getRegistered());
+        Set<URL> recoverRegistered = new HashSet<>(getRegistered());
         if (! recoverRegistered.isEmpty()) {
             if (logger.isInfoEnabled()) {
                 logger.info("Recover register url " + recoverRegistered);
@@ -286,7 +286,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
         }
         // subscribe
-        Map<URL, Set<NotifyListener>> recoverSubscribed = new HashMap<URL, Set<NotifyListener>>(getSubscribed());
+        Map<URL, Set<NotifyListener>> recoverSubscribed = new HashMap<>(getSubscribed());
         if (! recoverSubscribed.isEmpty()) {
             if (logger.isInfoEnabled()) {
                 logger.info("Recover subscribe url " + recoverSubscribed.keySet());
@@ -303,7 +303,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
     // 重试失败的动作
     protected void retry() {
         if (! failedRegistered.isEmpty()) {
-            Set<URL> failed = new HashSet<URL>(failedRegistered);
+            Set<URL> failed = new HashSet<>(failedRegistered);
             if (failed.size() > 0) {
                 if (logger.isInfoEnabled()) {
                     logger.info("Retry register " + failed);
@@ -323,7 +323,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
         }
         if(! failedUnregistered.isEmpty()) {
-            Set<URL> failed = new HashSet<URL>(failedUnregistered);
+            Set<URL> failed = new HashSet<>(failedUnregistered);
             if (failed.size() > 0) {
                 if (logger.isInfoEnabled()) {
                     logger.info("Retry unregister " + failed);
@@ -343,8 +343,8 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
         }
         if (! failedSubscribed.isEmpty()) {
-            Map<URL, Set<NotifyListener>> failed = new HashMap<URL, Set<NotifyListener>>(failedSubscribed);
-            for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<URL, Set<NotifyListener>>(failed).entrySet()) {
+            Map<URL, Set<NotifyListener>> failed = new HashMap<>(failedSubscribed);
+            for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<>(failed).entrySet()) {
                 if (entry.getValue() == null || entry.getValue().size() == 0) {
                     failed.remove(entry.getKey());
                 }
@@ -372,8 +372,8 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
         }
         if (! failedUnsubscribed.isEmpty()) {
-            Map<URL, Set<NotifyListener>> failed = new HashMap<URL, Set<NotifyListener>>(failedUnsubscribed);
-            for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<URL, Set<NotifyListener>>(failed).entrySet()) {
+            Map<URL, Set<NotifyListener>> failed = new HashMap<>(failedUnsubscribed);
+            for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<>(failed).entrySet()) {
                 if (entry.getValue() == null || entry.getValue().size() == 0) {
                     failed.remove(entry.getKey());
                 }
@@ -401,8 +401,8 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
         }
         if (! failedNotified.isEmpty()) {
-            Map<URL, Map<NotifyListener, List<URL>>> failed = new HashMap<URL, Map<NotifyListener, List<URL>>>(failedNotified);
-            for (Map.Entry<URL, Map<NotifyListener, List<URL>>> entry : new HashMap<URL, Map<NotifyListener, List<URL>>>(failed).entrySet()) {
+            Map<URL, Map<NotifyListener, List<URL>>> failed = new HashMap<>(failedNotified);
+            for (Map.Entry<URL, Map<NotifyListener, List<URL>>> entry : new HashMap<>(failed).entrySet()) {
                 if (entry.getValue() == null || entry.getValue().size() == 0) {
                     failed.remove(entry.getKey());
                 }

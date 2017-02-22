@@ -34,7 +34,7 @@ public class ThreadLocalCache implements Cache {
         this.store = new ThreadLocal<Map<Object, Object>>() {
             @Override
             protected Map<Object, Object> initialValue() {
-                return new HashMap<Object, Object>();
+                return new HashMap<>();
             }
         };
     }

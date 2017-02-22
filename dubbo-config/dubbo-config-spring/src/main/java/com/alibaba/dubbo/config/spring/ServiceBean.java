@@ -129,7 +129,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
                 Map<String, ProtocolConfig> protocolConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProtocolConfig.class, false, false);
                 if ((protocolConfigMap == null || protocolConfigMap.size() == 0)
                         && providerConfigMap.size() > 1) { // 兼容旧版本
-                    List<ProviderConfig> providerConfigs = new ArrayList<ProviderConfig>();
+                    List<ProviderConfig> providerConfigs = new ArrayList<>();
                     for (ProviderConfig config : providerConfigMap.values()) {
                         if (config.isDefault() != null && config.isDefault()) {
                             providerConfigs.add(config);
@@ -195,7 +195,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
                 && (getApplication() == null || getApplication().getRegistries() == null || getApplication().getRegistries().size() == 0)) {
             Map<String, RegistryConfig> registryConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, RegistryConfig.class, false, false);
             if (registryConfigMap != null && registryConfigMap.size() > 0) {
-                List<RegistryConfig> registryConfigs = new ArrayList<RegistryConfig>();
+                List<RegistryConfig> registryConfigs = new ArrayList<>();
                 for (RegistryConfig config : registryConfigMap.values()) {
                     if (config.isDefault() == null || config.isDefault()) {
                         registryConfigs.add(config);
@@ -229,7 +229,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
                 && (getProvider() == null || getProvider().getProtocols() == null || getProvider().getProtocols().size() == 0)) {
             Map<String, ProtocolConfig> protocolConfigMap = applicationContext == null ? null  : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProtocolConfig.class, false, false);
             if (protocolConfigMap != null && protocolConfigMap.size() > 0) {
-                List<ProtocolConfig> protocolConfigs = new ArrayList<ProtocolConfig>();
+                List<ProtocolConfig> protocolConfigs = new ArrayList<>();
                 for (ProtocolConfig config : protocolConfigMap.values()) {
                     if (config.isDefault() == null || config.isDefault()) {
                         protocolConfigs.add(config);

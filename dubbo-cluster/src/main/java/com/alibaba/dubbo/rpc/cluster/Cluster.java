@@ -34,9 +34,7 @@ public interface Cluster {
 
     /**
      * Merge the directory invokers to a virtual invoker.
-     * 
-     * @param <T>
-     * @param directory
+     *
      * @return cluster invoker
      * @throws RpcException
      */

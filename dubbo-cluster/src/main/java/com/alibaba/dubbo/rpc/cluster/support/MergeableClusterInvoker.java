@@ -83,7 +83,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
             returnType = null;
         }
         
-        Map<String, Future<Result>> results = new HashMap<String, Future<Result>>();
+        Map<String, Future<Result>> results = new HashMap<>();
         for( final Invoker<T> invoker : invokers ) {
             Future<Result> future = executor.submit( new Callable<Result>() {
                 public Result call() throws Exception {
@@ -93,10 +93,8 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
             results.put( invoker.getUrl().getServiceKey(), future );
         }
 
-        Object result = null;
-        
-        List<Result> resultList = new ArrayList<Result>( results.size() );
-        
+        Object result;
+        List<Result> resultList = new ArrayList<>( results.size() );
         int timeout = getUrl().getMethodParameter( invocation.getMethodName(), Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT );
         for ( Map.Entry<String, Future<Result>> entry : results.entrySet() ) {
             Future<Result> future = entry.getValue();
@@ -186,7 +184,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
                 resultMerger = ExtensionLoader.getExtensionLoader(Merger.class).getExtension(merger);
             }
             if (resultMerger != null) {
-                List<Object> rets = new ArrayList<Object>(resultList.size());
+                List<Object> rets = new ArrayList<>(resultList.size());
                 for(Result r : resultList) {
                     rets.add(r.getValue());
                 }

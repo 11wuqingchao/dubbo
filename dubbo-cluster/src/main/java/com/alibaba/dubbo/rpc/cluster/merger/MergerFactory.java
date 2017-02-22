@@ -29,8 +29,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class MergerFactory {
 
-    private static final ConcurrentMap<Class<?>, Merger<?>> mergerCache =
-            new ConcurrentHashMap<Class<?>, Merger<?>>();
+    private static final ConcurrentMap<Class<?>, Merger<?>> mergerCache = new ConcurrentHashMap<>();
 
     public static <T> Merger<T> getMerger(Class<T> returnType) {
         Merger result;
@@ -41,7 +40,7 @@ public class MergerFactory {
                 loadMergers();
                 result = mergerCache.get(type);
             }
-            if(result == null && ! type.isPrimitive()) {
+            if (result == null && ! type.isPrimitive()) {
                 result = ArrayMerger.INSTANCE;
             }
         } else {

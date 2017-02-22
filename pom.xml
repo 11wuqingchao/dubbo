@@ -134,11 +134,9 @@
 
         <!-- for maven compiler plugin -->
         <maven_compiler_plugin_version>2.3.2</maven_compiler_plugin_version>
-        <java_source_version>1.5</java_source_version>
-        <java_target_version>1.5</java_target_version>
         <file_encoding>UTF-8</file_encoding>
-        
 	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Common libs -->
@@ -401,12 +399,6 @@
 				<version>${cglib_version}</version>
 			</dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>com.alibaba.rocketmq</groupId>-->
-                <!--<artifactId>rocketmq-all</artifactId>-->
-                <!--<version>${rocketmq.version}</version>-->
-            <!--</dependency>-->
-
             <dependency>
                 <groupId>com.alibaba.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
@@ -440,6 +432,15 @@
 	</dependencies>
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>

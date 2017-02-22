@@ -80,9 +80,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private ProviderConfig provider;
 
-    private final List<URL> urls = new ArrayList<URL>();
+    private final List<URL> urls = new ArrayList<>();
     
-    private final List<Exporter<?>> exporters = new ArrayList<Exporter<?>>();
+    private final List<Exporter<?>> exporters = new ArrayList<>();
 
     private transient volatile boolean exported;
 
@@ -350,7 +350,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             logger.warn("Use random available port(" + port + ") for protocol " + name);
         }
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         if (anyhost) {
             map.put(Constants.ANYHOST_KEY, "true");
         }
@@ -436,7 +436,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 map.put("methods", Constants.ANY_VALUE);
             }
             else {
-                map.put("methods", StringUtils.join(new HashSet<String>(Arrays.asList(methods)), ","));
+                map.put("methods", StringUtils.join(new HashSet<>(Arrays.asList(methods)), ","));
             }
         }
         if (! ConfigUtils.isEmpty(token)) {

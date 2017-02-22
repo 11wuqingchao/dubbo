@@ -146,7 +146,7 @@ public class ConditionRouter implements Router, Comparable<Router> {
     
     private static Map<String, MatchPair> parseRule(String rule)
             throws ParseException {
-        Map<String, MatchPair> condition = new HashMap<String, MatchPair>();
+        Map<String, MatchPair> condition = new HashMap<>();
         if(StringUtils.isBlank(rule)) {
             return condition;
         }        
@@ -212,8 +212,8 @@ public class ConditionRouter implements Router, Comparable<Router> {
     }
 
     private static final class MatchPair {
-        final Set<String> matches = new HashSet<String>();
-        final Set<String> mismatches = new HashSet<String>();
+        final Set<String> matches = new HashSet<>();
+        final Set<String> mismatches = new HashSet<>();
         public boolean isMatch(String value, URL param) {
             for (String match : matches) {
                 if (! UrlUtils.isMatchGlobPattern(match, value, param)) {

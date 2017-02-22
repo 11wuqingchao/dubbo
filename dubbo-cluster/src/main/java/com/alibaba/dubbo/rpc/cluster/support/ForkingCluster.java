@@ -32,7 +32,7 @@ public class ForkingCluster implements Cluster {
     public final static String NAME = "forking"; 
     
     public <T> Invoker<T> join(Directory<T> directory) throws RpcException {
-        return new ForkingClusterInvoker<T>(directory);
+        return new ForkingClusterInvoker<>(directory);
     }
 
 }

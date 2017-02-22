@@ -37,14 +37,14 @@ import com.alibaba.dubbo.registry.support.AbstractRegistryFactory;
 public class RegistriesPageHandler implements PageHandler {
 
     public Page handle(URL url) {
-        List<List<String>> rows = new ArrayList<List<String>>();
+        List<List<String>> rows = new ArrayList<>();
         Collection<Registry> registries = AbstractRegistryFactory.getRegistries();
         int registeredCount = 0;
         int subscribedCount = 0;
         if (registries != null && registries.size() > 0) {
             for (Registry registry : registries) {
                 String server = registry.getUrl().getAddress();
-                List<String> row = new ArrayList<String>();
+                List<String> row = new ArrayList<>();
                 row.add(NetUtils.getHostName(server) + "/" + server);
                 if (registry.isAvailable()) {
                     row.add("<font color=\"green\">Connected</font>");

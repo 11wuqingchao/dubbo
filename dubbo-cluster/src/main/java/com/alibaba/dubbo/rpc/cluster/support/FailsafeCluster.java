@@ -32,7 +32,7 @@ public class FailsafeCluster implements Cluster {
     public final static String NAME = "failsafe";
 
     public <T> Invoker<T> join(Directory<T> directory) throws RpcException {
-        return new FailsafeClusterInvoker<T>(directory);
+        return new FailsafeClusterInvoker<>(directory);
     }
 
 }

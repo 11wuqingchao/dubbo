@@ -25,7 +25,7 @@ import com.alibaba.dubbo.registry.support.AbstractRegistryFactory;
  * RegistryConfig
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class RegistryConfig extends AbstractConfig {
 

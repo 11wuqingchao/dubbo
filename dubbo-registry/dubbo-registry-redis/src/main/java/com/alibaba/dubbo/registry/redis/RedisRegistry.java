@@ -68,9 +68,9 @@ public class RedisRegistry extends FailbackRegistry {
     
     private final String root;
 
-    private final Map<String, JedisPool> jedisPools = new ConcurrentHashMap<String, JedisPool>();
+    private final Map<String, JedisPool> jedisPools = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<String, Notifier> notifiers = new ConcurrentHashMap<String, Notifier>();
+    private final ConcurrentMap<String, Notifier> notifiers = new ConcurrentHashMap<>();
     
     private final int reconnectPeriod;
 
@@ -110,7 +110,7 @@ public class RedisRegistry extends FailbackRegistry {
         }
         replicate = "replicate".equals(cluster);
         
-        List<String> addresses = new ArrayList<String>();
+        List<String> addresses = new ArrayList<>();
         addresses.add(url.getAddress());
         String[] backups = url.getParameter(Constants.BACKUP_KEY, new String[0]);
         if (backups != null && backups.length > 0) {
@@ -159,7 +159,7 @@ public class RedisRegistry extends FailbackRegistry {
             try {
                 Jedis jedis = jedisPool.getResource();
                 try {
-                    for (URL url : new HashSet<URL>(getRegistered())) {
+                    for (URL url : new HashSet<>(getRegistered())) {
                         if (url.getParameter(Constants.DYNAMIC_KEY, true)) {
                             String key = toCategoryPath(url);
                             if (jedis.hset(key, url.toFullString(), String.valueOf(System.currentTimeMillis() + expirePeriod)) == 1) {
@@ -344,12 +344,12 @@ public class RedisRegistry extends FailbackRegistry {
                         admin = true;
                         Set<String> keys = jedis.keys(service);
                         if (keys != null && keys.size() > 0) {
-                            Map<String, Set<String>> serviceKeys = new HashMap<String, Set<String>>();
+                            Map<String, Set<String>> serviceKeys = new HashMap<>();
                             for (String key : keys) {
                                 String serviceKey = toServicePath(key);
                                 Set<String> sk = serviceKeys.get(serviceKey);
                                 if (sk == null) {
-                                    sk = new HashSet<String>();
+                                    sk = new HashSet<>();
                                     serviceKeys.put(serviceKey, sk);
                                 }
                                 sk.add(key);
@@ -384,8 +384,8 @@ public class RedisRegistry extends FailbackRegistry {
     }
 
     private void doNotify(Jedis jedis, String key) {
-        for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<URL, Set<NotifyListener>>(getSubscribed()).entrySet()) {
-            doNotify(jedis, Arrays.asList(key), entry.getKey(), new HashSet<NotifyListener>(entry.getValue()));
+        for (Map.Entry<URL, Set<NotifyListener>> entry : new HashMap<>(getSubscribed()).entrySet()) {
+            doNotify(jedis, Arrays.asList(key), entry.getKey(), new HashSet<>(entry.getValue()));
         }
     }
 
@@ -395,7 +395,7 @@ public class RedisRegistry extends FailbackRegistry {
             return;
         }
         long now = System.currentTimeMillis();
-        List<URL> result = new ArrayList<URL>();
+        List<URL> result = new ArrayList<>();
         List<String> categories = Arrays.asList(url.getParameter(Constants.CATEGORY_KEY, new String[0]));
         String consumerService = url.getServiceInterface();
         for (String key : keys) {
@@ -409,7 +409,7 @@ public class RedisRegistry extends FailbackRegistry {
             if (! categories.contains(Constants.ANY_VALUE) && ! categories.contains(category)) {
                 continue;
             }
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             Map<String, String> values = jedis.hgetAll(key);
             if (values != null && values.size() > 0) {
                 for (Map.Entry<String, String> entry : values.entrySet()) {

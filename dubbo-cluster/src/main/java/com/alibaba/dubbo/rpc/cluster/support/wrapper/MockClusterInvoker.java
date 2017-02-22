@@ -64,7 +64,7 @@ public class MockClusterInvoker<T> implements Invoker<T>{
 	}
 
 	public Result invoke(Invocation invocation) throws RpcException {
-		Result result = null;
+		Result result;
         
         String value = directory.getUrl().getMethodParameter(invocation.getMethodName(), Constants.MOCK_KEY, Boolean.FALSE.toString()).trim(); 
         if (value.length() == 0 || value.equalsIgnoreCase("false")){
@@ -96,7 +96,7 @@ public class MockClusterInvoker<T> implements Invoker<T>{
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Result doMockInvoke(Invocation invocation,RpcException e){
-		Result result = null;
+		Result result;
     	Invoker<T> minvoker ;
     	
     	List<Invoker<T>> mockInvokers = selectMockInvoker(invocation);
@@ -113,7 +113,6 @@ public class MockClusterInvoker<T> implements Invoker<T>{
 			} else {
 				throw new RpcException(me.getCode(), getMockExceptionMessage(e, me), me.getCause());
 			}
-//			
 		} catch (Throwable me) {
 			throw new RpcException(getMockExceptionMessage(e, me), me.getCause());
 		}
@@ -133,8 +132,6 @@ public class MockClusterInvoker<T> implements Invoker<T>{
      * 契约：
      * directory根据invocation中是否有Constants.INVOCATION_NEED_MOCK，来判断获取的是一个normal invoker 还是一个 mock invoker
      * 如果directorylist 返回多个mock invoker，只使用第一个invoker.
-     * @param invocation
-     * @return 
      */
     private List<Invoker<T>> selectMockInvoker(Invocation invocation){
     	//TODO generic invoker？

@@ -71,9 +71,9 @@ public class ExtensionLoader<T> {
 
     private static final Pattern NAME_SEPARATOR = Pattern.compile("\\s*[,]+\\s*");
     
-    private static final ConcurrentMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
+    private static final ConcurrentMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
 
-    private static final ConcurrentMap<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<Class<?>, Object>();
+    private static final ConcurrentMap<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<>();
 
     // ==============================
 
@@ -81,24 +81,24 @@ public class ExtensionLoader<T> {
 
     private final ExtensionFactory objectFactory;
 
-    private final ConcurrentMap<Class<?>, String> cachedNames = new ConcurrentHashMap<Class<?>, String>();
+    private final ConcurrentMap<Class<?>, String> cachedNames = new ConcurrentHashMap<>();
     
-    private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<Map<String,Class<?>>>();
+    private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
 
-    private final Map<String, Activate> cachedActivates = new ConcurrentHashMap<String, Activate>();
+    private final Map<String, Activate> cachedActivates = new ConcurrentHashMap<>();
 
     private volatile Class<?> cachedAdaptiveClass = null;
 
-    private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<String, Holder<Object>>();
+    private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
 
     private String cachedDefaultName;
 
-    private final Holder<Object> cachedAdaptiveInstance = new Holder<Object>();
+    private final Holder<Object> cachedAdaptiveInstance = new Holder<>();
     private volatile Throwable createAdaptiveInstanceError;
 
     private Set<Class<?>> cachedWrapperClasses;
     
-    private Map<String, IllegalStateException> exceptions = new ConcurrentHashMap<String, IllegalStateException>();
+    private Map<String, IllegalStateException> exceptions = new ConcurrentHashMap<>();
     
     private static <T> boolean withExtensionAnnotation(Class<T> type) {
         return type.isAnnotationPresent(SPI.class);
@@ -276,7 +276,7 @@ public class ExtensionLoader<T> {
             throw new IllegalArgumentException("Extension name == null");
         Holder<Object> holder = cachedInstances.get(name);
         if (holder == null) {
-            cachedInstances.putIfAbsent(name, new Holder<Object>());
+            cachedInstances.putIfAbsent(name, new Holder<>());
             holder = cachedInstances.get(name);
         }
         return (T) holder.get();
@@ -290,7 +290,7 @@ public class ExtensionLoader<T> {
      * @see #getSupportedExtensions()
      */
     public Set<String> getLoadedExtensions() {
-        return Collections.unmodifiableSet(new TreeSet<String>(cachedInstances.keySet()));
+        return Collections.unmodifiableSet(new TreeSet<>(cachedInstances.keySet()));
     }
 
     /**
@@ -308,7 +308,7 @@ public class ExtensionLoader<T> {
 		}
 		Holder<Object> holder = cachedInstances.get(name);
 		if (holder == null) {
-		    cachedInstances.putIfAbsent(name, new Holder<Object>());
+		    cachedInstances.putIfAbsent(name, new Holder<>());
 		    holder = cachedInstances.get(name);
 		}
 		Object instance = holder.get();
@@ -348,7 +348,7 @@ public class ExtensionLoader<T> {
     
 	public Set<String> getSupportedExtensions() {
         Map<String, Class<?>> clazzes = getExtensionClasses();
-        return Collections.unmodifiableSet(new TreeSet<String>(clazzes.keySet()));
+        return Collections.unmodifiableSet(new TreeSet<>(clazzes.keySet()));
     }
     
 	/**
@@ -369,29 +369,28 @@ public class ExtensionLoader<T> {
     public void addExtension(String name, Class<?> clazz) {
         getExtensionClasses(); // load classes
 
-        if(!type.isAssignableFrom(clazz)) {
+        if (!type.isAssignableFrom(clazz)) {
             throw new IllegalStateException("Input type " +
                     clazz + "not implement Extension " + type);
         }
-        if(clazz.isInterface()) {
+        if (clazz.isInterface()) {
             throw new IllegalStateException("Input type " +
                     clazz + "can not be interface!");
         }
 
-        if(!clazz.isAnnotationPresent(Adaptive.class)) {
-            if(StringUtils.isBlank(name)) {
+        if (!clazz.isAnnotationPresent(Adaptive.class)) {
+            if (StringUtils.isBlank(name)) {
                 throw new IllegalStateException("Extension name is blank (Extension " + type + ")!");
             }
-            if(cachedClasses.get().containsKey(name)) {
+            if (cachedClasses.get().containsKey(name)) {
                 throw new IllegalStateException("Extension name " +
                         name + " already existed(Extension " + type + ")!");
             }
 
             cachedNames.put(clazz, name);
             cachedClasses.get().put(name, clazz);
-        }
-        else {
-            if(cachedAdaptiveClass != null) {
+        } else {
+            if (cachedAdaptiveClass != null) {
                 throw new IllegalStateException("Adaptive Extension already existed(Extension " + type + ")!");
             }
 
@@ -411,30 +410,27 @@ public class ExtensionLoader<T> {
     public void replaceExtension(String name, Class<?> clazz) {
         getExtensionClasses(); // load classes
 
-        if(!type.isAssignableFrom(clazz)) {
+        if (!type.isAssignableFrom(clazz)) {
             throw new IllegalStateException("Input type " +
                     clazz + "not implement Extension " + type);
         }
-        if(clazz.isInterface()) {
-            throw new IllegalStateException("Input type " +
-                    clazz + "can not be interface!");
+        if (clazz.isInterface()) {
+            throw new IllegalStateException("Input type " +  clazz + "can not be interface!");
         }
 
-        if(!clazz.isAnnotationPresent(Adaptive.class)) {
+        if (!clazz.isAnnotationPresent(Adaptive.class)) {
             if(StringUtils.isBlank(name)) {
                 throw new IllegalStateException("Extension name is blank (Extension " + type + ")!");
             }
             if(!cachedClasses.get().containsKey(name)) {
-                throw new IllegalStateException("Extension name " +
-                        name + " not existed(Extension " + type + ")!");
+                throw new IllegalStateException("Extension name " + name + " not existed(Extension " + type + ")!");
             }
 
             cachedNames.put(clazz, name);
             cachedClasses.get().put(name, clazz);
             cachedInstances.remove(name);
-        }
-        else {
-            if(cachedAdaptiveClass == null) {
+        } else {
+            if (cachedAdaptiveClass == null) {
                 throw new IllegalStateException("Adaptive Extension not existed(Extension " + type + ")!");
             }
 
@@ -480,7 +476,7 @@ public class ExtensionLoader<T> {
 
         int i = 1;
         for (Map.Entry<String, IllegalStateException> entry : exceptions.entrySet()) {
-            if(i == 1) {
+            if (i == 1) {
                 buf.append(", possible causes: ");
             }
 
@@ -587,7 +583,7 @@ public class ExtensionLoader<T> {
             }
         }
         
-        Map<String, Class<?>> extensionClasses = new HashMap<String, Class<?>>();
+        Map<String, Class<?>> extensionClasses = new HashMap<>();
         loadFile(extensionClasses, DUBBO_INTERNAL_DIRECTORY);
         loadFile(extensionClasses, DUBBO_DIRECTORY);
         loadFile(extensionClasses, SERVICES_DIRECTORY);
@@ -610,7 +606,7 @@ public class ExtensionLoader<T> {
                     try {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
                         try {
-                            String line = null;
+                            String line;
                             while ((line = reader.readLine()) != null) {
                                 final int ci = line.indexOf('#');
                                 if (ci >= 0) line = line.substring(0, ci);
@@ -643,7 +639,7 @@ public class ExtensionLoader<T> {
                                                     clazz.getConstructor(type);
                                                     Set<Class<?>> wrappers = cachedWrapperClasses;
                                                     if (wrappers == null) {
-                                                        cachedWrapperClasses = new ConcurrentHashSet<Class<?>>();
+                                                        cachedWrapperClasses = new ConcurrentHashSet<>();
                                                         wrappers = cachedWrapperClasses;
                                                     }
                                                     wrappers.add(clazz);

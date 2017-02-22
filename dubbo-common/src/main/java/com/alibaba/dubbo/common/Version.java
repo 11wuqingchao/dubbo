@@ -125,7 +125,7 @@ public final class Version {
 		try {
 			// 在ClassPath搜文件
 			Enumeration<URL> urls = ClassHelper.getCallerClassLoader(Version.class).getResources(path);
-			Set<String> files = new HashSet<String>();
+			Set<String> files = new HashSet<>();
 			while (urls.hasMoreElements()) {
 				URL url = urls.nextElement();
 				if (url != null) {

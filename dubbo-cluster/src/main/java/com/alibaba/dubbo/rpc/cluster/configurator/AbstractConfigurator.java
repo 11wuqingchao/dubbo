@@ -55,7 +55,7 @@ public abstract class AbstractConfigurator implements Configurator {
             if (configApplication == null || Constants.ANY_VALUE.equals(configApplication) 
                     || configApplication.equals(currentApplication)) {
                 if (configuratorUrl.getPort() == 0 || url.getPort() == configuratorUrl.getPort()) {
-                    Set<String> condtionKeys = new HashSet<String>();
+                    Set<String> condtionKeys = new HashSet<>();
                     condtionKeys.add(Constants.CATEGORY_KEY);
                     condtionKeys.add(Constants.CHECK_KEY);
                     condtionKeys.add(Constants.DYNAMIC_KEY);

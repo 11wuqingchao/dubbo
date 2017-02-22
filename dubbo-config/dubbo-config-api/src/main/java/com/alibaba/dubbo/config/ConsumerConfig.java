@@ -19,7 +19,6 @@ package com.alibaba.dubbo.config;
  * ConsumerConfig
  * 
  * @author william.liangf
- * @export
  */
 public class ConsumerConfig extends AbstractReferenceConfig {
 

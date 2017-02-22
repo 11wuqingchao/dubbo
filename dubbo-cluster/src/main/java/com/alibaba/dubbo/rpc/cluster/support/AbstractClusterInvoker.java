@@ -41,15 +41,15 @@ import com.alibaba.dubbo.rpc.support.RpcUtils;
  */
 public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
 
-    private static final Logger                logger                            = LoggerFactory
-                                                                                         .getLogger(AbstractClusterInvoker.class);
-    protected final Directory<T>               directory;
+    private static final Logger     logger  = LoggerFactory .getLogger(AbstractClusterInvoker.class);
 
-    protected final boolean                    availablecheck;
+    protected final Directory<T>    directory;
+
+    protected final boolean         availablecheck;
     
-    private volatile boolean                   destroyed = false;
+    private volatile boolean        destroyed = false;
 
-    private volatile Invoker<T>                stickyInvoker                     = null;
+    private volatile Invoker<T>     stickyInvoker = null;
 
     public AbstractClusterInvoker(Directory<T> directory) {
         this(directory, directory.getUrl());
@@ -89,8 +89,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
      * 使用loadbalance选择invoker.</br>
      * a)先lb选择，如果在selected列表中 或者 不可用且做检验时，进入下一步(重选),否则直接返回</br>
      * b)重选验证规则：selected > available .保证重选出的结果尽量不在select中，并且是可用的 
-     * 
-     * @param availablecheck 如果设置true，在选择的时候先选invoker.available == true
+     *
      * @param selected 已选过的invoker.注意：输入保证不重复
      * 
      */
@@ -105,7 +104,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
             if ( stickyInvoker != null && !invokers.contains(stickyInvoker) ){
                 stickyInvoker = null;
             }
-            //ignore cucurrent problem
+            //ignore concurrent problem
             if (sticky && stickyInvoker != null && (selected == null || !selected.contains(stickyInvoker))){
                 if (availablecheck && stickyInvoker.isAvailable()){
                     return stickyInvoker;

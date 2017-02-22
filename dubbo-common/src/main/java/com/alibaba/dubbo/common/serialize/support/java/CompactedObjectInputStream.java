@@ -30,8 +30,7 @@ import com.alibaba.dubbo.common.utils.ClassHelper;
  * @author qianlei
  */
 
-public class CompactedObjectInputStream extends ObjectInputStream
-{
+public class CompactedObjectInputStream extends ObjectInputStream {
 	private ClassLoader mClassLoader;
 
 	public CompactedObjectInputStream(InputStream in) throws IOException

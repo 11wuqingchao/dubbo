@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class JSONObject implements JSONNode
 {
-	private Map<String,Object> mMap = new HashMap<String,Object>();
+	private Map<String,Object> mMap = new HashMap<>();
 
 	/**
 	 * get.

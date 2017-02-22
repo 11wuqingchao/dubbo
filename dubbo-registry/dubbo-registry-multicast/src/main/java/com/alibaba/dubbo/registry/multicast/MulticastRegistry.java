@@ -64,7 +64,7 @@ public class MulticastRegistry extends FailbackRegistry {
 
     private final int mutilcastPort;
 
-    private final ConcurrentMap<URL, Set<URL>> received = new ConcurrentHashMap<URL, Set<URL>>();
+    private final ConcurrentMap<URL, Set<URL>> received = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService cleanExecutor = Executors.newScheduledThreadPool(1, new NamedThreadFactory("DubboMulticastRegistryCleanTimer", true));
 
@@ -145,8 +145,8 @@ public class MulticastRegistry extends FailbackRegistry {
     
     private void clean() {
         if (admin) {
-            for (Set<URL> providers : new HashSet<Set<URL>>(received.values())) {
-                for (URL url : new HashSet<URL>(providers)) {
+            for (Set<URL> providers : new HashSet<>(received.values())) {
+                for (URL url : new HashSet<>(providers)) {
                     if (isExpired(url)) {
                         if (logger.isWarnEnabled()) {
                             logger.warn("Clean expired provider " + url);
@@ -352,7 +352,7 @@ public class MulticastRegistry extends FailbackRegistry {
     }
 
     private List<URL> toList(Set<URL> urls) {
-        List<URL> list = new ArrayList<URL>();
+        List<URL> list = new ArrayList<>();
         if (urls != null && urls.size() > 0) {
             for (URL url : urls) {
                 list.add(url);
@@ -382,7 +382,7 @@ public class MulticastRegistry extends FailbackRegistry {
     }
 
     public List<URL> lookup(URL url) {
-        List<URL> urls= new ArrayList<URL>();
+        List<URL> urls= new ArrayList<>();
         Map<String, List<URL>> notifiedUrls = getNotified().get(url);
         if (notifiedUrls != null && notifiedUrls.size() > 0) {
             for (List<URL> values : notifiedUrls.values()) {

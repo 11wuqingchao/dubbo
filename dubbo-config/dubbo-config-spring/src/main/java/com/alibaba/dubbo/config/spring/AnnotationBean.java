@@ -67,9 +67,9 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
 
     private String[] annotationPackages;
 
-    private final Set<ServiceConfig<?>> serviceConfigs = new ConcurrentHashSet<ServiceConfig<?>>();
+    private final Set<ServiceConfig<?>> serviceConfigs = new ConcurrentHashSet<>();
 
-    private final ConcurrentMap<String, ReferenceBean<?>> referenceConfigs = new ConcurrentHashMap<String, ReferenceBean<?>>();
+    private final ConcurrentMap<String, ReferenceBean<?>> referenceConfigs = new ConcurrentHashMap<>();
 
     public String getPackage() {
         return annotationPackage;
@@ -147,7 +147,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
             if (applicationContext != null) {
                 serviceConfig.setApplicationContext(applicationContext);
                 if (service.registry() != null && service.registry().length > 0) {
-                    List<RegistryConfig> registryConfigs = new ArrayList<RegistryConfig>();
+                    List<RegistryConfig> registryConfigs = new ArrayList<>();
                     for (String registryId : service.registry()) {
                         if (registryId != null && registryId.length() > 0) {
                             registryConfigs.add(applicationContext.getBean(registryId, RegistryConfig.class));
@@ -173,7 +173,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
                     
                 }
                 if (service.protocol() != null && service.protocol().length > 0) {
-                    List<ProtocolConfig> protocolConfigs = new ArrayList<ProtocolConfig>();
+                    List<ProtocolConfig> protocolConfigs = new ArrayList<>();
                     for (String protocolId : service.registry()) {
                         if (protocolId != null && protocolId.length() > 0) {
                             protocolConfigs.add(applicationContext.getBean(protocolId, ProtocolConfig.class));

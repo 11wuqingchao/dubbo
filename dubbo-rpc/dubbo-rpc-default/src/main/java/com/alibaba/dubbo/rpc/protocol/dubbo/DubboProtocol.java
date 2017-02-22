@@ -64,17 +64,15 @@ public class DubboProtocol extends AbstractProtocol {
     
     public static final int DEFAULT_PORT = 20880;
     
-    public final ReentrantLock lock = new ReentrantLock();
+    private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<>(); // <host:port,Exchanger>
     
-    private final Map<String, ExchangeServer> serverMap = new ConcurrentHashMap<String, ExchangeServer>(); // <host:port,Exchanger>
+    private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new ConcurrentHashMap<>(); // <host:port,Exchanger>
     
-    private final Map<String, ReferenceCountExchangeClient> referenceClientMap = new ConcurrentHashMap<String, ReferenceCountExchangeClient>(); // <host:port,Exchanger>
-    
-    private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap = new ConcurrentHashMap<String, LazyConnectExchangeClient>();
+    private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap = new ConcurrentHashMap<>();
     
     //consumer side export a stub service for dispatching event
     //servicekey-stubmethods
-    private final ConcurrentMap<String, String> stubServiceMethodsMap = new ConcurrentHashMap<String, String>();
+    private final ConcurrentMap<String, String> stubServiceMethodsMap = new ConcurrentHashMap<>();
     
     private static final String IS_CALLBACK_SERVICE_INVOKE = "_isCallBackServiceInvoke";
 
@@ -194,8 +192,8 @@ public class DubboProtocol extends AbstractProtocol {
     }
     
     Invoker<?> getInvoker(Channel channel, Invocation inv) throws RemotingException{
-        boolean isCallBackServiceInvoke = false;
-        boolean isStubServiceInvoke = false;
+        boolean isCallBackServiceInvoke;
+        boolean isStubServiceInvoke;
         int port = channel.getLocalAddress().getPort();
         String path = inv.getAttachments().get(Constants.PATH_KEY);
         //如果是客户端的回调服务.
@@ -232,7 +230,7 @@ public class DubboProtocol extends AbstractProtocol {
         
         // export service.
         String key = serviceKey(url);
-        DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
+        DubboExporter<T> exporter = new DubboExporter<>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
         
         //export an stub service for dispaching event
@@ -385,7 +383,7 @@ public class DubboProtocol extends AbstractProtocol {
     }
 
     public void destroy() {
-        for (String key : new ArrayList<String>(serverMap.keySet())) {
+        for (String key : new ArrayList<>(serverMap.keySet())) {
             ExchangeServer server = serverMap.remove(key);
             if (server != null) {
                 try {
@@ -399,7 +397,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
         
-        for (String key : new ArrayList<String>(referenceClientMap.keySet())) {
+        for (String key : new ArrayList<>(referenceClientMap.keySet())) {
             ExchangeClient client = referenceClientMap.remove(key);
             if (client != null) {
                 try {
@@ -413,7 +411,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
         
-        for (String key : new ArrayList<String>(ghostClientMap.keySet())) {
+        for (String key : new ArrayList<>(ghostClientMap.keySet())) {
             ExchangeClient client = ghostClientMap.remove(key);
             if (client != null) {
                 try {

@@ -28,7 +28,7 @@ import com.alibaba.dubbo.rpc.protocol.AbstractExporter;
  */
 public class DubboExporter<T> extends AbstractExporter<T> {
 
-    private final String                        key;
+    private final String key;
 
     private final Map<String, Exporter<?>> exporterMap;
 

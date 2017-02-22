@@ -40,8 +40,6 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     
     private final URL url;
     
-//    private final ExchangeHandler handler;
-    
     private final AtomicInteger refenceCount = new AtomicInteger(0);
     
     private final ConcurrentMap<String, LazyConnectExchangeClient> ghostClientMap;

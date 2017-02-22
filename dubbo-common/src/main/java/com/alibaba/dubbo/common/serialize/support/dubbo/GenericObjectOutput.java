@@ -32,7 +32,7 @@ import com.alibaba.dubbo.common.utils.ReflectUtils;
 public class GenericObjectOutput extends GenericDataOutput implements ObjectOutput {
 	private ClassDescriptorMapper mMapper;
 
-	private Map<Object, Integer> mRefs = new ConcurrentHashMap<Object, Integer>();
+	private Map<Object, Integer> mRefs = new ConcurrentHashMap<>();
 	
 	private final boolean isAllowNonSerializable;
 

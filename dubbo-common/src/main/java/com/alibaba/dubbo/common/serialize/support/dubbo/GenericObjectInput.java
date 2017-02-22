@@ -36,7 +36,7 @@ public class GenericObjectInput extends GenericDataInput implements ObjectInput
 
 	private ClassDescriptorMapper mMapper;
 
-	private List<Object> mRefs = new ArrayList<Object>();
+	private List<Object> mRefs = new ArrayList<>();
 
 	public GenericObjectInput(InputStream is)
 	{

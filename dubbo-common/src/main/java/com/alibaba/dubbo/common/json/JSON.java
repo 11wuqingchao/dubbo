@@ -60,7 +60,7 @@ public class JSON
 	 * 
 	 * @param obj object.
 	 * @return json string.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public static String json(Object obj) throws IOException
 	{
@@ -79,7 +79,7 @@ public class JSON
 	 * 
 	 * @param obj object.
 	 * @param writer writer.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public static void json(Object obj, Writer writer) throws IOException
     {
@@ -100,7 +100,7 @@ public class JSON
 	 * @param obj object.
 	 * @param properties property name array.
 	 * @return json string.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public static String json(Object obj, String[] properties) throws IOException
 	{
@@ -125,7 +125,7 @@ public class JSON
 	 * @param obj object.
 	 * @param properties property name array.
 	 * @param writer writer.
-	 * @throws IOException.
+	 * @throws IOException
 	 */
 	public static void json(Object obj, final String[] properties, Writer writer, boolean writeClass) throws IOException
 	{
@@ -475,7 +475,7 @@ public class JSON
 
 		Object value = null;
 		int state = START, index = 0;
-		Stack<int[]> states = new Stack<int[]>();
+		Stack<int[]> states = new Stack<>();
 		boolean pv = false;
 
 		handler.begin();

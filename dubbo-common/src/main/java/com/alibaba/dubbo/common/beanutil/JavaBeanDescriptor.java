@@ -65,16 +65,14 @@ public final class JavaBeanDescriptor implements Serializable, Iterable<Map.Entr
 
     private int type;
 
-    private Map<Object, Object> properties = new LinkedHashMap<Object, Object>();
+    private Map<Object, Object> properties = new LinkedHashMap<>();
 
     public JavaBeanDescriptor() {}
 
     public JavaBeanDescriptor(String className, int type) {
         notEmpty(className, "class name is empty");
         if (!isValidType(type)) {
-            throw new IllegalArgumentException(
-                new StringBuilder(16).append("type [ ")
-                    .append(type).append(" ] is unsupported").toString());
+            throw new IllegalArgumentException(String.format("type [ %d ] is unsupported", type));
         }
 
         this.className = className;

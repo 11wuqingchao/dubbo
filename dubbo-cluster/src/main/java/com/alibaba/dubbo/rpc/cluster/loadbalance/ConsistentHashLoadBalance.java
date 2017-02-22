@@ -36,7 +36,7 @@ import com.alibaba.dubbo.rpc.Invoker;
  */
 public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
-    private final ConcurrentMap<String, ConsistentHashSelector<?>> selectors = new ConcurrentHashMap<String, ConsistentHashSelector<?>>();
+    private final ConcurrentMap<String, ConsistentHashSelector<?>> selectors = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -45,7 +45,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         int identityHashCode = System.identityHashCode(invokers);
         ConsistentHashSelector<T> selector = (ConsistentHashSelector<T>) selectors.get(key);
         if (selector == null || selector.getIdentityHashCode() != identityHashCode) {
-            selectors.put(key, new ConsistentHashSelector<T>(invokers, invocation.getMethodName(), identityHashCode));
+            selectors.put(key, new ConsistentHashSelector<>(invokers, invocation.getMethodName(), identityHashCode));
             selector = (ConsistentHashSelector<T>) selectors.get(key);
         }
         return selector.select(invocation);
@@ -62,7 +62,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         private final int[]                     argumentIndex;
 
         public ConsistentHashSelector(List<Invoker<T>> invokers, String methodName, int identityHashCode) {
-            this.virtualInvokers = new TreeMap<Long, Invoker<T>>();
+            this.virtualInvokers = new TreeMap<>();
             this.identityHashCode = System.identityHashCode(invokers);
             URL url = invokers.get(0).getUrl();
             this.replicaNumber = url.getMethodParameter(methodName, "hash.nodes", 160);
@@ -89,8 +89,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         public Invoker<T> select(Invocation invocation) {
             String key = toKey(invocation.getArguments());
             byte[] digest = md5(key);
-            Invoker<T> invoker = sekectForKey(hash(digest, 0));
-            return invoker;
+            return selectForKey(hash(digest, 0));
         }
 
         private String toKey(Object[] args) {
@@ -103,7 +102,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
             return buf.toString();
         }
 
-        private Invoker<T> sekectForKey(long hash) {
+        private Invoker<T> selectForKey(long hash) {
             Invoker<T> invoker;
             Long key = hash;
             if (!virtualInvokers.containsKey(key)) {
@@ -134,7 +133,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
                 throw new IllegalStateException(e.getMessage(), e);
             }
             md5.reset();
-            byte[] bytes = null;
+            byte[] bytes;
             try {
                 bytes = value.getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {

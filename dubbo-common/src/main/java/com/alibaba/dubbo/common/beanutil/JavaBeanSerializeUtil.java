@@ -324,19 +324,19 @@ public final class JavaBeanSerializeUtil {
         if (boolean.class.equals(cl) || Boolean.class.equals(cl)) {
             return Boolean.FALSE;
         } else if (byte.class.equals(cl) || Byte.class.equals(cl)) {
-            return Byte.valueOf((byte) 0);
+            return (byte) 0;
         } else if (short.class.equals(cl) || Short.class.equals(cl)) {
-            return Short.valueOf((short) 0);
+            return (short) 0;
         } else if (int.class.equals(cl) || Integer.class.equals(cl)) {
-            return Integer.valueOf(0);
+            return 0;
         } else if (long.class.equals(cl) || Long.class.equals(cl)) {
-            return Long.valueOf(0L);
+            return 0L;
         } else if (float.class.equals(cl) || Float.class.equals(cl)) {
-            return Float.valueOf((float) 0);
+            return (float) 0;
         } else if (double.class.equals(cl) || Double.class.equals(cl)) {
-            return Double.valueOf((double) 0);
+            return (double) 0;
         } else if (char.class.equals(cl) || Character.class.equals(cl)) {
-            return new Character((char) 0);
+            return (char) 0;
         } else {
             return null;
         }
@@ -346,7 +346,7 @@ public final class JavaBeanSerializeUtil {
         if (cache.containsKey(beanDescriptor)) {
             return cache.get(beanDescriptor);
         }
-        Object result = null;
+        Object result;
         if (beanDescriptor.isClassType()) {
             try {
                 result = name2Class(loader, beanDescriptor.getClassNameProperty());

@@ -48,10 +48,10 @@ public class CompatibleTypeUtils {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Object compatibleTypeConvert(Object value, Class<?> type) {
-        if(value == null || type == null || type.isAssignableFrom(value.getClass())) {
+        if (value == null || type == null || type.isAssignableFrom(value.getClass())) {
         	return value;
         }
-        if(value instanceof String) {
+        if (value instanceof String) {
             String string = (String) value;
             if (char.class.equals(type) || Character.class.equals(type)) {
                 if(string.length() != 1) {

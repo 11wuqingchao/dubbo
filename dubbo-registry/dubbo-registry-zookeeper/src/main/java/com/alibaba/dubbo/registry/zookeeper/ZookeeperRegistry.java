@@ -50,9 +50,9 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     private final String        root;
     
-    private final Set<String> anyServices = new ConcurrentHashSet<String>();
+    private final Set<String> anyServices = new ConcurrentHashSet<>();
 
-    private final ConcurrentMap<URL, ConcurrentMap<NotifyListener, ChildListener>> zkListeners = new ConcurrentHashMap<URL, ConcurrentMap<NotifyListener, ChildListener>>();
+    private final ConcurrentMap<URL, ConcurrentMap<NotifyListener, ChildListener>> zkListeners = new ConcurrentHashMap<>();
     
     private final ZookeeperClient zkClient;
     
@@ -145,7 +145,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     }
                 }
             } else {
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 for (String path : toCategoriesPath(url)) {
                     ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
                     if (listeners == null) {
@@ -155,8 +155,8 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     ChildListener zkListener = listeners.get(listener);
                     if (zkListener == null) {
                         listeners.putIfAbsent(listener, new ChildListener() {
-                            public void childChanged(String parentPath, List<String> currentChilds) {
-                            	ZookeeperRegistry.this.notify(url, listener, toUrlsWithEmpty(url, parentPath, currentChilds));
+                            public void childChanged(String parentPath, List<String> currentChildren) {
+                            	ZookeeperRegistry.this.notify(url, listener, toUrlsWithEmpty(url, parentPath, currentChildren));
                             }
                         });
                         zkListener = listeners.get(listener);
@@ -245,7 +245,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
     }
     
     private List<URL> toUrlsWithoutEmpty(URL consumer, List<String> providers) {
-    	List<URL> urls = new ArrayList<URL>();
+    	List<URL> urls = new ArrayList<>();
         if (providers != null && providers.size() > 0) {
             for (String provider : providers) {
                 provider = URL.decode(provider);

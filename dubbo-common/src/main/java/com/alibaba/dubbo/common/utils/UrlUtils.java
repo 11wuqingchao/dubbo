@@ -131,7 +131,7 @@ public class UrlUtils {
         if (addresses == null || addresses.length == 0) {
             return null; //here won't be empty
         }
-        List<URL> registries = new ArrayList<URL>();
+        List<URL> registries = new ArrayList<>();
         for (String addr : addresses) {
             registries.add(parseURL(addr, defaults));
         }
@@ -139,7 +139,7 @@ public class UrlUtils {
     }
 
     public static Map<String, Map<String, String>> convertRegister(Map<String, Map<String, String>> register) {
-        Map<String, Map<String, String>> newRegister = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> newRegister = new HashMap<>();
         for (Map.Entry<String, Map<String, String>> entry : register.entrySet()) {
             String serviceName = entry.getKey();
             Map<String, String> serviceUrls = entry.getValue();
@@ -161,7 +161,7 @@ public class UrlUtils {
                     }
                     Map<String, String> newUrls = newRegister.get(name);
                     if (newUrls == null) {
-                        newUrls = new HashMap<String, String>();
+                        newUrls = new HashMap<>();
                         newRegister.put(name, newUrls);
                     }
                     newUrls.put(serviceUrl, StringUtils.toQueryString(params));
@@ -174,7 +174,7 @@ public class UrlUtils {
     }
 
     public static Map<String, String> convertSubscribe(Map<String, String> subscribe) {
-        Map<String, String> newSubscribe = new HashMap<String, String>();
+        Map<String, String> newSubscribe = new HashMap<>();
         for (Map.Entry<String, String> entry : subscribe.entrySet()) {
             String serviceName = entry.getKey();
             String serviceQuery = entry.getValue();
@@ -222,7 +222,7 @@ public class UrlUtils {
                     }
                     Map<String, String> newUrls = newRegister.get(name);
                     if (newUrls == null) {
-                        newUrls = new HashMap<String, String>();
+                        newUrls = new HashMap<>();
                         newRegister.put(name, newUrls);
                     }
                     newUrls.put(serviceUrl, StringUtils.toQueryString(params));
@@ -235,7 +235,7 @@ public class UrlUtils {
     }
 
     public static Map<String, String> revertSubscribe(Map<String, String> subscribe) {
-        Map<String, String> newSubscribe = new HashMap<String, String>();
+        Map<String, String> newSubscribe = new HashMap<>();
         for (Map.Entry<String, String> entry : subscribe.entrySet()) {
             String serviceName = entry.getKey();
             String serviceQuery = entry.getValue();
@@ -262,7 +262,7 @@ public class UrlUtils {
 
     public static Map<String, Map<String, String>> revertNotify(Map<String, Map<String, String>> notify) {
         if (notify != null && notify.size() > 0) {
-            Map<String, Map<String, String>> newNotify = new HashMap<String, Map<String, String>>();
+            Map<String, Map<String, String>> newNotify = new HashMap<>();
             for (Map.Entry<String, Map<String, String>> entry : notify.entrySet()) {
                 String serviceName = entry.getKey();
                 Map<String, String> serviceUrls = entry.getValue();
@@ -285,7 +285,7 @@ public class UrlUtils {
                             }
                             Map<String, String> newUrls = newNotify.get(name);
                             if (newUrls == null) {
-                                newUrls = new HashMap<String, String>();
+                                newUrls = new HashMap<>();
                                 newNotify.put(name, newUrls);
                             }
                             newUrls.put(url, StringUtils.toQueryString(params));
@@ -303,7 +303,7 @@ public class UrlUtils {
     //compatible for dubbo-2.0.0
     public static List<String> revertForbid(List<String> forbid, Set<URL> subscribed) {
         if (forbid != null && forbid.size() > 0) {
-            List<String> newForbid = new ArrayList<String>();
+            List<String> newForbid = new ArrayList<>();
             for (String serviceName : forbid) {
                 if (! serviceName.contains(":") && ! serviceName.contains("/")) {
                     for (URL url : subscribed) {

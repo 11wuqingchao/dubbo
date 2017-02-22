@@ -42,13 +42,18 @@ import com.alibaba.dubbo.rpc.RpcInvocation;
  *
  */
 class CallbackServiceCodec {
-    private static final Logger     logger             = LoggerFactory.getLogger(CallbackServiceCodec.class);
+    private static final Logger logger = LoggerFactory.getLogger(CallbackServiceCodec.class);
     
     private static final ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
+
     private static final DubboProtocol protocol = DubboProtocol.getDubboProtocol();
+
     private static final byte CALLBACK_NONE = 0x0;
+
     private static final byte CALLBACK_CREATE = 0x1;
+
     private static final byte CALLBACK_DESTROY = 0x2;
+
     private static final String INV_ATT_CALLBACK_KEY  = "sys_callback_arg-";
     
     private static byte isCallBack(URL url, String methodName ,int argIndex){
@@ -69,18 +74,12 @@ class CallbackServiceCodec {
     
     /**
      * client 端export callback service
-     * @param channel
-     * @param clazz
-     * @param inst
-     * @param export
-     * @param out
-     * @throws IOException
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private static String exportOrunexportCallbackService(Channel channel, URL url, Class clazz, Object inst, Boolean export) throws IOException{
         int instid = System.identityHashCode(inst);
         
-        Map<String,String> params = new HashMap<String,String>(3);
+        Map<String,String> params = new HashMap<>(3);
         //不需要在重新new client
         params.put(Constants.IS_SERVER_KEY, Boolean.FALSE.toString());
         //标识callback 变于排查问题
@@ -92,7 +91,7 @@ class CallbackServiceCodec {
         //增加方法，变于方法检查，自动降级(见dubbo protocol)
         params.put(Constants.METHODS_KEY, StringUtils.join(Wrapper.getWrapper(clazz).getDeclaredMethodNames(), ","));
         
-        Map<String, String> tmpmap = new HashMap<String, String>(url.getParameters());
+        Map<String, String> tmpmap = new HashMap<>(url.getParameters());
         tmpmap.putAll(params);
         tmpmap.remove(Constants.VERSION_KEY);//callback不需要区分version
         tmpmap.put(Constants.INTERFACE_KEY, clazz.getName());
@@ -127,7 +126,6 @@ class CallbackServiceCodec {
     
     /**
      * server端 应用一个callbackservice
-     * @param url 
      */
     @SuppressWarnings("unchecked")
     private static Object referOrdestroyCallbackService(Channel channel, URL url, Class<?> clazz ,Invocation inv ,int instid, boolean isRefer){
@@ -152,7 +150,7 @@ class CallbackServiceCodec {
                     //ignore concurrent problem. 
                     Set<Invoker<?>> callbackInvokers = (Set<Invoker<?>>)channel.getAttribute(Constants.CHANNEL_CALLBACK_KEY);
                     if (callbackInvokers == null){
-                        callbackInvokers = new ConcurrentHashSet<Invoker<?>>(1);
+                        callbackInvokers = new ConcurrentHashSet<>(1);
                         callbackInvokers.add(invoker);
                         channel.setAttribute(Constants.CHANNEL_CALLBACK_KEY, callbackInvokers);
                     }
@@ -257,7 +255,7 @@ class CallbackServiceCodec {
     public static Object decodeInvocationArgument(Channel channel, RpcInvocation inv, Class<?>[] pts, int paraIndex, Object inObject) throws IOException{
         //如果是callback，则创建proxy到客户端，方法的执行可通过channel调用到client端的callback接口
         //decode时需要根据channel及env获取url
-        URL url = null ;
+        URL url;
         try {
             url = DubboProtocol.getDubboProtocol().getInvoker(channel, inv).getUrl();
         } catch (RemotingException e) {

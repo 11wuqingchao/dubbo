@@ -23,7 +23,6 @@ import com.alibaba.dubbo.config.support.Parameter;
  * MonitorConfig
  * 
  * @author william.liangf
- * @export
  */
 public class MonitorConfig extends AbstractConfig {
 	

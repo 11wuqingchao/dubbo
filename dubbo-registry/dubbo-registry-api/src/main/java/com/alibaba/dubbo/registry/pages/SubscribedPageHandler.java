@@ -36,7 +36,7 @@ public class SubscribedPageHandler implements PageHandler {
 
     public Page handle(URL url) {
         String registryAddress = url.getParameter("registry", "");
-        List<List<String>> rows = new ArrayList<List<String>>();
+        List<List<String>> rows = new ArrayList<>();
         Collection<Registry> registries = AbstractRegistryFactory.getRegistries();
         StringBuilder select = new StringBuilder();
         Registry registry = null;
@@ -66,7 +66,7 @@ public class SubscribedPageHandler implements PageHandler {
             Set<URL> services = ((AbstractRegistry) registry).getSubscribed().keySet();
             if (services != null && services.size() > 0) {
                 for (URL u : services) {
-                    List<String> row = new ArrayList<String>();
+                    List<String> row = new ArrayList<>();
                     row.add(u.toFullString().replace("<", "&lt;").replace(">", "&gt;"));
                     rows.add(row);
                 }

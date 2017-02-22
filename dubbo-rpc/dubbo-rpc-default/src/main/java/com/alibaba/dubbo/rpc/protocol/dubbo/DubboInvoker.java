@@ -98,7 +98,7 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
                  * add by woodle
                  */
             	ResponseFuture future = currentClient.request(inv, timeout) ;
-                RpcContext.getContext().setFuture(new FutureAdapter<Object>(future));
+                RpcContext.getContext().setFuture(new FutureAdapter<>(future));
                 return new RpcResult();
             } else {
                 /**

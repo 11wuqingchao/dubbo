@@ -24,7 +24,6 @@ import com.alibaba.dubbo.config.support.Parameter;
  * MethodConfig
  * 
  * @author william.liangf
- * @export
  */
 public class MethodConfig extends AbstractMethodConfig {
 

@@ -154,9 +154,9 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     }
 
     public synchronized void notify(List<URL> urls) {
-        List<URL> invokerUrls = new ArrayList<URL>();
-        List<URL> routerUrls = new ArrayList<URL>();
-        List<URL> configuratorUrls = new ArrayList<URL>();
+        List<URL> invokerUrls = new ArrayList<>();
+        List<URL> routerUrls = new ArrayList<>();
+        List<URL> configuratorUrls = new ArrayList<>();
         for (URL url : urls) {
             String protocol = url.getProtocol();
             String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);
@@ -173,11 +173,11 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             }
         }
         // configurators 
-        if (configuratorUrls != null && configuratorUrls.size() >0 ){
+        if (configuratorUrls != null && configuratorUrls.size() > 0 ){
             this.configurators = toConfigurators(configuratorUrls);
         }
         // routers
-        if (routerUrls != null && routerUrls.size() >0 ){
+        if (routerUrls != null && routerUrls.size() > 0 ){
             List<Router> routers = toRouters(routerUrls);
             if(routers != null){ // null - do nothing
                 setRouters(routers);
@@ -215,7 +215,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             if (invokerUrls.size() == 0 && this.cachedInvokerUrls != null){
                 invokerUrls.addAll(this.cachedInvokerUrls);
             } else {
-                this.cachedInvokerUrls = new HashSet<URL>();
+                this.cachedInvokerUrls = new HashSet<>();
                 this.cachedInvokerUrls.addAll(invokerUrls);//缓存invokerUrls列表，便于交叉对比
             }
             if (invokerUrls.size() ==0 ){
@@ -240,16 +240,16 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     }
     
     private Map<String, List<Invoker<T>>> toMergeMethodInvokerMap(Map<String, List<Invoker<T>>> methodMap) {
-        Map<String, List<Invoker<T>>> result = new HashMap<String, List<Invoker<T>>>();
+        Map<String, List<Invoker<T>>> result = new HashMap<>();
         for (Map.Entry<String, List<Invoker<T>>> entry : methodMap.entrySet()) {
             String method = entry.getKey();
             List<Invoker<T>> invokers = entry.getValue();
-            Map<String, List<Invoker<T>>> groupMap = new HashMap<String, List<Invoker<T>>>();
+            Map<String, List<Invoker<T>>> groupMap = new HashMap<>();
             for (Invoker<T> invoker : invokers) {
                 String group = invoker.getUrl().getParameter(Constants.GROUP_KEY, "");
                 List<Invoker<T>> groupInvokers = groupMap.get(group);
                 if (groupInvokers == null) {
-                    groupInvokers = new ArrayList<Invoker<T>>();
+                    groupInvokers = new ArrayList<>();
                     groupMap.put(group, groupInvokers);
                 }
                 groupInvokers.add(invoker);
@@ -257,9 +257,9 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             if (groupMap.size() == 1) {
                 result.put(method, groupMap.values().iterator().next());
             } else if (groupMap.size() > 1) {
-                List<Invoker<T>> groupInvokers = new ArrayList<Invoker<T>>();
+                List<Invoker<T>> groupInvokers = new ArrayList<>();
                 for (List<Invoker<T>> groupList : groupMap.values()) {
-                    groupInvokers.add(cluster.join(new StaticDirectory<T>(groupList)));
+                    groupInvokers.add(cluster.join(new StaticDirectory<>(groupList)));
                 }
                 result.put(method, groupInvokers);
             } else {
@@ -277,11 +277,10 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
      * </br>1.override://0.0.0.0/...(或override://ip:port...?anyhost=true)&para1=value1...表示全局规则(对所有的提供者全部生效)
      * </br>2.override://ip:port...?anyhost=false 特例规则（只针对某个提供者生效）
      * </br>3.不支持override://规则... 需要注册中心自行计算.
-     * </br>4.不带参数的override://0.0.0.0/ 表示清除override 
-     * @return
+     * </br>4.不带参数的override://0.0.0.0/ 表示清除override
      */
     public static List<Configurator> toConfigurators(List<URL> urls){
-        List<Configurator> configurators = new ArrayList<Configurator>(urls.size());
+        List<Configurator> configurators = new ArrayList<>(urls.size());
         if (urls == null || urls.size() == 0){
             return configurators;
         }
@@ -290,7 +289,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
                 configurators.clear();
                 break;
             }
-            Map<String,String> override = new HashMap<String, String>(url.getParameters());
+            Map<String,String> override = new HashMap<>(url.getParameters());
             //override 上的anyhost可能是自动添加的，不能影响改变url判断
             override.remove(Constants.ANYHOST_KEY);
             if (override.size() == 0){
@@ -304,13 +303,12 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     }
     
     /**
-     * 
-     * @param urls
+     *
      * @return null : no routers ,do nothing
      *         else :routers list
      */
     private List<Router> toRouters(List<URL> urls) {
-        List<Router> routers = new ArrayList<Router>();
+        List<Router> routers = new ArrayList<>();
         if(urls == null || urls.size() < 1){
             return routers ;
         }
@@ -337,18 +335,15 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     
     /**
      * 将urls转成invokers,如果url已经被refer过，不再重新引用。
-     * 
-     * @param urls
-     * @param overrides
-     * @param query
+     *
      * @return invokers
      */
     private Map<String, Invoker<T>> toInvokers(List<URL> urls) {
-        Map<String, Invoker<T>> newUrlInvokerMap = new HashMap<String, Invoker<T>>();
+        Map<String, Invoker<T>> newUrlInvokerMap = new HashMap<>();
         if(urls == null || urls.size() == 0){
             return newUrlInvokerMap;
         }
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         String queryProtocols = this.queryMap.get(Constants.PROTOCOL_KEY);
         for (URL providerUrl : urls) {
         	//如果reference端配置了protocol，则只选择匹配的protocol
@@ -385,7 +380,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             Invoker<T> invoker = localUrlInvokerMap == null ? null : localUrlInvokerMap.get(key);
             if (invoker == null) { // 缓存中没有，重新refer
                 try {
-                	boolean enabled = true;
+                	boolean enabled;
                 	if (url.hasParameter(Constants.DISABLED_KEY)) {
                 		enabled = ! url.getParameter(Constants.DISABLED_KEY, false);
                 	} else {
@@ -410,9 +405,6 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     
     /**
      * 合并url参数 顺序为override > -D >Consumer > Provider
-     * @param providerUrl
-     * @param overrides
-     * @return
      */
     private URL mergeUrl(URL providerUrl){
         providerUrl = ClusterUtils.mergeUrl(providerUrl, queryMap); // 合并消费端参数
@@ -468,9 +460,9 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
      * @return Invoker与方法的映射关系
      */
     private Map<String, List<Invoker<T>>> toMethodInvokers(Map<String, Invoker<T>> invokersMap) {
-        Map<String, List<Invoker<T>>> newMethodInvokerMap = new HashMap<String, List<Invoker<T>>>();
+        Map<String, List<Invoker<T>>> newMethodInvokerMap = new HashMap<>();
         // 按提供者URL所声明的methods分类，兼容注册中心执行路由过滤掉的methods
-        List<Invoker<T>> invokersList = new ArrayList<Invoker<T>>();
+        List<Invoker<T>> invokersList = new ArrayList<>();
         if (invokersMap != null && invokersMap.size() > 0) {
             for (Invoker<T> invoker : invokersMap.values()) {
                 String parameter = invoker.getUrl().getParameter(Constants.METHODS_KEY);
@@ -482,7 +474,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
                                     && ! Constants.ANY_VALUE.equals(method)) {
                                 List<Invoker<T>> methodInvokers = newMethodInvokerMap.get(method);
                                 if (methodInvokers == null) {
-                                    methodInvokers = new ArrayList<Invoker<T>>();
+                                    methodInvokers = new ArrayList<>();
                                     newMethodInvokerMap.put(method, methodInvokers);
                                 }
                                 methodInvokers.add(invoker);
@@ -504,7 +496,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             }
         }
         // sort and unmodifiable
-        for (String method : new HashSet<String>(newMethodInvokerMap.keySet())) {
+        for (String method : new HashSet<>(newMethodInvokerMap.keySet())) {
             List<Invoker<T>> methodInvokers = newMethodInvokerMap.get(method);
             Collections.sort(methodInvokers, InvokerComparator.getComparator());
             newMethodInvokerMap.put(method, Collections.unmodifiableList(methodInvokers));
@@ -518,7 +510,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     private void destroyAllInvokers() {
         Map<String, Invoker<T>> localUrlInvokerMap = this.urlInvokerMap; // local reference
         if(localUrlInvokerMap != null) {
-            for (Invoker<T> invoker : new ArrayList<Invoker<T>>(localUrlInvokerMap.values())) {
+            for (Invoker<T> invoker : new ArrayList<>(localUrlInvokerMap.values())) {
                 try {
                     invoker.destroy();
                 } catch (Throwable t) {
@@ -533,8 +525,6 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
     /**
      * 检查缓存中的invoker是否需要被destroy
      * 如果url中指定refer.autodestroy=false，则只增加不减少，可能会有refer泄漏，
-     * 
-     * @param invokers
      */
     private void destroyUnusedInvokers(Map<String, Invoker<T>> oldUrlInvokerMap, Map<String, Invoker<T>> newUrlInvokerMap) {
         if (newUrlInvokerMap == null || newUrlInvokerMap.size() == 0) {
@@ -548,7 +538,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             for (Map.Entry<String, Invoker<T>> entry : oldUrlInvokerMap.entrySet()){
                 if (! newInvokers.contains(entry.getValue())) {
                     if (deleted == null) {
-                        deleted = new ArrayList<String>();
+                        deleted = new ArrayList<>();
                     }
                     deleted.add(entry.getKey());
                 }
@@ -617,7 +607,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
         }
         Map<String, Invoker<T>> localUrlInvokerMap = urlInvokerMap;
         if (localUrlInvokerMap != null && localUrlInvokerMap.size() > 0) {
-            for (Invoker<T> invoker : new ArrayList<Invoker<T>>(localUrlInvokerMap.values())) {
+            for (Invoker<T> invoker : new ArrayList<>(localUrlInvokerMap.values())) {
                 if (invoker.isAvailable()) {
                     return true;
                 }

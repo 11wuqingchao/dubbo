@@ -56,7 +56,7 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
                 weightSequence = weightSequences.get(key);
             }
             int currentWeight = weightSequence.getAndIncrement() % maxWeight;
-            List<Invoker<T>> weightInvokers = new ArrayList<Invoker<T>>();
+            List<Invoker<T>> weightInvokers = new ArrayList<>();
             for (Invoker<T> invoker : invokers) { // 筛选权重大于当前权重基数的Invoker
                 if (getWeight(invoker, invocation) > currentWeight) {
                     weightInvokers.add(invoker);

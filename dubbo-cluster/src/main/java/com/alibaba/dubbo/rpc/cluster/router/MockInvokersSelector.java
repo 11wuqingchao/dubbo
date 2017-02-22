@@ -51,7 +51,7 @@ public class MockInvokersSelector implements Router {
 		if (! hasMockProviders(invokers)){
 			return null;
 		}
-		List<Invoker<T>> sInvokers = new ArrayList<Invoker<T>>(1);
+		List<Invoker<T>> sInvokers = new ArrayList<>(1);
 		for (Invoker<T> invoker : invokers){
 			if (invoker.getUrl().getProtocol().equals(Constants.MOCK_PROTOCOL)){
 				sInvokers.add(invoker);
@@ -64,7 +64,7 @@ public class MockInvokersSelector implements Router {
 		if (! hasMockProviders(invokers)){
 			return invokers;
 		} else {
-			List<Invoker<T>> sInvokers = new ArrayList<Invoker<T>>(invokers.size());
+			List<Invoker<T>> sInvokers = new ArrayList<>(invokers.size());
 			for (Invoker<T> invoker : invokers){
 				if (! invoker.getUrl().getProtocol().equals(Constants.MOCK_PROTOCOL)){
 					sInvokers.add(invoker);

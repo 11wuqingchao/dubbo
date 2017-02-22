@@ -38,8 +38,7 @@ import com.alibaba.dubbo.common.utils.ReflectUtils;
  * @author qian.lei
  */
 
-public abstract class Proxy
-{
+public abstract class Proxy {
 	private static final AtomicLong PROXY_CLASS_COUNTER = new AtomicLong(0);
 
 	private static final String PACKAGE_NAME = Proxy.class.getPackage().getName();
@@ -62,8 +61,7 @@ public abstract class Proxy
 	 * @param ics interface class array.
 	 * @return Proxy instance.
 	 */
-	public static Proxy getProxy(Class<?>... ics)
-	{
+	public static Proxy getProxy(Class<?>... ics) {
 		return getProxy(ClassHelper.getCallerClassLoader(Proxy.class), ics);
 	}
 
@@ -74,25 +72,22 @@ public abstract class Proxy
 	 * 
 	 * @return Proxy instance.
 	 */
-	public static Proxy getProxy(ClassLoader cl, Class<?>... ics)
-	{
+	public static Proxy getProxy(ClassLoader cl, Class<?>... ics) {
 		if( ics.length > 65535 )
 			throw new IllegalArgumentException("interface limit exceeded");
 		
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<ics.length;i++)
-		{
+		for(int i=0; i<ics.length; i++) {
 			String itf = ics[i].getName();
 			if( !ics[i].isInterface() )
 				throw new RuntimeException(itf + " is not a interface.");
 
 			Class<?> tmp = null;
-			try
-			{
+			try {
 				tmp = Class.forName(itf, false, cl);
-			}
-			catch(ClassNotFoundException e)
-			{}
+			} catch(ClassNotFoundException e){
+                // do nothing
+            }
 
 			if( tmp != ics[i] )
 				throw new IllegalArgumentException(ics[i] + " is not visible from class loader");
@@ -110,16 +105,14 @@ public abstract class Proxy
 			cache = ProxyCacheMap.get(cl);
 			if( cache == null )
 		    {
-				cache = new HashMap<String, Object>();
+				cache = new HashMap<>();
 				ProxyCacheMap.put(cl, cache);
 		    }
 		}
 
 		Proxy proxy = null;
-		synchronized( cache )
-		{
-			do
-			{
+		synchronized( cache ) {
+			do {
 				Object value = cache.get(key);
 				if( value instanceof Reference<?> )
 				{
@@ -137,31 +130,24 @@ public abstract class Proxy
 					cache.put(key, PendingGenerationMarker);
 					break;
 				}
-			}
-			while( true );
+			} while( true );
 		}
 
 		long id = PROXY_CLASS_COUNTER.getAndIncrement();
 		String pkg = null;
 		ClassGenerator ccp = null, ccm = null;
-		try
-		{
+		try {
 			ccp = ClassGenerator.newInstance(cl);
 
-			Set<String> worked = new HashSet<String>();
-			List<Method> methods = new ArrayList<Method>();
+			Set<String> worked = new HashSet<>();
+			List<Method> methods = new ArrayList<>();
 
-			for(int i=0;i<ics.length;i++)
-			{
-				if( !Modifier.isPublic(ics[i].getModifiers()) )
-				{
+			for(int i=0; i<ics.length; i++) {
+				if( !Modifier.isPublic(ics[i].getModifiers()) ) {
 					String npkg = ics[i].getPackage().getName();
-					if( pkg == null )
-					{
+					if( pkg == null ) {
 						pkg = npkg;
-					}
-					else
-					{
+					} else {
 						if( !pkg.equals(npkg)  )
 							throw new IllegalArgumentException("non-public interfaces from different packages");
 					}
@@ -213,28 +199,21 @@ public abstract class Proxy
 			ccm.addMethod("public Object newInstance(" + InvocationHandler.class.getName() + " h){ return new " + pcn + "($1); }");
 			Class<?> pc = ccm.toClass();
 			proxy = (Proxy)pc.newInstance();
-		}
-		catch(RuntimeException e)
-		{
+		} catch(RuntimeException e) {
 			throw e;
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
-		}
-		finally
-		{
+		} finally {
 			// release ClassGenerator
 			if( ccp != null )
 				ccp.release();
 			if( ccm != null )
 				ccm.release();
-			synchronized( cache )
-			{
+			synchronized ( cache ) {
 				if( proxy == null )
 					cache.remove(key);
 				else
-					cache.put(key, new WeakReference<Proxy>(proxy));
+					cache.put(key, new WeakReference<>(proxy));
 				cache.notifyAll();
 			}
 		}
@@ -246,8 +225,7 @@ public abstract class Proxy
 	 * 
 	 * @return instance.
 	 */
-	public Object newInstance()
-	{
+	public Object newInstance() {
 		return newInstance(THROW_UNSUPPORTED_INVOKER);
 	}
 
@@ -258,12 +236,12 @@ public abstract class Proxy
 	 */
 	abstract public Object newInstance(InvocationHandler handler);
 
-	protected Proxy(){}
+	protected Proxy(){
 
-	private static String asArgument(Class<?> cl, String name)
-	{
-		if( cl.isPrimitive() )
-		{
+    }
+
+	private static String asArgument(Class<?> cl, String name) {
+		if( cl.isPrimitive() ) {
 			if( Boolean.TYPE == cl )
 				return name + "==null?false:((Boolean)" + name + ").booleanValue()";
 			if( Byte.TYPE == cl )

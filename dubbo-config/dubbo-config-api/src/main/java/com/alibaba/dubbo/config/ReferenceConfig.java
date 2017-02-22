@@ -54,7 +54,7 @@ import com.alibaba.dubbo.rpc.support.ProtocolUtils;
  * ReferenceConfig
  * 
  * @author william.liangf
- * @export
+ *
  */
 public class ReferenceConfig<T> extends AbstractReferenceConfig {
 
@@ -94,7 +94,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
 
     private transient volatile boolean destroyed;
 
-    private final List<URL> urls = new ArrayList<URL>();
+    private final List<URL> urls = new ArrayList<>();
 
     @SuppressWarnings("unused")
     private final Object finalizerGuardian = new Object() {
@@ -252,8 +252,8 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         }
         checkApplication();
         checkStubAndMock(interfaceClass);
-        Map<String, String> map = new HashMap<String, String>();
-        Map<Object, Object> attributes = new HashMap<Object, Object>();
+        Map<String, String> map = new HashMap<>();
+        Map<Object, Object> attributes = new HashMap<>();
         map.put(Constants.SIDE_KEY, Constants.CONSUMER_SIDE);
         map.put(Constants.DUBBO_VERSION_KEY, Version.getVersion());
         map.put(Constants.TIMESTAMP_KEY, String.valueOf(System.currentTimeMillis()));
@@ -272,7 +272,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                 map.put("methods", Constants.ANY_VALUE);
             }
             else {
-                map.put("methods", StringUtils.join(new HashSet<String>(Arrays.asList(methods)), ","));
+                map.put("methods", StringUtils.join(new HashSet<>(Arrays.asList(methods)), ","));
             }
         }
         map.put(Constants.INTERFACE_KEY, interfaceName);
@@ -455,7 +455,6 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
 	/**
 	 * @deprecated
 	 * @see #setInterface(Class)
-	 * @param interfaceClass
 	 */
 	@Deprecated
 	public void setInterfaceClass(Class<?> interfaceClass) {
@@ -478,7 +477,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             throw new IllegalStateException("The interface class " + interfaceClass + " is not a interface!");
         }
         this.interfaceClass = interfaceClass;
-        setInterface(interfaceClass == null ? (String) null : interfaceClass.getName());
+        setInterface(interfaceClass == null ?  null : interfaceClass.getName());
     }
 
     public String getClient() {

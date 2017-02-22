@@ -30,14 +30,13 @@ import com.alibaba.dubbo.common.store.DataStore;
 public class SimpleDataStore implements DataStore {
 
     // <组件类名或标识, <数据名, 数据值>>
-    private ConcurrentMap<String, ConcurrentMap<String, Object>> data =
-        new ConcurrentHashMap<String, ConcurrentMap<String,Object>>();
+    private ConcurrentMap<String, ConcurrentMap<String, Object>> data = new ConcurrentHashMap<>();
 
     public Map<String, Object> get(String componentName) {
         ConcurrentMap<String, Object> value = data.get(componentName);
-        if(value == null) return new HashMap<String, Object>();
+        if(value == null) return new HashMap<>();
 
-        return new HashMap<String, Object>(value);
+        return new HashMap<>(value);
     }
 
     public Object get(String componentName, String key) {

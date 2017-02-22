@@ -25,8 +25,7 @@ import java.util.List;
  * @author qian.lei
  */
 
-public class Stack<E>
-{
+public class Stack<E> {
 	private int mSize = 0;
 
 	private List<E> mElements = new ArrayList<E>();
@@ -35,11 +34,9 @@ public class Stack<E>
 
 	/**
 	 * push.
-	 * 
-	 * @param ele
+	 *
 	 */
-	public void push(E ele)
-	{
+	public void push(E ele) {
 		if( mElements.size() > mSize )
 			mElements.set(mSize, ele);
 		else
@@ -52,8 +49,7 @@ public class Stack<E>
 	 * 
 	 * @return the last element.
 	 */
-	public E pop()
-	{
+	public E pop() {
 		if( mSize == 0 )
 			throw new EmptyStackException();
 		return mElements.set(--mSize, null);
@@ -64,8 +60,7 @@ public class Stack<E>
 	 * 
 	 * @return the last element.
 	 */
-	public E peek()
-	{
+	public E peek() {
 		if( mSize == 0 )
 			throw new EmptyStackException();
 		return mElements.get(mSize-1);
@@ -77,8 +72,7 @@ public class Stack<E>
 	 * @param index index.
 	 * @return element.
 	 */
-	public E get(int index)
-	{
+	public E get(int index) {
 		if( index >= mSize )
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
 
@@ -92,8 +86,7 @@ public class Stack<E>
 	 * @param value element.
 	 * @return old element.
 	 */
-	public E set(int index, E value)
-	{
+	public E set(int index, E value) {
 		if( index >= mSize )
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
 
@@ -102,12 +95,10 @@ public class Stack<E>
 
 	/**
 	 * remove.
-	 * 
-	 * @param index
+	 *
 	 * @return element
 	 */
-	public E remove(int index)
-	{
+	public E remove(int index) {
 		if( index >= mSize )
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
 
@@ -121,8 +112,7 @@ public class Stack<E>
 	 * 
 	 * @return size.
 	 */
-	public int size()
-	{
+	public int size() {
 		return mSize;
 	}
 
@@ -131,16 +121,14 @@ public class Stack<E>
 	 * 
 	 * @return empty or not.
 	 */
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		return mSize == 0;
 	}
 
 	/**
 	 * clear stack.
 	 */
-	public void clear()
-	{
+	public void clear() {
 		mSize = 0;
 		mElements.clear();
 	}

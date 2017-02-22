@@ -29,8 +29,7 @@ import com.alibaba.dubbo.common.serialize.DataInput;
  * @author qian.lei
  */
 
-public class GenericDataInput implements DataInput, GenericDataFlags
-{
+public class GenericDataInput implements DataInput, GenericDataFlags {
 	private static final String EMPTY_STRING = "";
 
 	private static final byte[] EMPTY_BYTES = {};
@@ -43,23 +42,19 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 
 	private int mPosition = 0;
 
-	public GenericDataInput(InputStream is)
-	{
+	public GenericDataInput(InputStream is) {
 		this(is, 1024);
 	}
 
-	public GenericDataInput(InputStream is, int buffSize)
-	{
+	public GenericDataInput(InputStream is, int buffSize) {
 		mInput = is;
 		mBuffer = new byte[buffSize];
 	}
 
-	public boolean readBool() throws IOException
-	{
+	public boolean readBool() throws IOException {
 		byte b = read0();
 
-		switch( b )
-		{
+		switch( b ) {
 			case VARINT_0: return false;
 			case VARINT_1: return true;
 			default:
@@ -67,12 +62,10 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 		}
 	}
 
-	public byte readByte() throws IOException
-	{
+	public byte readByte() throws IOException {
 		byte b = read0();
 
-		switch( b )
-		{
+		switch( b ) {
 			case VARINT8:
 				return read0();
 			case VARINT_0: return 0; case VARINT_1: return 1; case VARINT_2: return 2; case VARINT_3: return 3;
@@ -113,34 +106,25 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 		return Double.longBitsToDouble(readVarint64());
 	}
 
-	public String readUTF() throws IOException
-	{
+	public String readUTF() throws IOException {
 		byte b = read0();
 
-		switch( b )
-		{
+		switch( b ) {
 			case OBJECT_BYTES:
 				int len = readUInt();
 				StringBuilder sb = new StringBuilder();
 
-				for(int i=0;i<len;i++)
-				{
+				for (int i=0; i<len; i++) {
 					byte b1 = read0();
-					if( (b1 & 0x80) == 0 )
-					{
+					if( (b1 & 0x80) == 0 ) {
 						sb.append((char)b1);
-					}
-					else if( (b1 & 0xE0) == 0xC0 )
-					{
+					} else if( (b1 & 0xE0) == 0xC0 ) {
 						byte b2 = read0();
 						sb.append((char)(((b1 & 0x1F) << 6) | (b2 & 0x3F)));
-					}
-					else if( (b1 & 0xF0) == 0xE0 )
-					{
+					} else if( (b1 & 0xF0) == 0xE0 ) {
 						byte b2 = read0(), b3 = read0();
 						sb.append((char)(((b1 & 0x0F) << 12) | ((b2 & 0x3F) << 6) | (b3 & 0x3F)));
-					}
-					else
+					} else
 						throw new UTFDataFormatException("Bad utf-8 encoding at " + b1);
 				}
 				return sb.toString();
@@ -151,12 +135,10 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 		}
 	}
 
-	public byte[] readBytes() throws IOException
-	{
+	public byte[] readBytes() throws IOException {
 		byte b = read0();
 
-		switch( b )
-		{
+		switch( b ) {
 			case OBJECT_BYTES: return read0(readUInt());
 			case OBJECT_NULL: return null;
 			case OBJECT_DUMMY: return EMPTY_BYTES;
@@ -165,19 +147,15 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 		}
 	}
 
-	public int readUInt() throws IOException
-	{
+	public int readUInt() throws IOException {
 		byte tmp = read0();
 		if( tmp < 0 )
 			return tmp & 0x7f;
 
 		int ret = tmp & 0x7f;
-		if( ( tmp = read0() ) < 0 )
-		{
+		if( ( tmp = read0() ) < 0 ) {
 			ret |= ( tmp & 0x7f ) << 7;
-		}
-		else
-		{
+		} else {
 			ret |= tmp << 7;
 			if( ( tmp = read0() ) < 0 )
 			{
@@ -237,8 +215,7 @@ public class GenericDataInput implements DataInput, GenericDataFlags
 		return ret;
 	}
 
-	private int readVarint32() throws IOException
-	{
+	private int readVarint32() throws IOException {
 		byte b = read0();
 
 		switch( b )

@@ -62,11 +62,11 @@ public class ClientsPageHandler implements PageHandler {
                 select.append("</select>");
             }
         }
-        List<List<String>> rows = new ArrayList<List<String>>();
+        List<List<String>> rows = new ArrayList<>();
         if (server != null) {
             Collection<ExchangeChannel> channels = server.getExchangeChannels();
             for (ExchangeChannel c : channels) {
-                List<String> row = new ArrayList<String>();
+                List<String> row = new ArrayList<>();
                 String address = NetUtils.toAddressString(c.getRemoteAddress());
                 row.add(NetUtils.getHostName(address) + "/" + address);
                 rows.add(row);

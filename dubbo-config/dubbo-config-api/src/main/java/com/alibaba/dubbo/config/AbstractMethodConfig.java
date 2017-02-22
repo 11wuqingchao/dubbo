@@ -25,7 +25,7 @@ import com.alibaba.dubbo.rpc.cluster.LoadBalance;
  * AbstractMethodConfig
  * 
  * @author william.liangf
- * @export
+ *
  */
 public abstract class AbstractMethodConfig extends AbstractConfig {
 
