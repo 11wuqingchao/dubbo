@@ -81,7 +81,7 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
         try {
             boolean isAsync = RpcUtils.isAsync(getUrl(), invocation);
             boolean isOneway = RpcUtils.isOneway(getUrl(), invocation);
-            int timeout = getUrl().getMethodParameter(methodName, Constants.TIMEOUT_KEY,Constants.DEFAULT_TIMEOUT);
+            int timeout = getUrl().getMethodParameter(methodName, Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);
             if (isOneway) {
                 /**
                  * 执行的方法不需要返回值：直接使用ExchangeClient的send方法
@@ -131,17 +131,17 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
 
     public void destroy() {
         //防止client被关闭多次.在connect per jvm的情况下，client.close方法会调用计数器-1，当计数器小于等于0的情况下，才真正关闭
-        if (super.isDestroyed()){
+        if (super.isDestroyed()) {
             return ;
         }
-        //dubbo check ,避免多次关闭
+        //dubbo check,避免多次关闭
         destroyLock.lock();
         try{
-            if (super.isDestroyed()){
+            if (super.isDestroyed()) {
                 return ;
             }
             super.destroy();
-            if (invokers != null){
+            if (invokers != null) {
                 invokers.remove(this);
             }
             for (ExchangeClient client : clients) {

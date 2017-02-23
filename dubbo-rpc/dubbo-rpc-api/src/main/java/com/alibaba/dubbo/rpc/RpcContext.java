@@ -86,9 +86,9 @@ public class RpcContext {
 
 	private InetSocketAddress remoteAddress;
 
-    private final Map<String, String> attachments = new HashMap<String, String>();
+    private final Map<String, String> attachments = new HashMap<>();
 
-    private final Map<String, Object> values = new HashMap<String, Object>();
+    private final Map<String, Object> values = new HashMap<>();
     
 	@Deprecated
     private List<Invoker<?>> invokers;
@@ -469,7 +469,7 @@ public class RpcContext {
     public RpcContext setInvokers(List<Invoker<?>> invokers) {
         this.invokers = invokers;
         if (invokers != null && invokers.size() > 0) {
-            List<URL> urls = new ArrayList<URL>(invokers.size());
+            List<URL> urls = new ArrayList<>(invokers.size());
             for (Invoker<?> invoker : invokers) {
                 urls.add(invoker.getUrl());
             }
@@ -549,7 +549,7 @@ public class RpcContext {
 				final T o = callable.call();
 				//local调用会直接返回结果.
 				if (o != null) {
-					FutureTask<T> f = new FutureTask<T>(new Callable<T>() {
+					FutureTask<T> f = new FutureTask<>(new Callable<T>() {
 						public T call() throws Exception {
 							return o;
 						}

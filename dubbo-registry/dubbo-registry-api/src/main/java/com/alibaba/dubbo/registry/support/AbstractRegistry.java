@@ -70,7 +70,7 @@ public abstract class AbstractRegistry implements Registry {
     // 本地磁盘缓存文件
     private File file;
 
-    // 本地磁盘缓存，其中特殊的key值.registies记录注册中心列表，其它均为notified服务提供者列表
+    // 本地磁盘缓存，其中特殊的key值.registries记录注册中心列表，其它均为notified服务提供者列表
     private final Properties properties = new Properties();
 
     // 文件缓存定时写入
@@ -177,7 +177,7 @@ public abstract class AbstractRegistry implements Registry {
                 }
             }
         }     
-     // 保存
+        // 保存
         try {
 			newProperties.putAll(properties);
             File lockfile = new File(file.getAbsolutePath() + ".lock");

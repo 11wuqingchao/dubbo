@@ -51,27 +51,29 @@ public class RpcInvocation implements Invocation, Serializable {
         this(invocation.getMethodName(), invocation.getParameterTypes(), 
                 invocation.getArguments(), new HashMap<>(invocation.getAttachments()),
                 invocation.getInvoker());
-        if (invoker != null) {
-            URL url = invoker.getUrl();
-            setAttachment(Constants.PATH_KEY, url.getPath());
-            if (url.hasParameter(Constants.INTERFACE_KEY)) {
-                setAttachment(Constants.INTERFACE_KEY, url.getParameter(Constants.INTERFACE_KEY));
-            }
-            if (url.hasParameter(Constants.GROUP_KEY)) {
-                setAttachment(Constants.GROUP_KEY, url.getParameter(Constants.GROUP_KEY));
-            }
-            if (url.hasParameter(Constants.VERSION_KEY)) {
-                setAttachment(Constants.VERSION_KEY, url.getParameter(Constants.VERSION_KEY, "0.0.0"));
-            }
-            if (url.hasParameter(Constants.TIMEOUT_KEY)) {
-                setAttachment(Constants.TIMEOUT_KEY, url.getParameter(Constants.TIMEOUT_KEY));
-            }
-            if (url.hasParameter(Constants.TOKEN_KEY)) {
-                setAttachment(Constants.TOKEN_KEY, url.getParameter(Constants.TOKEN_KEY));
-            }
-            if (url.hasParameter(Constants.APPLICATION_KEY)) {
-                setAttachment(Constants.APPLICATION_KEY, url.getParameter(Constants.APPLICATION_KEY));
-            }
+        if (invoker == null) {
+            return;
+        }
+
+        URL url = invoker.getUrl();
+        setAttachment(Constants.PATH_KEY, url.getPath());
+        if (url.hasParameter(Constants.INTERFACE_KEY)) {
+            setAttachment(Constants.INTERFACE_KEY, url.getParameter(Constants.INTERFACE_KEY));
+        }
+        if (url.hasParameter(Constants.GROUP_KEY)) {
+            setAttachment(Constants.GROUP_KEY, url.getParameter(Constants.GROUP_KEY));
+        }
+        if (url.hasParameter(Constants.VERSION_KEY)) {
+            setAttachment(Constants.VERSION_KEY, url.getParameter(Constants.VERSION_KEY, "0.0.0"));
+        }
+        if (url.hasParameter(Constants.TIMEOUT_KEY)) {
+            setAttachment(Constants.TIMEOUT_KEY, url.getParameter(Constants.TIMEOUT_KEY));
+        }
+        if (url.hasParameter(Constants.TOKEN_KEY)) {
+            setAttachment(Constants.TOKEN_KEY, url.getParameter(Constants.TOKEN_KEY));
+        }
+        if (url.hasParameter(Constants.APPLICATION_KEY)) {
+            setAttachment(Constants.APPLICATION_KEY, url.getParameter(Constants.APPLICATION_KEY));
         }
     }
 
