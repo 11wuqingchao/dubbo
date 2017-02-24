@@ -25,26 +25,11 @@ import java.util.Map;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-public class JSONTest extends TestCase
-{
-	public void testException() throws Exception {
-		MyException e = new MyException("001", "AAAAAAAA");
-		
-		StringWriter writer = new StringWriter();
-		JSON.json(e, writer);
-		String json = writer.getBuffer().toString();
-		System.out.println(json);
-		// Assert.assertEquals("{\"code\":\"001\",\"message\":\"AAAAAAAA\"}", json);
-		
-		StringReader reader = new StringReader(json);
-		MyException result = JSON.parse(reader, MyException.class);
-		Assert.assertEquals("001", result.getCode());
-		Assert.assertEquals("AAAAAAAA", result.getMessage());
-	}
+public class JSONTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testMap() throws Exception {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("aaa", "bbb");
 		
 		StringWriter writer = new StringWriter();
@@ -59,7 +44,7 @@ public class JSONTest extends TestCase
 
 	@SuppressWarnings("unchecked")
 	public void testMapArray() throws Exception {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("aaa", "bbb");
 
 		StringWriter writer = new StringWriter();
@@ -75,7 +60,7 @@ public class JSONTest extends TestCase
 
 	@SuppressWarnings("unchecked")
 	public void testLinkedMap() throws Exception {
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("aaa", "bbb");
 		
 		StringWriter writer = new StringWriter();
@@ -129,7 +114,7 @@ public class JSONTest extends TestCase
 		for(int i=0;i<5;i++)
 			assertEquals(o1[i], o2[i]);
 
-		List l1 = (List)JSON.parse("[1.2,2,3,4,5]", List.class);
+		List l1 = JSON.parse("[1.2,2,3,4,5]", List.class);
 		assertEquals(l1.size(), 5);
 		for(int i=0;i<5;i++)
 			assertEquals(o1[i], ((Number)l1.get(i)).intValue());
@@ -163,8 +148,7 @@ public class JSONTest extends TestCase
 
 	static int DEFAULT_$$ = 152;
 
-	public static class Bean1
-	{
+	public static class Bean1 {
 		private String name,displayName;
 
 		public int[] array;
@@ -186,8 +170,7 @@ public class JSONTest extends TestCase
 		}
 	}
 
-	public static class Bean
-	{
+	public static class Bean {
 		private String name, displayName = "钱磊";
 
 		public int[] array;
@@ -214,4 +197,6 @@ public class JSONTest extends TestCase
 			this.name = name;
 		}
 	}
+
+
 }
