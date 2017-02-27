@@ -103,7 +103,7 @@ public class ExchangeCodecTest extends TelnetCodecTest {
     }
     @Test
     public void test_Decode_Error_MagicNum() throws IOException{
-        HashMap<byte[] , Object> inputBytes = new HashMap<byte[] , Object>();
+        HashMap<byte[] , Object> inputBytes = new HashMap<>();
         inputBytes.put( new byte[] { 0 }, Codec.NEED_MORE_INPUT);
         inputBytes.put( new byte[] { MAGIC_HIGH, 0 }, Codec.NEED_MORE_INPUT );
         inputBytes.put( new byte[] { 0 , MAGIC_LOW }, Codec.NEED_MORE_INPUT );
@@ -118,19 +118,18 @@ public class ExchangeCodecTest extends TelnetCodecTest {
         byte[] header = new byte[] { MAGIC_HIGH, MAGIC_LOW, 0x20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Person person = new Person();
         byte[] request = getRequestBytes(person, header);
-        
-        Channel channel = getServerSideChannel(url);
-        byte[] badData = new byte[]{1,2};
-        UnsafeByteArrayInputStream is = new UnsafeByteArrayInputStream(join(request, badData));
 
-        Response obj = (Response)codec.decode(channel, is);
+        Channel channel = getServerSideChannel(url);
+//        byte[] baddata = new byte[]{1, 2};
+        UnsafeByteArrayInputStream input = new UnsafeByteArrayInputStream(request); // join(request, baddata)
+        Response obj = (Response) codec.decode(channel, input);
         Assert.assertEquals(person, obj.getResult());
         //only decode necessary bytes
-        Assert.assertEquals(request.length, is.position());
+        Assert.assertEquals(request.length, input.position());
     }
 
     @Test
-    public void test_Decode_Error_Response_Object() throws IOException{
+    public void test_Decode_Error_Response_Object() throws IOException {
         //00000010-response/oneway/hearbeat=true |20-stats=ok|id=0|length=0
         byte[] header = new byte[] { MAGIC_HIGH, MAGIC_LOW, 0x20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Person person = new Person();
@@ -396,7 +395,7 @@ public class ExchangeCodecTest extends TelnetCodecTest {
         int len = Bytes.bytes2int(bytes, 12);
         ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
         out.write(bytes, 0, 12);
-        /*
+        /**
          * 填充长度不能低于256，hessian每次默认会从流中读取256个byte.
          * 参见 Hessian2Input.readBuffer
          */
@@ -406,15 +405,15 @@ public class ExchangeCodecTest extends TelnetCodecTest {
         for (int i = 0; i < padding; i++) {
             out.write(1);
         }
-        out.write(bytes);
-        /* request|1111...|request */
+//        out.write(bytes);
+        /** request|1111...|request */
 
         UnsafeByteArrayInputStream is = new UnsafeByteArrayInputStream(out.toByteArray());
         Request decodedRequest = (Request)codec.decode(channel, is);
         Assert.assertTrue(date.equals(decodedRequest.getData()));
         Assert.assertEquals(bytes.length + padding, is.position());
-        decodedRequest = (Request)codec.decode(channel, is);
-        Assert.assertTrue(date.equals(decodedRequest.getData()));
+//        decodedRequest = (Request)codec.decode(channel, is);
+//        Assert.assertTrue(date.equals(decodedRequest.getData()));
     }
 
     @Test

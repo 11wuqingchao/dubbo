@@ -53,7 +53,7 @@ public interface Endpoint {
     /**
      * send message.
      * 
-     * @param message
+     * @param message 消息
      * @throws RemotingException
      */
     void send(Object message) throws RemotingException;
@@ -61,7 +61,7 @@ public interface Endpoint {
     /**
      * send message.
      * 
-     * @param message
+     * @param message 消息
      * @param sent 是否已发送完成
      */
     void send(Object message, boolean sent) throws RemotingException;

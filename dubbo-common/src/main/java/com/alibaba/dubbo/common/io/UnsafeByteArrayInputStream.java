@@ -15,8 +15,9 @@
  */
 package com.alibaba.dubbo.common.io;
 
+import com.alibaba.dubbo.common.PositionableInputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * UnsafeByteArrayInputStrem.
@@ -24,8 +25,7 @@ import java.io.InputStream;
  * @author qian.lei
  */
 
-public class UnsafeByteArrayInputStream extends InputStream
-{
+public class UnsafeByteArrayInputStream extends PositionableInputStream {
 	protected byte mData[];
 
 	protected int mPosition, mLimit, mMark = 0;

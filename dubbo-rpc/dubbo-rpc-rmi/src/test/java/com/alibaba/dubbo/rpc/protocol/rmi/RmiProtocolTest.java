@@ -29,8 +29,7 @@ import com.alibaba.dubbo.rpc.ProxyFactory;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.service.EchoService;
 
-public class RmiProtocolTest
-{
+public class RmiProtocolTest {
     private Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
     private ProxyFactory proxy = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
     
@@ -46,8 +45,7 @@ public class RmiProtocolTest
     }
     */
     @Test
-    public void testRmiProtocolTimeout() throws Exception
-    {
+    public void testRmiProtocolTimeout() throws Exception {
         System.setProperty("sun.rmi.transport.tcp.responseTimeout", "1000");
         DemoService service = new DemoServiceImpl();
         Exporter<?> rpcExporter = protocol.export(proxy.getInvoker(service, DemoService.class, URL.valueOf("rmi://127.0.0.1:9001/TestService")));
@@ -65,8 +63,7 @@ public class RmiProtocolTest
     }
     
 	@Test
-	public void testRmiProtocol() throws Exception
-	{
+	public void testRmiProtocol() throws Exception {
 	    {
     		DemoService service = new DemoServiceImpl();
     		Exporter<?> rpcExporter = protocol.export(proxy.getInvoker(service, DemoService.class, URL.valueOf("rmi://127.0.0.1:9001/TestService")));

@@ -44,8 +44,7 @@ import com.alibaba.dubbo.rpc.service.EchoService;
  * <code>ProxiesTest</code>
  */
 
-public class DubboProtocolTest
-{
+public class DubboProtocolTest {
     private Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
     private ProxyFactory proxy = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
     
@@ -59,15 +58,14 @@ public class DubboProtocolTest
 	}
 
 	@Test
-	public void testDubboProtocol() throws Exception
-	{
+	public void testDubboProtocol() throws Exception {
 		DemoService service = new DemoServiceImpl();
 		protocol.export(proxy.getInvoker(service, DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName())));
 		service = proxy.getProxy(protocol.refer(DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName())));
 		assertEquals(service.enumlength(new Type[]{}), Type.Lower);
 		assertEquals(service.getSize(null), -1);
 		assertEquals(service.getSize(new String[]{"", "", ""}), 3);
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("aa", "bb");
 		Set<String> set = service.keys(map);
 		assertEquals(set.size(), 1);
@@ -77,7 +75,7 @@ public class DubboProtocolTest
 		service = proxy.getProxy(protocol.refer(DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName() + "?client=netty")));
 		// test netty client
 		StringBuffer buf = new StringBuffer();
-		for(int i=0;i<1024*32+32;i++)
+		for (int i=0;i<32;i++)
 			buf.append('A');
 		System.out.println(service.stringLength(buf.toString()));
 
@@ -99,7 +97,7 @@ public class DubboProtocolTest
             assertEquals(service.getSize(null), -1);
             assertEquals(service.getSize(new String[]{"", "", ""}), 3);
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("aa", "bb");
         for(int i = 0; i < 10; i++) {
             Set<String> set = service.keys(map);
@@ -111,7 +109,7 @@ public class DubboProtocolTest
         service = proxy.getProxy(protocol.refer(DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName() + "?client=mina")));
         // test netty client
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < 1024 * 32 + 32; i++)
+        for (int i = 0; i <  32; i++)
             buf.append('A');
         System.out.println(service.stringLength(buf.toString()));
 
@@ -126,25 +124,20 @@ public class DubboProtocolTest
     }
 
     @Test
-    public void testDubboProtocolMultiService() throws Exception
-    {
+    public void testDubboProtocolMultiService() throws Exception {
         DemoService service = new DemoServiceImpl();
         protocol.export(proxy.getInvoker(service, DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName())));
         service = proxy.getProxy(protocol.refer(DemoService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + DemoService.class.getName())));
-        
+        service.sayHello("world");
+        // test netty client
+        assertEquals("world", service.echo("world"));
+        EchoService serviceEcho = (EchoService)service;
+        assertEquals(serviceEcho.$echo("test"), "test");
+
         RemoteService remote = new RemoteServiceImpl();
         protocol.export(proxy.getInvoker(remote, RemoteService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + RemoteService.class.getName())));
         remote = proxy.getProxy(protocol.refer(RemoteService.class, URL.valueOf("dubbo://127.0.0.1:9010/" + RemoteService.class.getName())));
-        
-        service.sayHello("world");
-        
-        // test netty client
-        assertEquals("world", service.echo("world"));
         assertEquals("hello world@" + RemoteServiceImpl.class.getName(), remote.sayHello("world"));
-        
-        EchoService serviceEcho = (EchoService)service;
-        assertEquals(serviceEcho.$echo("test"), "test");
-        
         EchoService remoteEecho = (EchoService)remote;
         assertEquals(remoteEecho.$echo("ok"), "ok");
     }

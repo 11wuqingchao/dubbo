@@ -164,11 +164,11 @@ public class TelnetCodecTest {
         os.flush();
         os.close();
         InputStream is = new ByteArrayInputStream(os.toByteArray());
-        byte[] data = new byte[is.read()];
+        byte[] data = new byte[is.available()];
         is.read(data);
 
         Assert.assertEquals(ret.length, data.length);
-        for(int i=0;i<ret.length;i++){
+        for(int i = 0; i < ret.length; i++){
             if (ret[i] != data[i]){
                 Assert.fail();
             }

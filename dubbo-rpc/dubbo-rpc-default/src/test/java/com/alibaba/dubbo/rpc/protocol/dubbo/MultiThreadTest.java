@@ -45,7 +45,7 @@ public class MultiThreadTest extends TestCase
 		assertEquals(service.getSize(new String[]{"123", "456", "789"}), 3);
 
 		final StringBuffer sb = new StringBuffer();
-		for(int i=0;i<1024*64+32;i++)
+		for(int i=0;i<32;i++)
 			sb.append('A');
 		assertEquals(sb.toString(), service.echo(sb.toString()));
 

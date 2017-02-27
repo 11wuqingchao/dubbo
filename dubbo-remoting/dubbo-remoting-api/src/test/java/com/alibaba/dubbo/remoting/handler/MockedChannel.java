@@ -29,10 +29,13 @@ import com.alibaba.dubbo.remoting.RemotingException;
  *
  */
 public class MockedChannel implements Channel {
-    private boolean isClosed ; 
-    private URL url; 
+    private boolean isClosed ;
+
+    private URL url;
+
     private ChannelHandler handler ;
-    private Map <String,Object> map = new HashMap<String, Object>(); 
+
+    private Map <String,Object> map = new HashMap<>();
     
     public MockedChannel() {
         super();

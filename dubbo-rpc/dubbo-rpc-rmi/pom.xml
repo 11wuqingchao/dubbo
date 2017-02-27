@@ -38,5 +38,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${jcl_version}</version>
+        </dependency>
 	</dependencies>
 </project>

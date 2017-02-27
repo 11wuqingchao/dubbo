@@ -75,7 +75,7 @@ public class ClientReconnectTest {
         +Constants.RECONNECT_KEY+"="+1 ; //1ms reconnect,保证有足够频率的重连
         try{
             Exchangers.connect(url);
-        }catch (Exception e) {
+        } catch (Exception e) {
             //do nothing
         }
         Thread.sleep(1500);//重连线程的运行
@@ -126,9 +126,6 @@ public class ClientReconnectTest {
         Assert.assertTrue("have more then one warn msgs . bug was :" + LogUtil.findMessage(Level.WARN, "client reconnect to "),LogUtil.findMessage(Level.WARN, "client reconnect to ") >1);
         DubboAppender.doStop();
     }
-    public static void main(String[] args) {
-		System.out.println(3%1);
-	}
     
     /**
      * 重连日志的校验
