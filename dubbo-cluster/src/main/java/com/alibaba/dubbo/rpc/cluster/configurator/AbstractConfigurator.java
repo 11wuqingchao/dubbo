@@ -55,24 +55,24 @@ public abstract class AbstractConfigurator implements Configurator {
             if (configApplication == null || Constants.ANY_VALUE.equals(configApplication) 
                     || configApplication.equals(currentApplication)) {
                 if (configuratorUrl.getPort() == 0 || url.getPort() == configuratorUrl.getPort()) {
-                    Set<String> condtionKeys = new HashSet<>();
-                    condtionKeys.add(Constants.CATEGORY_KEY);
-                    condtionKeys.add(Constants.CHECK_KEY);
-                    condtionKeys.add(Constants.DYNAMIC_KEY);
-                    condtionKeys.add(Constants.ENABLED_KEY);
+                    Set<String> conditionKeys = new HashSet<>();
+                    conditionKeys.add(Constants.CATEGORY_KEY);
+                    conditionKeys.add(Constants.CHECK_KEY);
+                    conditionKeys.add(Constants.DYNAMIC_KEY);
+                    conditionKeys.add(Constants.ENABLED_KEY);
                     for (Map.Entry<String, String> entry : configuratorUrl.getParameters().entrySet()) {
                         String key = entry.getKey();
                         String value = entry.getValue();
                         if (key.startsWith("~") || Constants.APPLICATION_KEY.equals(key) 
                                 || Constants.SIDE_KEY.equals(key)) {
-                            condtionKeys.add(key);
+                            conditionKeys.add(key);
                             if (value != null && ! Constants.ANY_VALUE.equals(value)
                                     && ! value.equals(url.getParameter(key.startsWith("~") ? key.substring(1) : key))) {
                                 return url;
                             }
                         }
                     }
-                    return doConfigure(url, configuratorUrl.removeParameters(condtionKeys));
+                    return doConfigure(url, configuratorUrl.removeParameters(conditionKeys));
                 }
             }
         }

@@ -88,7 +88,7 @@ public class ConditionRouter implements Router, Comparable<Router> {
             if (! matchWhen(url)) {
                 return invokers;
             }
-            List<Invoker<T>> result = new ArrayList<Invoker<T>>();
+            List<Invoker<T>> result = new ArrayList<>();
             if (thenCondition == null) {
             	logger.warn("The current consumer in the service blacklist. consumer: " + NetUtils.getLocalHost() + ", service: " + url.getServiceKey());
                 return result;

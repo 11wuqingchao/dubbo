@@ -33,8 +33,7 @@ import com.alibaba.dubbo.common.utils.ClassHelper;
 public class CompactedObjectInputStream extends ObjectInputStream {
 	private ClassLoader mClassLoader;
 
-	public CompactedObjectInputStream(InputStream in) throws IOException
-	{
+	public CompactedObjectInputStream(InputStream in) throws IOException {
 		this(in, Thread.currentThread().getContextClassLoader());
 	}
 

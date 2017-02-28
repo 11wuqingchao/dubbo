@@ -327,7 +327,6 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     /**
      * @deprecated Replace to <code>setStub(String)</code>
-     * @param local
      */
     @Deprecated
     public void setLocal(String local) {
@@ -337,7 +336,6 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     /**
      * @deprecated Replace to <code>setStub(Boolean)</code>
-     * @param local
      */
     @Deprecated
     public void setLocal(Boolean local) {
@@ -441,7 +439,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     }
 
     public void setRegistry(RegistryConfig registry) {
-        List<RegistryConfig> registries = new ArrayList<RegistryConfig>(1);
+        List<RegistryConfig> registries = new ArrayList<>(1);
         registries.add(registry);
         this.registries = registries;
     }

@@ -24,17 +24,14 @@ import java.io.Writer;
  * @author qian.lei
  */
 
-public class UnsafeStringWriter extends Writer
-{
+public class UnsafeStringWriter extends Writer {
 	private StringBuilder mBuffer;
 
-	public UnsafeStringWriter()
-	{
+	public UnsafeStringWriter() {
 		lock = mBuffer = new StringBuilder();
 	}
 
-	public UnsafeStringWriter(int size)
-	{
+	public UnsafeStringWriter(int size) {
 		if( size < 0 )
 		    throw new IllegalArgumentException("Negative buffer size");
 
@@ -42,20 +39,17 @@ public class UnsafeStringWriter extends Writer
 	}
 
 	@Override
-	public void write(int c)
-	{
+	public void write(int c) {
 		mBuffer.append((char)c);
 	}
 
 	@Override
-	public void write(char[] cs) throws IOException
-	{
+	public void write(char[] cs) throws IOException {
 		mBuffer.append(cs, 0, cs.length);
 	}
 
 	@Override
-	public void write(char[] cs, int off, int len) throws IOException
-	{
+	public void write(char[] cs, int off, int len) throws IOException {
 		if( (off < 0) || (off > cs.length) || (len < 0) ||
 				((off + len) > cs.length) || ((off + len) < 0) )
 			throw new IndexOutOfBoundsException();
@@ -65,20 +59,17 @@ public class UnsafeStringWriter extends Writer
 	}
 
 	@Override
-	public void write(String str)
-	{
+	public void write(String str) {
 		mBuffer.append(str);
 	}
 
 	@Override
-	public void write(String str, int off, int len)
-	{
+	public void write(String str, int off, int len) {
 		mBuffer.append(str.substring(off, off + len));
 	}
 
 	@Override
-	public Writer append(CharSequence csq)
-	{
+	public Writer append(CharSequence csq) {
 		if (csq == null)
 			write("null");
 		else
@@ -87,16 +78,14 @@ public class UnsafeStringWriter extends Writer
 	}
 
 	@Override
-	public Writer append(CharSequence csq, int start, int end)
-	{
+	public Writer append(CharSequence csq, int start, int end) {
 		CharSequence cs = (csq == null ? "null" : csq);
 		write(cs.subSequence(start, end).toString());
 		return this;
 	}
 
 	@Override
-	public Writer append(char c)
-	{
+	public Writer append(char c) {
 		mBuffer.append(c);
 		return this;
 	}
@@ -108,8 +97,7 @@ public class UnsafeStringWriter extends Writer
 	public void flush(){}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return mBuffer.toString();
 	}
 }

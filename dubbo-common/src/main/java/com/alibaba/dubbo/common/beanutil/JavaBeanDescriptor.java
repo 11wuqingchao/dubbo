@@ -126,8 +126,7 @@ public final class JavaBeanDescriptor implements Serializable, Iterable<Map.Entr
     public Object setProperty(Object propertyName, Object propertyValue) {
         notNull(propertyName, "Property name is null");
 
-        Object oldValue = properties.put(propertyName, propertyValue);
-        return oldValue;
+        return properties.put(propertyName, propertyValue);
     }
 
     public String setEnumNameProperty(String name) {
@@ -178,8 +177,7 @@ public final class JavaBeanDescriptor implements Serializable, Iterable<Map.Entr
 
     public Object getProperty(Object propertyName) {
         notNull(propertyName, "Property name is null");
-        Object propertyValue = properties.get(propertyName);
-        return propertyValue;
+        return properties.get(propertyName);
     }
 
     public boolean containsProperty(Object propertyName) {

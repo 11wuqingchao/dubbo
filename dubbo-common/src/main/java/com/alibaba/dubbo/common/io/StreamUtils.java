@@ -25,17 +25,14 @@ import java.io.InputStream;
  * @author ding.lid
  */
 
-public class StreamUtils
-{
+public class StreamUtils {
 	private StreamUtils(){}
 
-	public static InputStream limitedInputStream(final InputStream is, final int limit) throws IOException
-	{
+	public static InputStream limitedInputStream(final InputStream is, final int limit) throws IOException {
 		return new InputStream(){
 			private int mPosition = 0, mMark = 0, mLimit = Math.min(limit, is.available());
 
-			public int read() throws IOException
-			{
+			public int read() throws IOException {
 				if( mPosition < mLimit )
 				{
 					mPosition++;
@@ -44,8 +41,7 @@ public class StreamUtils
 				return -1;
 		    }
 
-			public int read(byte b[], int off, int len) throws IOException
-			{
+			public int read(byte b[], int off, int len) throws IOException {
 				if( b == null )
 				    throw new NullPointerException();
 
@@ -66,8 +62,7 @@ public class StreamUtils
 				return len;
 		    }
 
-			public long skip(long len) throws IOException
-		    {
+			public long skip(long len) throws IOException {
 				if( mPosition + len > mLimit )
 					len = mLimit - mPosition;
 
@@ -79,18 +74,15 @@ public class StreamUtils
 				return len;
 		    }
 
-			public int available()
-			{
+			public int available() {
 				return mLimit - mPosition;
 			}
 
-			public boolean markSupported()
-		    {
+			public boolean markSupported() {
 		    	return is.markSupported();
 			}
 
-			public void mark(int readlimit)
-			{
+			public void mark(int readlimit) {
 				is.mark(readlimit);
 				mMark = mPosition;
 			}
@@ -101,8 +93,8 @@ public class StreamUtils
 				mPosition = mMark;
 			}
 
-			public void close() throws IOException
-			{}
+			public void close() throws IOException {
+            }
 		};
 	}
 	
@@ -125,14 +117,13 @@ public class StreamUtils
             public int read() throws IOException {
                 if(!mInMarked) {
                     return is.read();
-                }
-                else {
-                    if(mPosition < mCount) {
+                } else {
+                    if (mPosition < mCount) {
                         byte b = mMarkBuffer[mPosition++];
                         return b & 0xFF;
                     }
                     
-                    if(!mInReset) {
+                    if (!mInReset) {
                         if(mDry) return -1;
                         
                         if(null == mMarkBuffer) {
@@ -152,8 +143,7 @@ public class StreamUtils
                         mCount++;
                         
                         return read;
-                    }
-                    else {
+                    } else {
                         // mark buffer is used, exit mark status!
                         mInMarked = false;
                         mInReset = false;

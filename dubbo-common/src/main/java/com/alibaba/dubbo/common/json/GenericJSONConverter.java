@@ -51,32 +51,22 @@ public class GenericJSONConverter implements JSONConverter {
 		Class<?> c = obj.getClass();
 		Encoder encoder = GlobalEncoderMap.get(c);
 
-		if( encoder != null )
-		{
+		if( encoder != null ) {
 			encoder.encode(obj, jb);
-		}
-		else if( obj instanceof JSONNode )
-		{
+		} else if( obj instanceof JSONNode ) {
 			((JSONNode)obj).writeJSON(this, jb, writeClass);
-		}
-		else if( c.isEnum() )
-		{
+		} else if( c.isEnum() ) {
 			jb.valueString(((Enum<?>)obj).name());
-		}
-		else if( c.isArray() )
-		{
+		} else if( c.isArray() ) {
 			int len = Array.getLength(obj);
 			jb.arrayBegin();
 			for(int i=0;i<len;i++)
 				writeValue(Array.get(obj, i), jb, writeClass);
 			jb.arrayEnd();
-		}
-		else if( Map.class.isAssignableFrom(c) )
-		{
+		} else if( Map.class.isAssignableFrom(c) ) {
 			Object key, value;
 			jb.objectBegin();
-			for( Map.Entry<Object, Object> entry : ((Map<Object, Object>)obj).entrySet() )
-			{
+			for (Map.Entry<Object, Object> entry : ((Map<Object, Object>)obj).entrySet()) {
 				key = entry.getKey();
 				if( key == null )
 					continue;
@@ -89,28 +79,22 @@ public class GenericJSONConverter implements JSONConverter {
 					writeValue(value, jb, writeClass);
 			}
 			jb.objectEnd();
-		}
-		else if( Collection.class.isAssignableFrom(c) )
-		{
+		} else if( Collection.class.isAssignableFrom(c) ) {
 			jb.arrayBegin();
-			for( Object item : (Collection<Object>)obj )
-			{
+			for (Object item : (Collection<Object>)obj ) {
 				if( item == null )
 					jb.valueNull();
 				else
 					writeValue(item, jb, writeClass);
 			}
 			jb.arrayEnd();
-		}
-		else
-		{
+		} else {
 			jb.objectBegin();
 			
 			Wrapper w = Wrapper.getWrapper(c);
 			String pns[] = w.getPropertyNames();
 
-			for( String pn : pns )
-			{
+			for ( String pn : pns ){
 				if ((obj instanceof Throwable) && (
 						"localizedMessage".equals(pn) 
 						|| "cause".equals(pn) 
@@ -135,8 +119,7 @@ public class GenericJSONConverter implements JSONConverter {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Object readValue(Class<?> c, Object jv) throws IOException
-	{
+	public Object readValue(Class<?> c, Object jv) throws IOException {
 		if (jv == null) {
 			return null;
 		}
@@ -150,8 +133,7 @@ public class GenericJSONConverter implements JSONConverter {
 		return jv;
 	}
 
-	static
-	{
+	static {
 		// init encoder map.
 		Encoder e = new Encoder(){
 			public void encode(Object obj, JSONWriter jb) throws IOException

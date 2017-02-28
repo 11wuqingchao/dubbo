@@ -58,8 +58,7 @@ import com.alibaba.dubbo.common.utils.StringUtils;
  */
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class Builder<T> implements GenericDataFlags
-{
+public abstract class Builder<T> implements GenericDataFlags {
 	// Must be protected. by qian.lei
 	protected static Logger logger = LoggerFactory.getLogger(Builder.class);
 
