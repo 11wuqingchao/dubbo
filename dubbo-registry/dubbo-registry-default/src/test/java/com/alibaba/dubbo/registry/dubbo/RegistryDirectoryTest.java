@@ -70,7 +70,7 @@ public class RegistryDirectoryTest {
     private RegistryDirectory getRegistryDirectory(URL url) {
         RegistryDirectory registryDirectory = new RegistryDirectory(URL.class, url);
         registryDirectory.setProtocol(protocol);
-        // asert empty
+        // assert empty
         List invokers = registryDirectory.list(invocation);
         Assert.assertEquals(0, invokers.size());
         Assert.assertEquals(false, registryDirectory.isAvailable());
@@ -145,7 +145,7 @@ public class RegistryDirectoryTest {
     @Test
     public void testNotified_WithError() {
         RegistryDirectory registryDirectory = getRegistryDirectory();
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         // ignore error log
         URL badurl = URL.valueOf("notsupported://127.0.0.1/" + service);
         serviceUrls.add(badurl);
@@ -159,7 +159,7 @@ public class RegistryDirectoryTest {
 
     @Test
     public void testNotified_WithDuplicateUrls() {
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         // ignore error log
         serviceUrls.add(SERVICEURL);
         serviceUrls.add(SERVICEURL);
@@ -173,7 +173,7 @@ public class RegistryDirectoryTest {
     // forbid
     private void testforbid(RegistryDirectory registryDirectory) {
         invocation = new RpcInvocation();
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(new URL(Constants.EMPTY_PROTOCOL, Constants.ANYHOST_VALUE, 0, service, Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY));
         registryDirectory.notify(serviceUrls);
         Assert.assertEquals("invokers size=0 ,then the registry directory is not available", false,
@@ -189,9 +189,9 @@ public class RegistryDirectoryTest {
     //测试调用和registry url的path无关
     @Test
     public void test_NotifiedDubbo1() {
-        URL             errorPathUrl            = URL.valueOf("notsupport:/" + "xxx"+"?refer=" + URL.encode("interface="+service));
+        URL errorPathUrl = URL.valueOf("notsupport:/" + "xxx"+"?refer=" + URL.encode("interface="+service));
         RegistryDirectory registryDirectory = getRegistryDirectory(errorPathUrl);
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         URL Dubbo1URL = URL.valueOf("dubbo://127.0.0.1:9098?lazy=true");
         serviceUrls.add(Dubbo1URL.addParameter("methods", "getXXX"));
         registryDirectory.notify(serviceUrls);
@@ -210,14 +210,14 @@ public class RegistryDirectoryTest {
 
     // notify one invoker
     private void test_Notified_only_routers(RegistryDirectory registryDirectory) {
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(URL.valueOf("empty://127.0.0.1/?category=routers"));
         registryDirectory.notify(serviceUrls);
     }
     // notify one invoker
     private void test_Notified1invokers(RegistryDirectory registryDirectory) {
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));// .addParameter("refer.autodestroy", "true")
         registryDirectory.notify(serviceUrls);
         Assert.assertEquals(true, registryDirectory.isAvailable());
@@ -242,7 +242,7 @@ public class RegistryDirectoryTest {
 
     // 两个invoker===================================
     private void test_Notified2invokers(RegistryDirectory registryDirectory) {
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
@@ -270,7 +270,7 @@ public class RegistryDirectoryTest {
 
     // 通知成3个invoker===================================
     private void test_Notified3invokers(RegistryDirectory registryDirectory) {
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
         serviceUrls.add(SERVICEURL3.addParameter("methods", "getXXX1,getXXX2,getXXX3"));
@@ -313,7 +313,7 @@ public class RegistryDirectoryTest {
                                                                                             regurl);
         registryDirectory2.setProtocol(protocol);
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         // 检验注册中心的参数需要被清除
         {
             serviceUrls.clear();
@@ -397,7 +397,7 @@ public class RegistryDirectoryTest {
     public void testDestroy() {
         RegistryDirectory registryDirectory = getRegistryDirectory();
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
         serviceUrls.add(SERVICEURL3.addParameter("methods", "getXXX1,getXXX2,getXXX3"));
@@ -450,7 +450,7 @@ public class RegistryDirectoryTest {
 
         RegistryDirectory registryDirectory = getRegistryDirectory();
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         URL serviceURL = SERVICEURL_DUBBO_NOPATH.addParameter("methods", "getXXX1,getXXX2,getXXX3");
         serviceUrls.add(serviceURL);
 
@@ -469,7 +469,7 @@ public class RegistryDirectoryTest {
 
     enum Param {
         MORGAN,
-    };
+    }
 
     /**
      * When the first arg of a method is String or Enum, Registry server can do parameter-value-based routing.
@@ -477,7 +477,7 @@ public class RegistryDirectoryTest {
     @Test
     public void testParmeterRoute() {
         RegistryDirectory registryDirectory = getRegistryDirectory();
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1.napoli"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1.MORGAN,getXXX2"));
         serviceUrls.add(SERVICEURL3.addParameter("methods", "getXXX1.morgan,getXXX2,getXXX3"));
@@ -499,9 +499,9 @@ public class RegistryDirectoryTest {
     @Test
     public void testEmptyNotifyCauseForbidden() {
         RegistryDirectory registryDirectory = getRegistryDirectory();
-        List invokers = null;
+        List invokers;
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         registryDirectory.notify(serviceUrls);
 
         RpcInvocation inv = new RpcInvocation();
@@ -537,7 +537,7 @@ public class RegistryDirectoryTest {
         URL routerurl = URL.valueOf(Constants.ROUTE_PROTOCOL + "://127.0.0.1:9096/");
         URL routerurl2 = URL.valueOf(Constants.ROUTE_PROTOCOL + "://127.0.0.1:9097/");
 
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         // without ROUTER_KEY, the first router should not be created.
         serviceUrls.add(routerurl.addParameter(Constants.CATEGORY_KEY, Constants.ROUTERS_CATEGORY).addParameter(Constants.TYPE_KEY, "javascript").addParameter(Constants.ROUTER_KEY,
                                                                                                  "notsupported").addParameter(Constants.RULE_KEY,
@@ -549,7 +549,7 @@ public class RegistryDirectoryTest {
         registryDirectory.notify(serviceUrls);
         List<Router> routers = registryDirectory.getRouters();
         //default invocation selector
-        Assert.assertEquals(1+1, routers.size());
+        Assert.assertEquals(1 + 1, routers.size());
         Assert.assertEquals(ScriptRouter.class, routers.get(1).getClass());
 
         registryDirectory.notify(new ArrayList<URL>());
@@ -571,14 +571,14 @@ public class RegistryDirectoryTest {
     @Test
     public void testNotifyoverrideUrls_beforeInvoker(){
         RegistryDirectory registryDirectory = getRegistryDirectory();
-        List<URL> overrideUrls = new ArrayList<URL>();
+        List<URL> overrideUrls = new ArrayList<>();
         overrideUrls.add(URL.valueOf("override://0.0.0.0?timeout=1&connections=5"));
         registryDirectory.notify(overrideUrls);
-        //注册中心初始只推送override，dirctory状态应该是false，因为没有invoker存在。
+        //注册中心初始只推送override，directory状态应该是false，因为没有invoker存在。
         Assert.assertEquals(false, registryDirectory.isAvailable());
         
         //在推送两个provider,directory状态恢复为true
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("timeout", "1000"));
         serviceUrls.add(SERVICEURL2.addParameter("timeout", "1000").addParameter("connections", "10"));
 
@@ -605,14 +605,14 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         
         //在推送两个provider,directory状态恢复为true
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("timeout", "1000"));
         serviceUrls.add(SERVICEURL2.addParameter("timeout", "1000").addParameter("connections", "10"));
 
         registryDirectory.notify(serviceUrls);
         Assert.assertEquals(true, registryDirectory.isAvailable());
         
-        List<URL> overrideUrls = new ArrayList<URL>();
+        List<URL> overrideUrls = new ArrayList<>();
         overrideUrls.add(URL.valueOf("override://0.0.0.0?timeout=1&connections=5"));
         registryDirectory.notify(overrideUrls);
         
@@ -635,7 +635,7 @@ public class RegistryDirectoryTest {
     public void testNotifyoverrideUrls_withInvoker(){
         RegistryDirectory registryDirectory = getRegistryDirectory();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.addParameter("timeout", "1000"));
         durls.add(SERVICEURL2.addParameter("timeout", "1000").addParameter("connections", "10"));
         durls.add(URL.valueOf("override://0.0.0.0?timeout=1&connections=5"));
@@ -664,7 +664,7 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.addParameter("timeout", "1"));//一个一样，一个不一样
         durls.add(SERVICEURL2.addParameter("timeout", "1").addParameter("connections", "5"));
         registryDirectory.notify(durls);
@@ -673,7 +673,7 @@ public class RegistryDirectoryTest {
         Invoker<?> a1Invoker = invokers.get(0);
         Invoker<?> b1Invoker = invokers.get(1);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=1&connections=5"));
         registryDirectory.notify(durls);
         Assert.assertEquals(true, registryDirectory.isAvailable());
@@ -698,12 +698,12 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140").addParameter("timeout", "1"));//一个一样，一个不一样
         durls.add(SERVICEURL2.setHost("10.20.30.141").addParameter("timeout", "2"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=3"));
         durls.add(URL.valueOf("override://10.20.30.141:9092?timeout=4"));
         registryDirectory.notify(durls);
@@ -724,15 +724,15 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140").addParameter("timeout", "1"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=1000"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=3"));
         durls.add(URL.valueOf("override://0.0.0.0"));
         registryDirectory.notify(durls);
@@ -752,13 +752,13 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140").addParameter("timeout", "1"));
         registryDirectory.notify(durls);
         Assert.assertEquals(null,registryDirectory.getUrl().getParameter("mock"));
         
         //override
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=1000&mock=fail"));
         registryDirectory.notify(durls);
         List<Invoker<?>> invokers = registryDirectory.list(invocation);
@@ -767,7 +767,7 @@ public class RegistryDirectoryTest {
         Assert.assertEquals("fail",registryDirectory.getUrl().getParameter("mock"));
         
         //override clean
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0/dubbo.test.api.HelloService"));
         registryDirectory.notify(durls);
         invokers = registryDirectory.list(invocation);
@@ -787,11 +787,11 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140").addParameter("timeout", "1"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?timeout=3"));
         durls.add(URL.valueOf("override://0.0.0.0"));
         durls.add(URL.valueOf("override://10.20.30.140:9091?timeout=4"));
@@ -811,12 +811,12 @@ public class RegistryDirectoryTest {
     	RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140"));
         durls.add(SERVICEURL.setHost("10.20.30.141"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://0.0.0.0?"+Constants.ENABLED_KEY+"=false"));
         registryDirectory.notify(durls);
         
@@ -834,12 +834,12 @@ public class RegistryDirectoryTest {
     	RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140"));
         durls.add(SERVICEURL.setHost("10.20.30.141"));
         registryDirectory.notify(durls);
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://10.20.30.140?"+Constants.DISABLED_KEY+"=true"));
         registryDirectory.notify(durls);
         
@@ -847,7 +847,7 @@ public class RegistryDirectoryTest {
         Assert.assertEquals(1,invokers.size());
         Assert.assertEquals("10.20.30.141", invokers.get(0).getUrl().getHost());
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("empty://0.0.0.0?"+Constants.DISABLED_KEY+"=true&"+Constants.CATEGORY_KEY+"="+Constants.CONFIGURATORS_CATEGORY));
         registryDirectory.notify(durls);
         List<Invoker<?>> invokers2 = registryDirectory.list(invocation);
@@ -863,7 +863,7 @@ public class RegistryDirectoryTest {
         RegistryDirectory registryDirectory = getRegistryDirectory();
         invocation = new RpcInvocation();
         
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140"));
         durls.add(SERVICEURL.setHost("10.20.30.141"));
         registryDirectory.notify(durls);
@@ -871,14 +871,14 @@ public class RegistryDirectoryTest {
         List<Invoker<?>> invokers = registryDirectory.list(invocation);
         Assert.assertEquals(2,invokers.size());
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140"));
         registryDirectory.notify(durls);
         List<Invoker<?>> invokers2 = registryDirectory.list(invocation);
         Assert.assertEquals(1,invokers2.size());
         Assert.assertEquals("10.20.30.140", invokers.get(0).getUrl().getHost());
         
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("empty://0.0.0.0?"+Constants.DISABLED_KEY+"=true&"+Constants.CATEGORY_KEY+"="+Constants.CONFIGURATORS_CATEGORY));
         registryDirectory.notify(durls);
         List<Invoker<?>> invokers3 = registryDirectory.list(invocation);
@@ -895,7 +895,7 @@ public class RegistryDirectoryTest {
         invocation = new RpcInvocation();
         
         // 初始就禁用
-        List<URL> durls = new ArrayList<URL>();
+        List<URL> durls = new ArrayList<>();
         durls.add(SERVICEURL.setHost("10.20.30.140").addParameter(Constants.ENABLED_KEY, "false"));
         durls.add(SERVICEURL.setHost("10.20.30.141"));
         registryDirectory.notify(durls);
@@ -905,7 +905,7 @@ public class RegistryDirectoryTest {
         Assert.assertEquals("10.20.30.141", invokers.get(0).getUrl().getHost());
         
         // 通过覆盖规则启用
-        durls = new ArrayList<URL>();
+        durls = new ArrayList<>();
         durls.add(URL.valueOf("override://10.20.30.140?"+Constants.DISABLED_KEY+"=false"));
         registryDirectory.notify(durls);
         List<Invoker<?>> invokers2 = registryDirectory.list(invocation);
@@ -917,12 +917,9 @@ public class RegistryDirectoryTest {
         if (isScriptUnsupported) return;
         RegistryDirectory registryDirectory = getRegistryDirectory();
         URL routerurl = URL.valueOf(Constants.ROUTE_PROTOCOL + "://127.0.0.1:9096/").addParameter(Constants.ROUTER_KEY,
-                                                                                                     "javascript").addParameter(Constants.RULE_KEY,
-                                                                                                                                "function test1(){}").addParameter(Constants.ROUTER_KEY,
-                                                                                                                                                                   "script"); // FIX
-                                                                                                                                                                              // BAD
-
-        List<URL> serviceUrls = new ArrayList<URL>();
+                        "javascript").addParameter(Constants.RULE_KEY,"function test1(){}").addParameter(Constants.ROUTER_KEY,
+                        "script"); // FIX // BAD
+        List<URL> serviceUrls = new ArrayList<>();
         // without ROUTER_KEY, the first router should not be created.
         serviceUrls.add(routerurl);
         registryDirectory.notify(serviceUrls);
@@ -944,7 +941,7 @@ public class RegistryDirectoryTest {
     public void testNotify_MockProviderOnly() {
     	RegistryDirectory registryDirectory = getRegistryDirectory();
     	
-    	List<URL> serviceUrls = new ArrayList<URL>();
+    	List<URL> serviceUrls = new ArrayList<>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
         serviceUrls.add(SERVICEURL.setProtocol(Constants.MOCK_PROTOCOL));
@@ -967,7 +964,7 @@ public class RegistryDirectoryTest {
     public void test_Notified_acceptProtocol0() {
     	URL errorPathUrl  = URL.valueOf("notsupport:/xxx?refer=" + URL.encode("interface="+service));
         RegistryDirectory registryDirectory = getRegistryDirectory(errorPathUrl);
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         URL dubbo1URL = URL.valueOf("dubbo://127.0.0.1:9098?lazy=true&methods=getXXX");
         URL dubbo2URL = URL.valueOf("injvm://127.0.0.1:9099?lazy=true&methods=getXXX");
         serviceUrls.add(dubbo1URL);
@@ -986,7 +983,7 @@ public class RegistryDirectoryTest {
     	URL errorPathUrl  = URL.valueOf("notsupport:/xxx");
     	errorPathUrl = errorPathUrl.addParameterAndEncoded(Constants.REFER_KEY, "interface="+service + "&protocol=dubbo");
         RegistryDirectory registryDirectory = getRegistryDirectory(errorPathUrl);
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         URL dubbo1URL = URL.valueOf("dubbo://127.0.0.1:9098?lazy=true&methods=getXXX");
         URL dubbo2URL = URL.valueOf("injvm://127.0.0.1:9098?lazy=true&methods=getXXX");
         serviceUrls.add(dubbo1URL);
@@ -1005,7 +1002,7 @@ public class RegistryDirectoryTest {
     	URL errorPathUrl  = URL.valueOf("notsupport:/xxx");
     	errorPathUrl = errorPathUrl.addParameterAndEncoded(Constants.REFER_KEY, "interface="+service + "&protocol=dubbo,injvm");
         RegistryDirectory registryDirectory = getRegistryDirectory(errorPathUrl);
-        List<URL> serviceUrls = new ArrayList<URL>();
+        List<URL> serviceUrls = new ArrayList<>();
         URL dubbo1URL = URL.valueOf("dubbo://127.0.0.1:9098?lazy=true&methods=getXXX");
         URL dubbo2URL = URL.valueOf("injvm://127.0.0.1:9099?lazy=true&methods=getXXX");
         serviceUrls.add(dubbo1URL);

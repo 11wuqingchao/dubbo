@@ -43,7 +43,7 @@ public class ClientReconnectTest {
             Client client = startClient(port, 200);
             Assert.assertEquals(false, client.isConnected());
             Server server = startServer(port);
-            for (int i = 0; i < 100 && ! client.isConnected(); i++) {
+            for (int i = 0; i < 1000 && ! client.isConnected(); i++) {
                 Thread.sleep(10);
             }
             Assert.assertEquals(true, client.isConnected());
@@ -90,15 +90,15 @@ public class ClientReconnectTest {
      * 重连日志的校验，不能一直抛出error日志.
      */
     @Test
-    public void testReconnectErrorLog() throws RemotingException, InterruptedException{
+    public void testReconnectErrorLog() throws RemotingException, InterruptedException {
         int port = NetUtils.getAvailablePort();
         DubboAppender.doStart();
-        String url = "exchange://127.0.0.3:"+port + "/client.reconnect.test?check=false&"
+        String url = "exchange://127.0.0.3:"+ port + "/client.reconnect.test?check=false&"
         +Constants.RECONNECT_KEY+"="+1 + //1ms reconnect,保证有足够频率的重连
         "&"+Constants.SHUTDOWN_TIMEOUT_KEY+ "=1";//shutdown时间足够短，确保error日志输出
         try{
             Exchangers.connect(url);
-        }catch (Exception e) {
+        } catch (Exception e) {
             //do nothing
         }
         Thread.sleep(1500);//重连线程的运行

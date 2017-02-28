@@ -65,7 +65,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
 	public Result invoke(final Invocation invocation) throws RpcException {
         List<Invoker<T>> invokers = directory.list(invocation);
         
-        String merger = getUrl().getMethodParameter( invocation.getMethodName(), Constants.MERGER_KEY );
+        String merger = getUrl().getMethodParameter( invocation.getMethodName(), Constants.MERGER_KEY);
         if ( ConfigUtils.isEmpty(merger) ) { // 如果方法不需要Merge，退化为只调一个Group
             for(final Invoker<T> invoker : invokers ) {
                 if (invoker.isAvailable()) {
@@ -133,7 +133,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
             merger = merger.substring(1);
             Method method;
             try {
-                method = returnType.getMethod( merger, returnType );
+                method = returnType.getMethod(merger, returnType );
             } catch ( NoSuchMethodException e ) {
                 throw new RpcException( new StringBuilder( 32 )
                                                 .append( "Can not merge result because missing method [ " )
@@ -160,10 +160,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
                         }
                     }
                 } catch ( Exception e ) {
-                    throw new RpcException( 
-                            new StringBuilder( 32 )
-                                    .append( "Can not merge result: " )
-                                    .append( e.getMessage() ).toString(), 
+                    throw new RpcException(new StringBuilder("Can not merge result: ").append(e.getMessage()).toString(),
                             e );
                 }
             } else {
@@ -184,12 +181,11 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
                 resultMerger = ExtensionLoader.getExtensionLoader(Merger.class).getExtension(merger);
             }
             if (resultMerger != null) {
-                List<Object> rets = new ArrayList<>(resultList.size());
+                List<Object> retList = new ArrayList<>(resultList.size());
                 for(Result r : resultList) {
-                    rets.add(r.getValue());
+                    retList.add(r.getValue());
                 }
-                result = resultMerger.merge(
-                        rets.toArray((Object[])Array.newInstance(returnType, 0)));
+                result = resultMerger.merge(retList.toArray((Object[]) Array.newInstance(returnType, 0)));
             } else {
                 throw new RpcException( "There is no merger to merge result." );
             }

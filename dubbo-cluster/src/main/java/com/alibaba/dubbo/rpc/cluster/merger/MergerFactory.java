@@ -36,9 +36,23 @@ public class MergerFactory {
         if (returnType.isArray()) {
             Class type = returnType.getComponentType();
             result = mergerCache.get(type);
+            /**
+             * mergerCache里缓存的Merger的key是数组类名，而不是数组的元素的类名，这里做了一个兜底策略
+             * add by woodle
+             */
+            if (result == null) {
+                result = mergerCache.get(returnType);
+            }
             if (result == null) {
                 loadMergers();
                 result = mergerCache.get(type);
+                /**
+                 * mergerCache里缓存的Merger的key是数组类名，而不是数组的元素的类名，这里做了一个兜底策略
+                 * add by woodle
+                 */
+                if (result == null) {
+                    result = mergerCache.get(returnType);
+                }
             }
             if (result == null && ! type.isPrimitive()) {
                 result = ArrayMerger.INSTANCE;
@@ -54,8 +68,7 @@ public class MergerFactory {
     }
 
     static void loadMergers() {
-        Set<String> names = ExtensionLoader.getExtensionLoader(Merger.class)
-                .getSupportedExtensions();
+        Set<String> names = ExtensionLoader.getExtensionLoader(Merger.class).getSupportedExtensions();
         for (String name : names) {
             Merger m = ExtensionLoader.getExtensionLoader(Merger.class).getExtension(name);
             mergerCache.putIfAbsent(ReflectUtils.getGenericClass(m.getClass()), m);

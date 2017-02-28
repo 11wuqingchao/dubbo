@@ -32,8 +32,7 @@ import com.alibaba.dubbo.rpc.cluster.Router;
  */
 public class MockInvokersSelector implements Router {
 
-	public <T> List<Invoker<T>> route(final List<Invoker<T>> invokers,
-			URL url, final Invocation invocation) throws RpcException {
+	public <T> List<Invoker<T>> route(final List<Invoker<T>> invokers, URL url, final Invocation invocation) throws RpcException {
 		if (invocation.getAttachments() == null) {
 			return getNormalInvokers(invokers);
 		} else {
@@ -89,8 +88,13 @@ public class MockInvokersSelector implements Router {
         return null;
     }
 
+    /**
+     * jdk6和jdk7的Collections.sort()的排序实现做了修改，
+     * 为了保证MockInvokerSelector始终保证是第一个，改了MockInvokerSelector的compareTo方法
+     * add by woodle
+     */
     public int compareTo(Router o) {
-        return 1;
+        return -1;
     }
 
 }

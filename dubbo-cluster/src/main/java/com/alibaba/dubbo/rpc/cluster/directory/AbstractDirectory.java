@@ -104,7 +104,7 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
 
     protected void setRouters(List<Router> routers){
         // copy list
-        routers = routers == null ? new  ArrayList<Router>() : new ArrayList<Router>(routers);
+        routers = routers == null ? new  ArrayList<Router>() : new ArrayList<>(routers);
         // append url router
     	String routerkey = url.getParameter(Constants.ROUTER_KEY);
         if (routerkey != null && routerkey.length() > 0) {
@@ -113,6 +113,11 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         }
         // append mock invoker selector
         routers.add(new MockInvokersSelector());
+        /**
+         * jdk6和jdk7的Collections.sort()的排序实现做了修改，
+         * 为了保证MockInvokerSelector始终保证是第一个，改了MockInvokerSelector的compareTo方法
+         * add by woodle
+         */
         Collections.sort(routers);
     	this.routers = routers;
     }

@@ -38,6 +38,8 @@ import com.alibaba.dubbo.registry.NotifyListener;
  * MulticastRegistryTest
  * 
  * @author tony.chenl
+ * mac yosmite 系统需要关闭 awdl0 才能
+ * sudo ifconfig awdl0 down 或者跑此case 指定-Djava.net.preferIPv4Stack=true
  */
 public class MulticastRegistryTest {
 
@@ -69,12 +71,9 @@ public class MulticastRegistryTest {
         new MulticastRegistry(errorUrl);
     }
 
-    /**
-     * Test method for {@link com.alibaba.dubbo.registry.support.injvm.InjvmRegistry#register(java.util.Map)}.
-     */
     @Test
     public void testRegister() {
-        Set<URL> registered = null;
+        Set<URL> registered;
         // clear first
         registered = registry.getRegistered();
 
@@ -88,15 +87,10 @@ public class MulticastRegistryTest {
         assertEquals(1, registered.size());
     }
 
-    /**
-     * Test method for
-     * {@link com.alibaba.dubbo.registry.support.injvm.InjvmRegistry#subscribe(java.util.Map, com.alibaba.dubbo.registry.support.NotifyListener)}
-     * .
-     */
     @Test
     public void testSubscribe() {
-        // verify lisener.
-        final AtomicReference<URL> args = new AtomicReference<URL>();
+        // verify listener.
+        final AtomicReference<URL> args = new AtomicReference<>();
         registry.subscribe(consumerUrl, new NotifyListener() {
 
             public void notify(List<URL> urls) {
@@ -114,7 +108,7 @@ public class MulticastRegistryTest {
     public void testDefaultPort() {
         MulticastRegistry multicastRegistry = new MulticastRegistry(URL.valueOf("multicast://224.5.6.7"));
         try {
-            MulticastSocket multicastSocket = multicastRegistry.getMutilcastSocket();
+            MulticastSocket multicastSocket = multicastRegistry.getMulticastSocket();
             Assert.assertEquals(1234, multicastSocket.getLocalPort());
         } finally {
             multicastRegistry.destroy();

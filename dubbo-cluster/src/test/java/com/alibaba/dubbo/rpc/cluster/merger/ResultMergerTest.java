@@ -31,11 +31,11 @@ public class ResultMergerTest {
 
     @Test
     public void testListMerger() throws Exception {
-        List<Object> list1 = new ArrayList<Object>();
+        List<Object> list1 = new ArrayList<>();
         list1.add( null );
         list1.add( "1" );
         list1.add( "2" );
-        List<Object> list2 = new ArrayList<Object>();
+        List<Object> list2 = new ArrayList<>();
         list2.add( "3" );
         list2.add( "4" );
 
@@ -54,11 +54,11 @@ public class ResultMergerTest {
     
     @Test
     public void testSetMerger() throws Exception {
-        Set<Object> set1 = new HashSet<Object>();
+        Set<Object> set1 = new HashSet<>();
         set1.add( null );
         set1.add( "1" );
         set1.add( "2" );
-        Set<Object> set2 = new HashSet<Object>();
+        Set<Object> set2 = new HashSet<>();
         set2.add( "2" );
         set2.add( "3" );
 
@@ -85,7 +85,7 @@ public class ResultMergerTest {
         Assert.assertTrue(result.getClass().isArray());
         Assert.assertEquals(6, Array.getLength(result));
         Assert.assertTrue(String.class.isInstance(Array.get(result, 0)));
-        for(int i = 0; i < 6; i++) {
+        for( int i = 0; i < 6; i++) {
             Assert.assertEquals(String.valueOf(i + 1), Array.get(result, i));
         }
         
