@@ -41,15 +41,15 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
 
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName();
-        int length = invokers.size(); // 总个数
-        int maxWeight = 0; // 最大权重
-        int minWeight = Integer.MAX_VALUE; // 最小权重
+        int length = invokers.size();                   // 总个数
+        int maxWeight = 0;                              // 最大权重
+        int minWeight = Integer.MAX_VALUE;              // 最小权重
         for (int i = 0; i < length; i++) {
             int weight = getWeight(invokers.get(i), invocation);
-            maxWeight = Math.max(maxWeight, weight); // 累计最大权重
-            minWeight = Math.min(minWeight, weight); // 累计最小权重
+            maxWeight = Math.max(maxWeight, weight);    // 累计最大权重
+            minWeight = Math.min(minWeight, weight);    // 累计最小权重
         }
-        if (maxWeight > 0 && minWeight < maxWeight) { // 权重不一样
+        if (maxWeight > 0 && minWeight < maxWeight) {   // 权重不一样
             AtomicPositiveInteger weightSequence = weightSequences.get(key);
             if (weightSequence == null) {
                 weightSequences.putIfAbsent(key, new AtomicPositiveInteger());
@@ -57,7 +57,7 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
             }
             int currentWeight = weightSequence.getAndIncrement() % maxWeight;
             List<Invoker<T>> weightInvokers = new ArrayList<>();
-            for (Invoker<T> invoker : invokers) { // 筛选权重大于当前权重基数的Invoker
+            for (Invoker<T> invoker : invokers) {       // 筛选权重大于当前权重基数的Invoker
                 if (getWeight(invoker, invocation) > currentWeight) {
                     weightInvokers.add(invoker);
                 }

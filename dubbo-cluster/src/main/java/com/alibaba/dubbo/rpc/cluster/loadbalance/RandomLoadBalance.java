@@ -35,15 +35,15 @@ public class RandomLoadBalance extends AbstractLoadBalance {
     private final Random random = new Random();
 
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
-        int length = invokers.size(); // 总个数
-        int totalWeight = 0; // 总权重
-        boolean sameWeight = true; // 权重是否都一样
+        int length = invokers.size();               // 总个数
+        int totalWeight = 0;                        // 总权重
+        boolean sameWeight = true;                  // 权重是否都一样
         for (int i = 0; i < length; i++) {
             int weight = getWeight(invokers.get(i), invocation);
-            totalWeight += weight; // 累计总权重
+            totalWeight += weight;                  // 累计总权重
             if (sameWeight && i > 0
                     && weight != getWeight(invokers.get(i - 1), invocation)) {
-                sameWeight = false; // 计算所有权重是否一样
+                sameWeight = false;                 // 计算所有权重是否一样
             }
         }
         if (totalWeight > 0 && ! sameWeight) {
