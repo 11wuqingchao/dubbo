@@ -142,7 +142,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
                     int index = invokers.indexOf(invoker);
                     try{
                         //最后在避免碰撞
-                        invoker = index <invokers.size()-1?invokers.get(index+1) :invoker;
+                        invoker = index <invokers.size() - 1 ?invokers.get(index+1) : invoker;
                     }catch (Exception e) {
                         logger.warn(e.getMessage()+" may because invokers list dynamic change, ignore.",e);
                     }
@@ -156,22 +156,15 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
     
     /**
      * 重选，先从非selected的列表中选择，没有在从selected列表中选择.
-     * @param loadbalance
-     * @param invocation
-     * @param invokers
-     * @param selected
-     * @return
      * @throws RpcException
      */
-    private Invoker<T> reselect(LoadBalance loadbalance,Invocation invocation,
-                                List<Invoker<T>> invokers, List<Invoker<T>> selected ,boolean availablecheck)
-            throws RpcException {
-        
+    private Invoker<T> reselect(LoadBalance loadbalance,Invocation invocation, List<Invoker<T>> invokers,
+                                List<Invoker<T>> selected, boolean availablecheck)  throws RpcException {
         //预先分配一个，这个列表是一定会用到的.
-        List<Invoker<T>> reselectInvokers = new ArrayList<Invoker<T>>(invokers.size()>1?(invokers.size()-1):invokers.size());
+        List<Invoker<T>> reselectInvokers = new ArrayList<>(invokers.size()>1 ? (invokers.size() - 1) : invokers.size());
         
         //先从非select中选
-        if( availablecheck ){ //选isAvailable 的非select
+        if ( availablecheck ) { //选isAvailable 的非select
             for(Invoker<T> invoker : invokers){
                 if(invoker.isAvailable()){
                     if(selected ==null || !selected.contains(invoker)){
@@ -182,13 +175,13 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
             if(reselectInvokers.size()>0){
                 return  loadbalance.select(reselectInvokers, getUrl(), invocation);
             }
-        }else{ //选全部非select
-            for(Invoker<T> invoker : invokers){
+        } else { //选全部非select
+            for (Invoker<T> invoker : invokers) {
                 if(selected ==null || !selected.contains(invoker)){
                     reselectInvokers.add(invoker);
                 }
             }
-            if(reselectInvokers.size()>0){
+            if (reselectInvokers.size()>0) {
                 return  loadbalance.select(reselectInvokers, getUrl(), invocation);
             }
         }
@@ -202,7 +195,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
                     }
                 }
             }
-            if(reselectInvokers.size()>0){
+            if (reselectInvokers.size() > 0) {
                 return  loadbalance.select(reselectInvokers, getUrl(), invocation);
             }
         }
@@ -210,9 +203,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
     }
     
     public Result invoke(final Invocation invocation) throws RpcException {
-
         checkWheatherDestoried();
-
         LoadBalance loadbalance;
         
         List<Invoker<T>> invokers = list(invocation);
@@ -227,8 +218,7 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
     }
 
     protected void checkWheatherDestoried() {
-
-        if(destroyed){
+        if (destroyed) {
             throw new RpcException("Rpc cluster invoker for " + getInterface() + " on consumer " + NetUtils.getLocalHost()
                     + " use dubbo version " + Version.getVersion()
                     + " is now destroyed! Can not invoke any more.");
@@ -252,11 +242,9 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
         }
     }
 
-    protected abstract Result doInvoke(Invocation invocation, List<Invoker<T>> invokers,
-                                       LoadBalance loadbalance) throws RpcException;
+    protected abstract Result doInvoke(Invocation invocation, List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException;
     
     protected  List<Invoker<T>> list(Invocation invocation) throws RpcException {
-    	List<Invoker<T>> invokers = directory.list(invocation);
-    	return invokers;
+    	return directory.list(invocation);
     }
 }

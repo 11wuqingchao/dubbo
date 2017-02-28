@@ -27,12 +27,13 @@ import com.alibaba.dubbo.rpc.support.MockProtocol;
 
 public class MockClusterInvokerTest {
 	
-	List<Invoker<IHelloService>> invokers = new ArrayList<Invoker<IHelloService>>();
+	List<Invoker<IHelloService>> invokers = new ArrayList<>();
 	
 	@Before
 	public void beforeMethod(){
 		invokers.clear();
 	}
+
 	/**
 	 * 测试mock策略是否正常-fail-mock
 	 */
@@ -211,9 +212,9 @@ public class MockClusterInvokerTest {
         invocation = new RpcInvocation();
 		invocation.setMethodName("getSomething3");
 		try {
-			ret = cluster.invoke(invocation);
+			cluster.invoke(invocation);
 			Assert.fail();
-		}catch (RpcException e) {
+		} catch (RpcException e) {
 			
 		}
 	}
@@ -346,8 +347,7 @@ public class MockClusterInvokerTest {
 		invocation.setMethodName("getSomething2");
         ret = cluster.invoke(invocation);
         Assert.assertEquals("x", ret.getValue());
-        
-      //如d
+
         //如果没有配置mock，则直接返回null
         invocation = new RpcInvocation();
 		invocation.setMethodName("sayHello");
@@ -452,7 +452,7 @@ public class MockClusterInvokerTest {
 		invocation.setMethodName("getInt1");
         Result ret = cluster.invoke(invocation);
         Assert.assertTrue("result type must be integer but was : " + ret.getValue().getClass(), ret.getValue() instanceof Integer);
-        Assert.assertEquals(new Integer(1688), (Integer)ret.getValue());
+        Assert.assertEquals(new Integer(1688), ret.getValue());
 	}
 	
 	@Test
@@ -540,7 +540,7 @@ public class MockClusterInvokerTest {
         List<User> rl = (List<User>)ret.getValue();
         System.out.println(rl);
         Assert.assertEquals(2, rl.size());
-        Assert.assertEquals("hi1", ((User)rl.get(0)).getName());
+        Assert.assertEquals("hi1", (rl.get(0)).getName());
 	}
 	
 	@Test
@@ -552,9 +552,9 @@ public class MockClusterInvokerTest {
 		//方法配置了mock
         RpcInvocation invocation = new RpcInvocation();
 		invocation.setMethodName("getUsers");
-		try{
+		try {
 			cluster.invoke(invocation);
-		}catch (RpcException e) {
+		} catch (RpcException e) {
 		}
 	}
 	
@@ -635,7 +635,7 @@ public class MockClusterInvokerTest {
 		Invoker<IHelloService> invoker1 = proxy.getInvoker(new HelloService(), IHelloService.class, durl);
 		invokers.add(invoker1);
 		
-		Directory<IHelloService> dic = new StaticDirectory<IHelloService>(durl, invokers, null);
+		Directory<IHelloService> dic = new StaticDirectory<>(durl, invokers, null);
 		AbstractClusterInvoker<IHelloService> cluster = new AbstractClusterInvoker(dic) {
             @Override
             protected Result doInvoke(Invocation invocation, List invokers, LoadBalance loadbalance)
@@ -647,7 +647,7 @@ public class MockClusterInvokerTest {
             	}
             }
         };
-        return new MockClusterInvoker<IHelloService>(dic, cluster);
+        return new MockClusterInvoker<>(dic, cluster);
 	}
 	
 	public static interface IHelloService{
@@ -661,6 +661,7 @@ public class MockClusterInvokerTest {
 		public List<User> getUsers();
 		void sayHello();
 	}
+
 	public static class HelloService implements IHelloService {
 		public String getSomething() {
 			return "something";

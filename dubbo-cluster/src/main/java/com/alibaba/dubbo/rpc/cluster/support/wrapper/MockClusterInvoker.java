@@ -131,16 +131,15 @@ public class MockClusterInvoker<T> implements Invoker<T>{
      * 返回MockInvoker
      * 契约：
      * directory根据invocation中是否有Constants.INVOCATION_NEED_MOCK，来判断获取的是一个normal invoker 还是一个 mock invoker
-     * 如果directorylist 返回多个mock invoker，只使用第一个invoker.
+     * 如果directoryList 返回多个mock invoker，只使用第一个invoker.
      */
     private List<Invoker<T>> selectMockInvoker(Invocation invocation){
     	//TODO generic invoker？
         if (invocation instanceof RpcInvocation){
-            //存在隐含契约(虽然在接口声明中增加描述，但扩展性会存在问题.同时放在attachement中的做法需要改进
+            //存在隐含契约(虽然在接口声明中增加描述，但扩展性会存在问题.同时放在attachment中的做法需要改进
         	((RpcInvocation)invocation).setAttachment(Constants.INVOCATION_NEED_MOCK, Boolean.TRUE.toString());
             //directory根据invocation中attachment是否有Constants.INVOCATION_NEED_MOCK，来判断获取的是normal invokers or mock invokers
-        	List<Invoker<T>> invokers = directory.list(invocation);
-            return invokers;
+        	return directory.list(invocation);
         } else {
             return null ;
         }
