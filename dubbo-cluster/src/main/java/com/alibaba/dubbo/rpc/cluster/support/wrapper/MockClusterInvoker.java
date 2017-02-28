@@ -34,7 +34,7 @@ import com.alibaba.dubbo.rpc.support.MockInvoker;
 /**
  * @author chao.liuc
  */
-public class MockClusterInvoker<T> implements Invoker<T>{
+public class MockClusterInvoker<T> implements Invoker<T> {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MockClusterInvoker.class);
 
@@ -80,7 +80,7 @@ public class MockClusterInvoker<T> implements Invoker<T>{
         	//fail-mock
         	try {
         		result = this.invoker.invoke(invocation);
-        	}catch (RpcException e) {
+        	} catch (RpcException e) {
 				if (e.isBiz()) {
 					throw e;
 				} else {
