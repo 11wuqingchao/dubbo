@@ -67,22 +67,25 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
     }
     
     public List<Invoker<T>> list(Invocation invocation) throws RpcException {
-        if (destroyed){
+        if (destroyed) {
             throw new RpcException("Directory already destroyed .url: "+ getUrl());
         }
         List<Invoker<T>> invokers = doList(invocation);
         List<Router> localRouters = this.routers; // local reference
-        if (localRouters != null && localRouters.size() > 0) {
-            for (Router router: localRouters){
-                try {
-                    if (router.getUrl() == null || router.getUrl().getParameter(Constants.RUNTIME_KEY, true)) {
-                        invokers = router.route(invokers, getConsumerUrl(), invocation);
-                    }
-                } catch (Throwable t) {
-                    logger.error("Failed to execute router: " + getUrl() + ", cause: " + t.getMessage(), t);
+        if (localRouters == null || localRouters.size() == 0) {
+            return invokers;
+        }
+
+        for (Router router: localRouters) {
+            try {
+                if (router.getUrl() == null || router.getUrl().getParameter(Constants.RUNTIME_KEY, true)) {
+                    invokers = router.route(invokers, getConsumerUrl(), invocation);
                 }
+            } catch (Throwable t) {
+                logger.error("Failed to execute router: " + getUrl() + ", cause: " + t.getMessage(), t);
             }
         }
+
         return invokers;
     }
     
@@ -106,9 +109,9 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         // copy list
         routers = routers == null ? new  ArrayList<Router>() : new ArrayList<>(routers);
         // append url router
-    	String routerkey = url.getParameter(Constants.ROUTER_KEY);
-        if (routerkey != null && routerkey.length() > 0) {
-            RouterFactory routerFactory = ExtensionLoader.getExtensionLoader(RouterFactory.class).getExtension(routerkey);
+    	String routerKey = url.getParameter(Constants.ROUTER_KEY);
+        if (routerKey != null && routerKey.length() > 0) {
+            RouterFactory routerFactory = ExtensionLoader.getExtensionLoader(RouterFactory.class).getExtension(routerKey);
             routers.add(routerFactory.getRouter(url));
         }
         // append mock invoker selector
