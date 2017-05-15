@@ -14,9 +14,9 @@ public class TracingConstants {
 
     public static final String TRACING_IS_SAMPLE            = "tracing_is_sampler";
 
-    public static final String SYNC_TRANSFER_TYPE           = "trace.sync.transfer.type"; //properties配置同步trace类型的配置key
+    public static final String SYNC_TRANSFER_TYPE           = "trace.sync.transfer.type";   //properties配置同步trace类型的配置key
 
-    public static final String DEFAULT_SYNC_TRANSFER        = "default";        //默认的同步方式
+    public static final String DEFAULT_SYNC_TRANSFER        = "default";                    //默认的同步方式
 
     public static final String DEFAULT_COLLECTOR_TYPE       = "default";
 

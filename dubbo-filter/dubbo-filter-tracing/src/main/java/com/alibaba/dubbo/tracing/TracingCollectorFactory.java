@@ -13,6 +13,6 @@ public interface TracingCollectorFactory {
      * 监控链路的数据同步器
      *
      */
-    public TracingCollector getTracingCollector();
+    TracingCollector getTracingCollector();
 
 }

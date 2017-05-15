@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class Span implements Serializable {
 
+    private static final long serialVersionUID = -7098712064249426933L;
+
     private String id;
 
     private String parentId;

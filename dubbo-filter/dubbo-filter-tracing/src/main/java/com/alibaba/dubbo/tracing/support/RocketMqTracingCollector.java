@@ -46,7 +46,7 @@ public class RocketMqTracingCollector implements TracingCollector {
                 logger.error("send mq message return [" + sendResult.getSendStatus() + "]");
             }
         } catch (Exception e) {
-            logger.error("fail to send message.",e);
+            logger.error("fail to send message.", e);
         }
     }
 }

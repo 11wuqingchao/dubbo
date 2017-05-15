@@ -17,7 +17,7 @@ public class ContextHolder {
         }
     };
 
-    private static ThreadLocal<String> localTraceId = new ThreadLocal<String>();
+    private static ThreadLocal<String> localTraceId = new ThreadLocal<>();
 
     private static ThreadLocal<Boolean> localSample = new ThreadLocal<Boolean>(){
         @Override

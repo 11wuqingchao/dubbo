@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 标注 文本Annotation
  */
 public class Annotation implements Serializable {
+
+    private static final long serialVersionUID = -2047070654487631861L;
+
     public static final String CLIENT_SEND      = "cs";
 
     public static final String CLIENT_RECEIVE   = "cr";
@@ -14,6 +17,7 @@ public class Annotation implements Serializable {
     public static final String SERVER_SEND      = "ss";
 
     public static final String SERVER_RECEIVE   = "sr";
+
 
     private long timestamp;
 
@@ -26,6 +30,7 @@ public class Annotation implements Serializable {
     public Annotation(){
 
     }
+
     public Annotation(long timestamp, String value, Endpoint host) {
         this.timestamp = timestamp;
         this.value = value;

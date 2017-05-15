@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public class BinaryAnnotation implements Serializable {
 
+    private static final long serialVersionUID = 6344383711155625186L;
+
     private String key;
 
     private String value;
