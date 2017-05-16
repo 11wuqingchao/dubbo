@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -124,9 +123,9 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     @SuppressWarnings({ "unchecked", "deprecation" })
 	public void afterPropertiesSet() throws Exception {
         if (getProvider() == null) {
-            Map<String, ProviderConfig> providerConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProviderConfig.class, false, false);
+            Map<String, ProviderConfig> providerConfigMap = BeanHelper.get(applicationContext, ProviderConfig.class);
             if (providerConfigMap != null && providerConfigMap.size() > 0) {
-                Map<String, ProtocolConfig> protocolConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProtocolConfig.class, false, false);
+                Map<String, ProtocolConfig> protocolConfigMap = BeanHelper.get(applicationContext, ProtocolConfig.class);
                 if ((protocolConfigMap == null || protocolConfigMap.size() == 0)
                         && providerConfigMap.size() > 1) { // 兼容旧版本
                     List<ProviderConfig> providerConfigs = new ArrayList<>();
@@ -154,37 +153,19 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
                 }
             }
         }
-        if (getApplication() == null
-                && (getProvider() == null || getProvider().getApplication() == null)) {
-            Map<String, ApplicationConfig> applicationConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ApplicationConfig.class, false, false);
+        if (getApplication() == null && (getProvider() == null || getProvider().getApplication() == null)) {
+            Map<String, ApplicationConfig> applicationConfigMap = BeanHelper.get(applicationContext, ApplicationConfig.class);
             if (applicationConfigMap != null && applicationConfigMap.size() > 0) {
-                ApplicationConfig applicationConfig = null;
-                for (ApplicationConfig config : applicationConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (applicationConfig != null) {
-                            throw new IllegalStateException("Duplicate application configs: " + applicationConfig + " and " + config);
-                        }
-                        applicationConfig = config;
-                    }
-                }
+                ApplicationConfig applicationConfig = BeanHelper.getApplicationConfig(applicationConfigMap);
                 if (applicationConfig != null) {
                     setApplication(applicationConfig);
                 }
             }
         }
-        if (getModule() == null
-                && (getProvider() == null || getProvider().getModule() == null)) {
-            Map<String, ModuleConfig> moduleConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ModuleConfig.class, false, false);
+        if (getModule() == null && (getProvider() == null || getProvider().getModule() == null)) {
+            Map<String, ModuleConfig> moduleConfigMap = BeanHelper.get(applicationContext, ModuleConfig.class);
             if (moduleConfigMap != null && moduleConfigMap.size() > 0) {
-                ModuleConfig moduleConfig = null;
-                for (ModuleConfig config : moduleConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (moduleConfig != null) {
-                            throw new IllegalStateException("Duplicate module configs: " + moduleConfig + " and " + config);
-                        }
-                        moduleConfig = config;
-                    }
-                }
+                ModuleConfig moduleConfig = BeanHelper.getModuleConfig(moduleConfigMap);
                 if (moduleConfig != null) {
                     setModule(moduleConfig);
                 }
@@ -193,33 +174,19 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         if ((getRegistries() == null || getRegistries().size() == 0)
                 && (getProvider() == null || getProvider().getRegistries() == null || getProvider().getRegistries().size() == 0)
                 && (getApplication() == null || getApplication().getRegistries() == null || getApplication().getRegistries().size() == 0)) {
-            Map<String, RegistryConfig> registryConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, RegistryConfig.class, false, false);
+            Map<String, RegistryConfig> registryConfigMap = BeanHelper.get(applicationContext, RegistryConfig.class);
             if (registryConfigMap != null && registryConfigMap.size() > 0) {
-                List<RegistryConfig> registryConfigs = new ArrayList<>();
-                for (RegistryConfig config : registryConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        registryConfigs.add(config);
-                    }
-                }
+                List<RegistryConfig> registryConfigs = BeanHelper.getRegistryConfigs(registryConfigMap);
                 if (registryConfigs.size() > 0) {
-                    super.setRegistries(registryConfigs);
+                    setRegistries(registryConfigs);
                 }
             }
         }
-        if (getMonitor() == null
-                && (getProvider() == null || getProvider().getMonitor() == null)
+        if (getMonitor() == null  && (getProvider() == null || getProvider().getMonitor() == null)
                 && (getApplication() == null || getApplication().getMonitor() == null)) {
-            Map<String, MonitorConfig> monitorConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, MonitorConfig.class, false, false);
+            Map<String, MonitorConfig> monitorConfigMap = BeanHelper.get(applicationContext, MonitorConfig.class);
             if (monitorConfigMap != null && monitorConfigMap.size() > 0) {
-                MonitorConfig monitorConfig = null;
-                for (MonitorConfig config : monitorConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (monitorConfig != null) {
-                            throw new IllegalStateException("Duplicate monitor configs: " + monitorConfig + " and " + config);
-                        }
-                        monitorConfig = config;
-                    }
-                }
+                MonitorConfig monitorConfig = BeanHelper.getMonitorConfig(monitorConfigMap);
                 if (monitorConfig != null) {
                     setMonitor(monitorConfig);
                 }
@@ -227,16 +194,11 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         }
         if ((getProtocols() == null || getProtocols().size() == 0)
                 && (getProvider() == null || getProvider().getProtocols() == null || getProvider().getProtocols().size() == 0)) {
-            Map<String, ProtocolConfig> protocolConfigMap = applicationContext == null ? null  : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProtocolConfig.class, false, false);
+            Map<String, ProtocolConfig> protocolConfigMap = BeanHelper.get(applicationContext, ProtocolConfig.class);
             if (protocolConfigMap != null && protocolConfigMap.size() > 0) {
-                List<ProtocolConfig> protocolConfigs = new ArrayList<>();
-                for (ProtocolConfig config : protocolConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        protocolConfigs.add(config);
-                    }
-                }
+                List<ProtocolConfig> protocolConfigs = BeanHelper.getProtocolConfigs(protocolConfigMap);
                 if (protocolConfigs.size() > 0) {
-                    super.setProtocols(protocolConfigs);
+                    setProtocols(protocolConfigs);
                 }
             }
         }

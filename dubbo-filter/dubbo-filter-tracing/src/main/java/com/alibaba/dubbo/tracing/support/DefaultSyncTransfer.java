@@ -33,6 +33,13 @@ public class DefaultSyncTransfer implements SyncTransfer {
         this.protocol = protocol;
     }
 
+    public DefaultSyncTransfer() {
+        queue = new ArrayBlockingQueue<>(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.FLUSH_SIZE_KEY,
+                TracingConstants.DEFAULT_FLUSH_SIZE)));
+        transferTask = new TransferTask(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.QUEUE_SIZE_KEY,
+                TracingConstants.DEFAULT_BUFFER_QUEUE_SIZE)));
+    }
+
     private class TransferTask extends Thread {
         private List<Span> cacheList;
         private int flushSizeInner;
@@ -40,7 +47,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
         private TransferTask(int flushSize) {
             cacheList = new ArrayList<>();
             flushSizeInner = flushSize;
-            setName("Tracing-span-transfer-task-thread");
+            setName("tracing-span-transfer-task-thread");
         }
 
         @Override
@@ -63,18 +70,12 @@ public class DefaultSyncTransfer implements SyncTransfer {
                     collector.push(cacheList);
                     cacheList.clear();
                 } catch (InterruptedException e) {
-                    log.error("Dst-span-transfer-task-thread occur an error", e);
+                    log.error("tracing-span-transfer-task-thread occur an error", e);
                 }
             }
         }
     }
 
-    public DefaultSyncTransfer() {
-        queue = new ArrayBlockingQueue<>(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.FLUSH_SIZE_KEY,
-                TracingConstants.DEFAULT_FLUSH_SIZE)));
-        transferTask = new TransferTask(Integer.parseInt(ConfigUtils.getProperty(TracingConstants.QUEUE_SIZE_KEY,
-                TracingConstants.DEFAULT_BUFFER_QUEUE_SIZE)));
-    }
 
 
     public void start() {

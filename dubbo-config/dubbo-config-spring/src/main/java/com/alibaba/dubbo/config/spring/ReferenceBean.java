@@ -15,11 +15,10 @@
  */
 package com.alibaba.dubbo.config.spring;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -77,7 +76,7 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,
     @SuppressWarnings({ "unchecked"})
     public void afterPropertiesSet() throws Exception {
         if (getConsumer() == null) {
-            Map<String, ConsumerConfig> consumerConfigMap = applicationContext == null ? null  : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ConsumerConfig.class, false, false);
+            Map<String, ConsumerConfig> consumerConfigMap = BeanHelper.get(applicationContext, ConsumerConfig.class);
             if (consumerConfigMap != null && consumerConfigMap.size() > 0) {
                 ConsumerConfig consumerConfig = null;
                 for (ConsumerConfig config : consumerConfigMap.values()) {
@@ -93,75 +92,50 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,
                 }
             }
         }
+
         if (getApplication() == null && (getConsumer() == null || getConsumer().getApplication() == null)) {
-            Map<String, ApplicationConfig> applicationConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ApplicationConfig.class, false, false);
+            Map<String, ApplicationConfig> applicationConfigMap = BeanHelper.get(applicationContext, ApplicationConfig.class);
             if (applicationConfigMap != null && applicationConfigMap.size() > 0) {
-                ApplicationConfig applicationConfig = null;
-                for (ApplicationConfig config : applicationConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (applicationConfig != null) {
-                            throw new IllegalStateException("Duplicate application configs: " + applicationConfig + " and " + config);
-                        }
-                        applicationConfig = config;
-                    }
-                }
+                ApplicationConfig applicationConfig = BeanHelper.getApplicationConfig(applicationConfigMap);
                 if (applicationConfig != null) {
                     setApplication(applicationConfig);
                 }
             }
         }
+
         if (getModule() == null && (getConsumer() == null || getConsumer().getModule() == null)) {
-            Map<String, ModuleConfig> moduleConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ModuleConfig.class, false, false);
+            Map<String, ModuleConfig> moduleConfigMap = BeanHelper.get(applicationContext, ModuleConfig.class);
             if (moduleConfigMap != null && moduleConfigMap.size() > 0) {
-                ModuleConfig moduleConfig = null;
-                for (ModuleConfig config : moduleConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (moduleConfig != null) {
-                            throw new IllegalStateException("Duplicate module configs: " + moduleConfig + " and " + config);
-                        }
-                        moduleConfig = config;
-                    }
-                }
+                ModuleConfig moduleConfig = BeanHelper.getModuleConfig(moduleConfigMap);
                 if (moduleConfig != null) {
                     setModule(moduleConfig);
                 }
             }
         }
+
         if ((getRegistries() == null || getRegistries().size() == 0)
                 && (getConsumer() == null || getConsumer().getRegistries() == null || getConsumer().getRegistries().size() == 0)
                 && (getApplication() == null || getApplication().getRegistries() == null || getApplication().getRegistries().size() == 0)) {
-            Map<String, RegistryConfig> registryConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, RegistryConfig.class, false, false);
+            Map<String, RegistryConfig> registryConfigMap = BeanHelper.get(applicationContext, RegistryConfig.class);
             if (registryConfigMap != null && registryConfigMap.size() > 0) {
-                List<RegistryConfig> registryConfigs = new ArrayList<>();
-                for (RegistryConfig config : registryConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        registryConfigs.add(config);
-                    }
-                }
+                List<RegistryConfig> registryConfigs = BeanHelper.getRegistryConfigs(registryConfigMap);
                 if (registryConfigs.size() > 0) {
-                    super.setRegistries(registryConfigs);
+                    setRegistries(registryConfigs);
                 }
             }
         }
-        if (getMonitor() == null
-                && (getConsumer() == null || getConsumer().getMonitor() == null)
+
+        if (getMonitor() == null && (getConsumer() == null || getConsumer().getMonitor() == null)
                 && (getApplication() == null || getApplication().getMonitor() == null)) {
-            Map<String, MonitorConfig> monitorConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, MonitorConfig.class, false, false);
+            Map<String, MonitorConfig> monitorConfigMap = BeanHelper.get(applicationContext, MonitorConfig.class);
             if (monitorConfigMap != null && monitorConfigMap.size() > 0) {
-                MonitorConfig monitorConfig = null;
-                for (MonitorConfig config : monitorConfigMap.values()) {
-                    if (config.isDefault() == null || config.isDefault()) {
-                        if (monitorConfig != null) {
-                            throw new IllegalStateException("Duplicate monitor configs: " + monitorConfig + " and " + config);
-                        }
-                        monitorConfig = config;
-                    }
-                }
+                MonitorConfig monitorConfig = BeanHelper.getMonitorConfig(monitorConfigMap);
                 if (monitorConfig != null) {
                     setMonitor(monitorConfig);
                 }
             }
         }
+
         Boolean b = isInit();
         if (b == null && getConsumer() != null) {
             b = getConsumer().isInit();
